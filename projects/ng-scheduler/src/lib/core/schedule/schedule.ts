@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CalendarStore } from '../store/calendar.store';
 import { SchedulerConfig, ViewMode } from '../models/config-schedule';
 import { ResourceView } from '../../features/resource/resource-view/resource-view';
+import { IconComponent } from '../../shared/components/icon/icon';
 
 @Component({
   selector: 'mglon-schedule',
   standalone: true,
-  imports: [CommonModule, ResourceView],
+  imports: [CommonModule, ResourceView, IconComponent],
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss',
   providers: [CalendarStore],

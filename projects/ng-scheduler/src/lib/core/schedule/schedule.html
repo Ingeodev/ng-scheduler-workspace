@@ -3,13 +3,13 @@
   <header class="ng-sched-header">
     <div class="ng-sched-header__nav">
       <button class="ng-sched-button ng-sched-button--icon" (click)="store.prev()">
-        &lt;
+        <mglon-icon name="clock"></mglon-icon>
       </button>
       <button class="ng-sched-button" (click)="store.today()">
         Today
       </button>
       <button class="ng-sched-button ng-sched-button--icon" (click)="store.next()">
-        &gt;
+        <mglon-icon name="chevron-right"></mglon-icon>
       </button>
       <h2 class="ng-sched-header__title">{{ store.formattedDate() }}</h2>
     </div>
