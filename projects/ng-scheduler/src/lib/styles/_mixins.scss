@@ -1,0 +1,25 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--ngx-cal-z-header);
+  background-color: var(--ngx-cal-surface);
+}
+
+@mixin sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: var(--ngx-cal-z-sticky);
+  background-color: var(--ngx-cal-surface);
+}

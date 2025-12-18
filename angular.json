@@ -7,7 +7,12 @@
       "projectType": "library",
       "root": "projects/ng-scheduler",
       "sourceRoot": "projects/ng-scheduler/src",
-      "prefix": "lib",
+      "prefix": "mglon",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",

@@ -9,7 +9,7 @@
     "noImplicitReturns": true,
     "paths": {
       "ng-scheduler": [
-        "./dist/ng-scheduler"
+        "./projects/ng-scheduler/src/public-api.ts"
       ]
     },
     "noFallthroughCasesInSwitch": true,

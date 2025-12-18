@@ -1,0 +1,40 @@
+<div class="ng-sched-schedule">
+  <!-- Header -->
+  <header class="ng-sched-header">
+    <div class="ng-sched-header__nav">
+      <button class="ng-sched-button ng-sched-button--icon" (click)="store.prev()">
+        &lt;
+      </button>
+      <button class="ng-sched-button" (click)="store.today()">
+        Today
+      </button>
+      <button class="ng-sched-button ng-sched-button--icon" (click)="store.next()">
+        &gt;
+      </button>
+      <h2 class="ng-sched-header__title">{{ store.formattedDate() }}</h2>
+    </div>
+
+    <div class="ng-sched-header__views">
+      @for (view of ['month', 'week', 'day', 'resource']; track view) {
+      <button class="ng-sched-button" [class.ng-sched-button--active]="store.viewMode() === view"
+        (click)="store.changeView($any(view))">
+        {{ view | titlecase }}
+      </button>
+      }
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="ng-sched-body">
+    @switch (store.viewMode()) {
+    @case ('resource') {
+    <mglon-resource-view></mglon-resource-view>
+    }
+    @default {
+    <div class="ng-sched-placeholder">
+      View '{{ store.viewMode() }}' not implemented yet.
+    </div>
+    }
+    }
+  </main>
+</div>

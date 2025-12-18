@@ -1,0 +1,101 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+:host {
+  @include google-calendar-theme;
+  display: block;
+  font-family: var(--ngx-cal-font-family);
+  color: var(--ngx-cal-text-primary);
+  background-color: var(--ngx-cal-background);
+  height: 100%;
+  overflow: auto;
+  /* Allow scrolling of the entire scheduler */
+  position: relative;
+}
+
+.ngx-cal-resource-view {
+  display: grid;
+  grid-template-columns: var(--ngx-cal-sidebar-width) 1fr;
+  grid-template-rows: var(--ngx-cal-header-height) 1fr;
+  min-width: fit-content;
+
+  // Header Area (Top Left + Top Right)
+  &__header {
+    display: contents; // Treat children as grid items
+  }
+
+  &__corner {
+    @include sticky-top;
+    @include sticky-left; // Top-left corner needs to be sticky in both directions usually or handled specifically
+    z-index: 30; // Highest z-index for corner
+    grid-row: 1;
+    grid-column: 1;
+    border-right: 1px solid var(--ngx-cal-border);
+    border-bottom: 1px solid var(--ngx-cal-border);
+    background-color: var(--ngx-cal-surface);
+  }
+
+  &__time-track {
+    @include sticky-top;
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    border-bottom: 1px solid var(--ngx-cal-border);
+    background-color: var(--ngx-cal-surface);
+  }
+
+  &__time-cell {
+    @include flex-center;
+    flex: 0 0 100px; // Fixed width for time slots
+    height: 100%;
+    border-right: 1px solid var(--ngx-cal-border);
+    font-size: var(--ngx-cal-font-size-sm);
+    color: var(--ngx-cal-text-secondary);
+  }
+
+  // Sidebar (Left resources)
+  &__sidebar {
+    grid-row: 2;
+    grid-column: 1;
+    display: block;
+    background-color: var(--ngx-cal-surface);
+  }
+
+  &__resource-cell {
+    @include sticky-left;
+    height: var(--ngx-cal-cell-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--ngx-cal-spacing-sm);
+    border-right: 1px solid var(--ngx-cal-border);
+    border-bottom: 1px solid var(--ngx-cal-border);
+    font-size: var(--ngx-cal-font-size-md);
+    background-color: var(--ngx-cal-surface);
+    width: var(--ngx-cal-sidebar-width);
+    box-sizing: border-box;
+    @include text-ellipsis;
+  }
+
+  // Grid Body
+  &__grid {
+    grid-row: 2;
+    grid-column: 2;
+    display: block;
+  }
+
+  &__row {
+    display: flex;
+    height: var(--ngx-cal-cell-height);
+    border-bottom: 1px solid var(--ngx-cal-border);
+  }
+
+  &__cell {
+    flex: 0 0 100px; // Must match time slot width
+    border-right: 1px solid var(--ngx-cal-border);
+    height: 100%;
+
+    &:hover {
+      background-color: var(--ngx-cal-hover);
+    }
+  }
+}

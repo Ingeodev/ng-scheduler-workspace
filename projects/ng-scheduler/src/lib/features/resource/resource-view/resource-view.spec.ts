@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgScheduler } from './ng-scheduler';
+import { ResourceView } from './resource-view';
 
-describe('NgScheduler', () => {
-  let component: NgScheduler;
-  let fixture: ComponentFixture<NgScheduler>;
+describe('ResourceView', () => {
+  let component: ResourceView;
+  let fixture: ComponentFixture<ResourceView>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgScheduler]
+      imports: [ResourceView]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NgScheduler);
+    fixture = TestBed.createComponent(ResourceView);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should create', () => {

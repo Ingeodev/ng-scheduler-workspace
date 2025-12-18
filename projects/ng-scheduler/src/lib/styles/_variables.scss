@@ -1,0 +1,35 @@
+
+// Google Calendar inspired theme variables
+@mixin google-calendar-theme {
+  // Colors
+  --ngx-cal-primary: #1a73e8;
+  --ngx-cal-on-primary: #ffffff;
+  --ngx-cal-surface: #ffffff;
+  --ngx-cal-background: #ffffff;
+  --ngx-cal-border: #dadce0;
+  --ngx-cal-text-primary: #3c4043;
+  --ngx-cal-text-secondary: #70757a;
+  --ngx-cal-hover: #f1f3f4;
+  --ngx-cal-selection: #e8f0fe;
+  
+  // Spacing
+  --ngx-cal-spacing-xs: 4px;
+  --ngx-cal-spacing-sm: 8px;
+  --ngx-cal-spacing-md: 16px;
+  --ngx-cal-spacing-lg: 24px;
+  
+  // Sizing
+  --ngx-cal-header-height: 48px;
+  --ngx-cal-sidebar-width: 60px;
+  --ngx-cal-cell-height: 48px;
+  
+  // Typography
+  --ngx-cal-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --ngx-cal-font-size-sm: 10px;
+  --ngx-cal-font-size-md: 12px;
+  --ngx-cal-font-size-lg: 14px;
+  
+  // Z-Index
+  --ngx-cal-z-sticky: 10;
+  --ngx-cal-z-header: 20;
+}
