@@ -14,27 +14,27 @@
   grid-template-rows: auto 1fr;
   height: 100%;
   width: 100%;
-  background-color: var(--mglon-schedule-background);
-  color: var(--mglon-schedule-text-primary);
-  font-family: var(--mglon-schedule-font-family);
+  background-color: var(--ngx-cal-background);
+  color: var(--ngx-cal-text-primary);
+  font-family: var(--ngx-cal-font-family);
 }
 
 .ng-sched-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--mglon-schedule-spacing-sm) var(--mglon-schedule-spacing-md);
-  border-bottom: 1px solid var(--mglon-schedule-border);
-  background-color: var(--mglon-schedule-surface);
+  padding: var(--ngx-cal-spacing-sm) var(--ngx-cal-spacing-md);
+  border-bottom: 1px solid var(--ngx-cal-border);
+  background-color: var(--ngx-cal-surface);
 
   &__nav {
     display: flex;
     align-items: center;
-    gap: var(--mglon-schedule-spacing-sm);
+    gap: var(--ngx-cal-spacing-sm);
   }
 
   &__title {
-    margin: 0 0 0 var(--mglon-schedule-spacing-md);
+    margin: 0 0 0 var(--ngx-cal-spacing-md);
     font-size: 1.25rem;
     font-weight: 500;
   }
@@ -42,7 +42,7 @@
   &__views {
     display: flex;
     gap: 0;
-    border: 1px solid var(--mglon-schedule-border);
+    border: 1px solid var(--ngx-cal-border);
     border-radius: 4px;
     overflow: hidden;
   }
@@ -50,9 +50,9 @@
 
 .ng-sched-button {
   padding: 6px 12px;
-  border: 1px solid var(--mglon-schedule-border);
+  border: 1px solid var(--ngx-cal-border);
   background-color: transparent;
-  color: var(--mglon-schedule-text-primary);
+  color: var(--ngx-cal-text-primary);
   font-family: inherit;
   font-size: 0.875rem;
   cursor: pointer;
@@ -64,19 +64,19 @@
   }
 
   &:hover {
-    background-color: var(--mglon-schedule-hover);
+    background-color: var(--ngx-cal-hover);
   }
 
   &--active {
-    background-color: var(--mglon-schedule-selection);
-    color: var(--mglon-schedule-primary);
+    background-color: var(--ngx-cal-selection);
+    color: var(--ngx-cal-primary);
     font-weight: 500;
   }
 
   // Grouped buttons (views) style
   .ng-sched-header__views & {
     border: none;
-    border-right: 1px solid var(--mglon-schedule-border);
+    border-right: 1px solid var(--ngx-cal-border);
     border-radius: 0;
 
     &:last-child {
@@ -97,5 +97,5 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--mglon-schedule-text-secondary);
+  color: var(--ngx-cal-text-secondary);
 }

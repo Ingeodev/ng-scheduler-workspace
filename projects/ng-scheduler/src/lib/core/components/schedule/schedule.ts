@@ -4,15 +4,14 @@ import { CalendarStore } from '../store/calendar.store';
 import { SchedulerConfig, ViewMode } from '../models/config-schedule';
 import { ResourceView } from '../../features/resource/resource-view/resource-view';
 import { IconComponent } from '../../shared/components/icon/icon';
-import { HeaderSchedule } from '../components/header-schedule/header-schedule';
 
 @Component({
   selector: 'mglon-schedule',
   standalone: true,
-  imports: [CommonModule, ResourceView, IconComponent, HeaderSchedule],
+  imports: [CommonModule, ResourceView, IconComponent],
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss',
-  providers: [],
+  providers: [CalendarStore],
   encapsulation: ViewEncapsulation.None
 })
 export class Schedule {
@@ -35,8 +34,7 @@ export class Schedule {
       prev: () => this.store.prev(),
       today: () => this.store.today(),
       changeView: (view: ViewMode) => this.store.changeView(view),
-      setDate: (date: Date) => this.store.setDate(date),
-      addEvent: () => console.log('Add event clicked')
+      setDate: (date: Date) => this.store.setDate(date)
     };
   }
 }

@@ -6,6 +6,7 @@
     "@angular/core": "^20.3.0"
   },
   "dependencies": {
+    "@ngrx/signals": "^21.0.0",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
