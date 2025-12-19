@@ -7,8 +7,8 @@
   // Theme Overrides (Playground Customization)
 
   // Primary Palette (Neutral Gray)
-  --mglon-schedule-primary-50: #fafafa;
-  --mglon-schedule-primary-100: #f5f5f5;
+  --mglon-schedule-primary-50: #f1eeee;
+  --mglon-schedule-primary-100: #eceaea;
   --mglon-schedule-primary-200: #eeeeee;
   --mglon-schedule-primary-300: #e0e0e0;
   --mglon-schedule-primary-400: #bdbdbd;
@@ -20,6 +20,7 @@
   --mglon-schedule-primary-950: #0a0a0a;
 
   --mglon-schedule-primary: var(--mglon-schedule-primary-900);
+
   --mglon-schedule-on-primary: #ffffff;
 
   // Surface variants using primary palette (lighter shades for surfaces)
@@ -46,6 +47,38 @@
   --mglon-schedule-radius-md: 12px;
   --mglon-schedule-radius-lg: 16px;
   --mglon-schedule-radius-full: 9999px; // User said "todos", so everything becomes square.
+
+  // ============================================
+  // Button Group Customization
+  // ============================================
+  // Uncomment and modify any of these to customize the button-group component:
+
+  // Layout & Spacing
+  // --mglon-button-group-gap: 4px;
+  // --mglon-button-group-padding: 8px;
+
+  // Border & Radius
+  // --mglon-button-group-border-width: 2px;
+  // --mglon-button-group-border-radius: 12px;
+
+  // Colors
+  // --mglon-button-group-background: #f0f0f0;
+  // --mglon-button-group-border-color: #333;
+
+  // Selection Indicator
+  // --mglon-button-group-indicator-background: #ff6b6b;
+
+  // Button Colors
+  // --mglon-button-group-button-color: #666;
+  // --mglon-button-group-button-active-color: #fff;
+  // --mglon-button-group-button-active-font-weight: 600;
+
+  // Transitions
+  // --mglon-button-group-transition-duration: 0.5s;
+  // --mglon-button-group-indicator-transition-duration: 0.6s;
+
+  // States
+  // --mglon-button-group-disabled-opacity: 0.3;
 }
 
 body {

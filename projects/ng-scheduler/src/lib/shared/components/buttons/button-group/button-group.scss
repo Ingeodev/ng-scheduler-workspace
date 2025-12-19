@@ -3,55 +3,22 @@
 
 :host {
   // ============================================
-  // Component-Specific CSS Variables
-  // These inherit from global utility variables but can be overridden
-  // ============================================
-
-  // Layout & Spacing
-  --mglon-button-group-gap: 0;
-  --mglon-button-group-padding: var(--mglon-schedule-padding-xs);
-
-  // Border & Radius
-  --mglon-button-group-border-width: 2px;
-  --mglon-button-group-border-radius: var(--mglon-schedule-radius-full);
-
-  // Colors - Solid appearance (default)
-  --mglon-button-group-background: var(--mglon-schedule-surface-1);
-  --mglon-button-group-border-color: transparent;
-
-  // Selection Indicator
-  --mglon-button-group-indicator-background: var(--mglon-schedule-primary);
-  --mglon-button-group-indicator-radius: calc(var(--mglon-button-group-border-radius) - var(--mglon-button-group-padding));
-
-  // Button Colors (for projected buttons)
-  --mglon-button-group-button-color: var(--mglon-schedule-on-surface-1);
-  --mglon-button-group-button-active-color: var(--mglon-schedule-on-primary);
-  --mglon-button-group-button-active-font-weight: 500;
-
-  // Transitions
-  --mglon-button-group-transition-duration: 0.3s;
-  --mglon-button-group-indicator-transition-duration: 0.4s;
-
-  // Disabled State
-  --mglon-button-group-disabled-opacity: 0.5;
-
-  // ============================================
   // Base Layout & Structure
   // ============================================
   display: inline-flex;
   position: relative;
   overflow: hidden;
   z-index: 0;
-  gap: var(--mglon-button-group-gap);
+  gap: var(--mglon-button-group-gap, 0);
   flex-shrink: 0; // Prevent shrinking in flex containers
 
   // ============================================
   // Default Styling
   // ============================================
-  background-color: var(--mglon-button-group-background);
-  border: var(--mglon-button-group-border-width) solid var(--mglon-button-group-border-color);
-  padding: var(--mglon-button-group-padding);
-  border-radius: var(--mglon-button-group-border-radius);
+  background-color: var(--mglon-button-group-background, var(--mglon-schedule-surface-1));
+  border: var(--mglon-button-group-border-width, 2px) solid var(--mglon-button-group-border-color, transparent);
+  padding: var(--mglon-button-group-padding, var(--mglon-schedule-padding-xs));
+  border-radius: var(--mglon-button-group-border-radius, var(--mglon-schedule-radius-full));
 
   // ============================================
   // Border Radius Variants
@@ -119,7 +86,7 @@
   // Disabled State
   // ============================================
   &[disabled] {
-    opacity: var(--mglon-button-group-disabled-opacity);
+    opacity: var(--mglon-button-group-disabled-opacity, 0.5);
     cursor: not-allowed;
     pointer-events: none; // Prevent all click events on the group
 
@@ -140,10 +107,10 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: var(--mglon-button-group-indicator-background);
-    border-radius: var(--mglon-button-group-indicator-radius);
+    background-color: var(--mglon-button-group-indicator-background, var(--mglon-schedule-primary));
+    border-radius: calc(var(--mglon-button-group-border-radius, var(--mglon-schedule-radius-full)) - var(--mglon-button-group-padding, var(--mglon-schedule-padding-xs)));
     z-index: 0;
-    transition: all var(--mglon-button-group-indicator-transition-duration) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all var(--mglon-button-group-indicator-transition-duration, 0.4s) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   // ============================================
@@ -163,20 +130,20 @@
     z-index: 1;
 
     // Inherit group radius
-    border-radius: var(--mglon-button-group-border-radius) !important;
+    border-radius: var(--mglon-button-group-border-radius, var(--mglon-schedule-radius-full)) !important;
 
     // Text color states
-    color: var(--mglon-button-group-button-color);
-    transition: color var(--mglon-button-group-transition-duration) ease;
+    color: var(--mglon-button-group-button-color, var(--mglon-schedule-on-surface-1));
+    transition: color var(--mglon-button-group-transition-duration, 0.3s) ease;
 
     &[active] {
-      color: var(--mglon-button-group-button-active-color) !important;
-      font-weight: var(--mglon-button-group-button-active-font-weight);
+      color: var(--mglon-button-group-button-active-color, var(--mglon-schedule-on-primary)) !important;
+      font-weight: var(--mglon-button-group-button-active-font-weight, 500);
     }
 
     // Individual button disabled state
     &[disabled] {
-      opacity: var(--mglon-button-group-disabled-opacity);
+      opacity: var(--mglon-button-group-disabled-opacity, 0.5);
       cursor: not-allowed;
       pointer-events: none;
     }
