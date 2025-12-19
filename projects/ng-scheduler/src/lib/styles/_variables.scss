@@ -1,21 +1,76 @@
 // Google Calendar inspired theme variables
 @mixin google-calendar-theme {
   // Colors
-  --mglon-schedule-primary: #1a73e8;
-  --mglon-schedule-on-primary: #ffffff;
-  --mglon-schedule-surface: #ffffff;
-  --mglon-schedule-background: #ffffff;
-  --mglon-schedule-border: #dadce0;
-  --mglon-schedule-text-primary: #3c4043;
-  --mglon-schedule-text-secondary: #70757a;
-  --mglon-schedule-hover: #f1f3f4;
-  --mglon-schedule-selection: #e8f0fe;
+  // Primary Palette (Blue - Googleish)
+  --mglon-schedule-primary-50: #e8f0fe;
+  --mglon-schedule-primary-100: #d2e3fc;
+  --mglon-schedule-primary-200: #a7cbfb;
+  --mglon-schedule-primary-300: #7cacf8;
+  --mglon-schedule-primary-400: #518ef5;
+  --mglon-schedule-primary-500: #1a73e8; // Base Primary
+  --mglon-schedule-primary-600: #1967d2;
+  --mglon-schedule-primary-700: #185abc;
+  --mglon-schedule-primary-800: #174ea6;
+  --mglon-schedule-primary-900: #0d3a86;
+  --mglon-schedule-primary-950: #08265a;
 
-  // Spacing
+  // Neutral Palette (Tailwind-like)
+  --mglon-schedule-neutral-50: #fafafa;
+  --mglon-schedule-neutral-100: #f5f5f5;
+  --mglon-schedule-neutral-200: #e5e5e5;
+  --mglon-schedule-neutral-300: #d4d4d4;
+  --mglon-schedule-neutral-400: #a3a3a3;
+  --mglon-schedule-neutral-500: #737373;
+  --mglon-schedule-neutral-600: #525252;
+  --mglon-schedule-neutral-700: #404040;
+  --mglon-schedule-neutral-800: #262626;
+  --mglon-schedule-neutral-900: #171717;
+  --mglon-schedule-neutral-950: #0a0a0a;
+
+  // Semantic Mappings
+  --mglon-schedule-primary: var(--mglon-schedule-primary-500);
+  --mglon-schedule-on-primary: #ffffff;
+
+  --mglon-schedule-surface: #ffffff;
+  --mglon-schedule-surface-variant: var(--mglon-schedule-neutral-100);
+  --mglon-schedule-background: #ffffff;
+
+  --mglon-schedule-border: var(--mglon-schedule-neutral-200);
+
+  --mglon-schedule-text-primary: var(--mglon-schedule-neutral-900);
+  --mglon-schedule-text-secondary: var(--mglon-schedule-neutral-500);
+
+  --mglon-schedule-hover: var(--mglon-schedule-neutral-100);
+  --mglon-schedule-selection: var(--mglon-schedule-primary-50);
+
+  // Spacing (Base)
   --mglon-schedule-spacing-xs: 4px;
   --mglon-schedule-spacing-sm: 8px;
   --mglon-schedule-spacing-md: 16px;
   --mglon-schedule-spacing-lg: 24px;
+
+  // Padding
+  --mglon-schedule-padding-xs: var(--mglon-schedule-spacing-xs);
+  --mglon-schedule-padding-sm: var(--mglon-schedule-spacing-sm);
+  --mglon-schedule-padding-md: var(--mglon-schedule-spacing-md);
+  --mglon-schedule-padding-lg: var(--mglon-schedule-spacing-lg);
+
+  // Margin
+  --mglon-schedule-margin-xs: var(--mglon-schedule-spacing-xs);
+  --mglon-schedule-margin-sm: var(--mglon-schedule-spacing-sm);
+  --mglon-schedule-margin-md: var(--mglon-schedule-spacing-md);
+  --mglon-schedule-margin-lg: var(--mglon-schedule-spacing-lg);
+
+  // Gap
+  --mglon-schedule-gap-xs: var(--mglon-schedule-spacing-xs);
+  --mglon-schedule-gap-sm: var(--mglon-schedule-spacing-sm);
+  --mglon-schedule-gap-md: var(--mglon-schedule-spacing-md);
+  --mglon-schedule-gap-lg: var(--mglon-schedule-spacing-lg);
+
+  // Borders
+  --mglon-schedule-border-width-sm: 1px;
+  --mglon-schedule-border-width-md: 2px;
+  --mglon-schedule-border-width-lg: 4px;
 
   // Sizing
   --mglon-schedule-header-height: 48px;
@@ -26,12 +81,13 @@
   --mglon-schedule-radius-sm: 4px;
   --mglon-schedule-radius-md: 8px;
   --mglon-schedule-radius-lg: 16px;
+  --mglon-schedule-radius-full: 9999px;
 
   // Typography
   --mglon-schedule-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --mglon-schedule-font-size-sm: 10px;
-  --mglon-schedule-font-size-md: 12px;
-  --mglon-schedule-font-size-lg: 14px;
+  --mglon-schedule-font-size-sm: 12px;
+  --mglon-schedule-font-size-md: 14px;
+  --mglon-schedule-font-size-lg: 16px;
 
   // Z-Index
   --mglon-schedule-z-sticky: 10;

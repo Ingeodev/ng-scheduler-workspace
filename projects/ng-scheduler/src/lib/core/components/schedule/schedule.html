@@ -1,28 +1,8 @@
 <div class="ng-sched-schedule">
   <!-- Header -->
-  <header class="ng-sched-header">
-    <div class="ng-sched-header__nav">
-      <button class="ng-sched-button ng-sched-button--icon" (click)="store.prev()">
-        <mglon-icon name="clock"></mglon-icon>
-      </button>
-      <button class="ng-sched-button" (click)="store.today()">
-        Today
-      </button>
-      <button class="ng-sched-button ng-sched-button--icon" (click)="store.next()">
-        <mglon-icon name="chevron-right"></mglon-icon>
-      </button>
-      <h2 class="ng-sched-header__title">{{ store.formattedDate() }}</h2>
-    </div>
-
-    <div class="ng-sched-header__views">
-      @for (view of ['month', 'week', 'day', 'resource']; track view) {
-      <button class="ng-sched-button" [class.ng-sched-button--active]="store.viewMode() === view"
-        (click)="store.changeView($any(view))">
-        {{ view | titlecase }}
-      </button>
-      }
-    </div>
-  </header>
+  <mglon-header-schedule [title]="store.formattedDate()" [activeView]="store.viewMode()" (next)="store.next()"
+    (prev)="store.prev()" (today)="store.today()" (viewChange)="store.changeView($event)" (add)="add.emit()">
+  </mglon-header-schedule>
 
   <!-- Body -->
   <main class="ng-sched-body">

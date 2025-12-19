@@ -1,0 +1,82 @@
+@use '../../../../styles/variables' as vars;
+@use '../../../../styles/mixins' as mixins;
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  background-clip: padding-box;
+  text-decoration: none;
+  font-family: var(--mglon-schedule-font-family);
+  border-radius: 16px; // Google Calendar uses rounded rects often, or full circle
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include mixins.elevation-md;
+
+  &:hover {
+    @include mixins.elevation-lg;
+  }
+
+  // Sizes
+  &.size-md {
+    height: 48px;
+    min-width: 48px;
+
+    &.extended {
+      padding: 0 20px;
+      border-radius: 24px;
+    }
+
+    &:not(.extended) {
+      width: 48px;
+      border-radius: 50%;
+    }
+  }
+
+  &.size-lg {
+    height: 56px;
+    min-width: 56px;
+
+    &.extended {
+      padding: 0 24px;
+      border-radius: 28px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.25px;
+    }
+
+    &:not(.extended) {
+      width: 56px;
+      border-radius: 50%;
+      font-size: 24px;
+    }
+  }
+
+  // Colors
+  &.color-surface {
+    background-color: var(--mglon-schedule-surface);
+    color: var(--mglon-schedule-text-primary);
+  }
+
+  &.color-primary {
+    background-color: var(--mglon-schedule-primary);
+    color: var(--mglon-schedule-on-primary);
+
+    &:hover {
+      background-color: #185abc; // Darken
+    }
+  }
+
+  &.color-secondary {
+    background-color: var(--mglon-schedule-selection);
+    color: var(--mglon-schedule-primary);
+  }
+}

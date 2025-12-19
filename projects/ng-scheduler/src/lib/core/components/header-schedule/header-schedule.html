@@ -1,40 +1,36 @@
 <div class="mglon-header">
 
-  <!-- Row 1: View Config (Center) + Add Button (Right) -->
-  <div class="mglon-header__top-row">
-    <div class="mglon-header__spacer"></div> <!-- Spacer to push center content -->
-
-    <div class="mglon-header__views">
-      @for (view of views(); track view) {
-      <button class="mglon-header__button" [class.mglon-header__button--active]="activeView() === view"
-        (click)="viewChange.emit(view)">
-        {{ view | titlecase }}
-      </button>
-      }
-    </div>
-
-    <div class="mglon-header__actions">
-      <button class="mglon-header__cta" (click)="add.emit()">
-        Add Event
-      </button>
-    </div>
-  </div>
-
   <!-- Row 2: Navigation + Title -->
   <div class="mglon-header__bottom-row">
     <div class="mglon-header__nav">
-      <button class="mglon-header__icon-btn" (click)="prev.emit()">
+      <button mglon-icon-button (click)="prev.emit()">
         <mglon-icon name="chevron-left"></mglon-icon>
       </button>
-      <button class="mglon-header__button" (click)="today.emit()">
+      <button mglon-button variant="outlined" (click)="today.emit()">
         Today
       </button>
-      <button class="mglon-header__icon-btn" (click)="next.emit()">
+      <button mglon-icon-button (click)="next.emit()">
         <mglon-icon name="chevron-right"></mglon-icon>
       </button>
     </div>
 
     <h2 class="mglon-header__title">{{ title() }}</h2>
+
+    <div class="mglon-header__views">
+      <mglon-button-group type="icon">
+        @for (view of views(); track view) {
+        <button mglon-icon-button [active]="activeView() === view" (click)="viewChange.emit(view)">
+          <mglon-icon [name]="viewIcons[view]" size="20px"></mglon-icon>
+        </button>
+        }
+      </mglon-button-group>
+    </div>
+
+    <div class="mglon-header__actions">
+      <button mglon-button variant="filled" (click)="add.emit()">
+        Add Event
+      </button>
+    </div>
   </div>
 
 </div>

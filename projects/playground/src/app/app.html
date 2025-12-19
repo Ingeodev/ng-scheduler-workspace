@@ -1,3 +1,8 @@
-<div style="height: 100vh; padding: 20px; box-sizing: border-box;">
-  <mglon-schedule [config]="config"></mglon-schedule>
+<div style="height: 100vh; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px;">
+  <div style="flex: 1; min-height: 0;">
+
+    <div style="margin-top: 20px; height: calc(100% - 60px);">
+      <mglon-schedule [config]="config"></mglon-schedule>
+    </div>
+  </div>
 </div>

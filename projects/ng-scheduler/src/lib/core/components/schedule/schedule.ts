@@ -1,14 +1,15 @@
-import { Component, effect, input, inject, ViewEncapsulation } from '@angular/core';
+import { Component, effect, input, inject, ViewEncapsulation, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarStore } from '../store/calendar.store';
-import { SchedulerConfig, ViewMode } from '../models/config-schedule';
-import { ResourceView } from '../../features/resource/resource-view/resource-view';
-import { IconComponent } from '../../shared/components/icon/icon';
+import { CalendarStore } from '../../store/calendar.store';
+import { SchedulerConfig, ViewMode } from '../../models/config-schedule';
+import { ResourceView } from '../../../features/resource/resource-view/resource-view';
+import { IconComponent } from '../../../shared/components/icon/icon';
+import { HeaderSchedule } from '../header-schedule/header-schedule';
 
 @Component({
   selector: 'mglon-schedule',
   standalone: true,
-  imports: [CommonModule, ResourceView, IconComponent],
+  imports: [CommonModule, ResourceView, IconComponent, HeaderSchedule],
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss',
   providers: [CalendarStore],
@@ -16,6 +17,7 @@ import { IconComponent } from '../../shared/components/icon/icon';
 })
 export class Schedule {
   readonly config = input<Partial<SchedulerConfig>>({});
+  readonly add = output<void>();
 
   readonly store = inject(CalendarStore);
 

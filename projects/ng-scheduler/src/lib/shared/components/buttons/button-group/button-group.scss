@@ -1,0 +1,95 @@
+@use '../../../../styles/_variables' as vars;
+@use '../../../../styles/_mixins' as mixins;
+
+:host {
+  display: inline-flex;
+  background-color: var(--mglon-schedule-primary-100, #f1f3f4); // Surface background
+  border: 1px solid transparent; // Optional: border if needed, usually surface variant is enough
+  padding: var(--mglon-schedule-padding-xs, 4px); // Padding for floating effect
+  gap: 0; // Gap handled by logic or zero for connected groups usually? 
+  // User said "background movible" which implies a segmented control look.
+  // Standard segmented control has no gap between touch targets but visual gap is padding.
+
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
+  // Border Radius Logic
+  &.rounded-sm {
+    --group-radius: var(--mglon-schedule-radius-sm);
+  }
+
+  &.rounded-md {
+    --group-radius: var(--mglon-schedule-radius-md);
+  }
+
+  &.rounded-lg {
+    --group-radius: var(--mglon-schedule-radius-lg);
+  }
+
+  &.rounded-full {
+    --group-radius: var(--mglon-schedule-radius-full);
+  }
+
+  border-radius: var(--group-radius, var(--mglon-schedule-radius-full));
+
+  &.type-icon {
+    border-radius: var(--mglon-schedule-radius-full); // Pill shape for icons
+  }
+
+  &.vertical {
+    flex-direction: column;
+  }
+
+  .selection-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    // Selection is usually White with Shadow on Gray Surface (iOS) or Primary Color (Android/Material)
+    // User mentioned "background movible" and previously used primary.
+    // Let's use Surface (Paper) White for the indicator if the track is Gray, to look like a physical toggle?
+    // OR keep Primary. Let's stick to Primary Color + OnPrimary Text for contrast if that was the theme.
+    // However, typical "Segmented Button" is: Track Gray, Indicator White (Shadow), Text Black (Selected).
+    // OR Track Transparent, Indicator Primary, Text White (Selected).
+    // The user said "background para todos los botones en un color gris de tipo surface".
+    // This implies Track = Gray.
+    // Let's use White indicator with Shadow (Clean look).
+    background-color: var(--mglon-schedule-primary);
+    //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+    // Radius matches the host type
+
+    //border-radius: 9999px;
+
+    @include mixins.animate-natural(all, 0.4s);
+    z-index: 0;
+  }
+
+  // Children Styles Override
+  ::ng-deep>button[mglon-button],
+  ::ng-deep>button[mglon-icon-button],
+  ::ng-deep>a[mglon-button],
+  ::ng-deep>a[mglon-icon-button] {
+    background-color: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    z-index: 1;
+    position: relative;
+    border-radius: var(--group-radius, var(--mglon-schedule-radius-full)) !important;
+    // Ensure text color reacts to selection
+    // Since indicator is white/surface, text should be primary or strong text?
+    // If indicator is white, selected text should be standard text color (maybe darker/bolder).
+    // Unselected text on gray background should be secondary/medium.
+    color: var(--mglon-schedule-text-secondary);
+    transition: color 0.3s ease;
+
+    &[data-active="true"],
+    // For ButtonComponent
+    &.active {
+      // For IconButtonComponent
+      // For IconButtonComponent
+      color: var(--mglon-schedule-on-primary) !important; // High contrast on white indicator
+      font-weight: 500;
+    }
+  }
+}

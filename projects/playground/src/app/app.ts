@@ -1,18 +1,19 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Schedule, SchedulerConfig } from 'ng-scheduler';
+import { Schedule, SchedulerConfig, ButtonComponent, ButtonGroupComponent, FabButtonComponent, IconButtonComponent } from 'ng-scheduler';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Schedule],
+  imports: [Schedule, ButtonComponent, ButtonGroupComponent, FabButtonComponent, IconButtonComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('playground');
+  title = 'playground';
 
-  config: Partial<SchedulerConfig> = {
-    initialView: 'resource',
+  demoValue = 'month';
+
+  config: SchedulerConfig = {
+    initialView: 'week',
     initialDate: new Date()
   };
 }

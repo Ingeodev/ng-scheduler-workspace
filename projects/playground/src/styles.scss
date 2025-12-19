@@ -1,1 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+@use '../../ng-scheduler/src/lib/styles/variables' as vars;
+
+:root {
+  @include vars.google-calendar-theme;
+
+  // Theme Overrides (Playground Customization)
+
+  // Primary Palette (Deep Purple)
+  --mglon-schedule-primary-50: #ede7f6;
+  --mglon-schedule-primary-100: #d1c4e9;
+  --mglon-schedule-primary-200: #b39ddb;
+  --mglon-schedule-primary-300: #9575cd;
+  --mglon-schedule-primary-400: #7e57c2;
+  --mglon-schedule-primary-500: #673ab7;
+  --mglon-schedule-primary-600: #5e35b1;
+  --mglon-schedule-primary-700: #512da8;
+  --mglon-schedule-primary-800: #4527a0;
+  --mglon-schedule-primary-900: #311b92;
+  --mglon-schedule-primary-950: #1a0f55;
+
+  --mglon-schedule-primary: var(--mglon-schedule-primary-500);
+  --mglon-schedule-on-primary: #ffffff;
+
+  // Semantic mappings using the palette
+  --mglon-schedule-selection: var(--mglon-schedule-primary-50);
+  --mglon-schedule-surface-variant: var(--mglon-schedule-primary-50); // Using primary tint for surface
+  --mglon-schedule-text-primary: var(--mglon-schedule-primary-900);
+
+  // Sharp Theme
+  --mglon-schedule-radius-sm: 0px;
+  --mglon-schedule-radius-md: 0px;
+  --mglon-schedule-radius-lg: 0px;
+  --mglon-schedule-radius-full: 9999px; // User said "todos", so everything becomes square.
+}
+
+body {
+  margin: 0;
+  font-family: var(--mglon-schedule-font-family, Roboto, "Helvetica Neue", sans-serif);
+}

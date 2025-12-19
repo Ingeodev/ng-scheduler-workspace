@@ -1,0 +1,58 @@
+@use '../../../../styles/variables' as vars;
+@use '../../../../styles/mixins' as mixins;
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--mglon-schedule-text-secondary);
+  cursor: pointer;
+  border-radius: 50%; // Always circular
+  overflow: hidden;
+  transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Sizes
+  &.size-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 18px; // Icon size
+  }
+
+  &.size-md {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+
+  &.size-lg {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+  }
+
+  // Interaction
+  &:hover {
+    background-color: rgba(60, 64, 67, 0.04);
+    color: var(--mglon-schedule-text-primary);
+  }
+
+  // Active state
+  &.active {
+    color: var(--mglon-schedule-primary);
+    background-color: var(--mglon-schedule-selection);
+  }
+
+  // Disabled
+  &:disabled,
+  &[disabled] {
+    cursor: default;
+    opacity: 0.38;
+    background-color: transparent !important;
+  }
+}
