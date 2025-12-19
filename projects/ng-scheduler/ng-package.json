@@ -5,6 +5,7 @@
     "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
-    "@ngrx/signals"
+    "@ngrx/signals",
+    "@angular/cdk"
   ]
 }

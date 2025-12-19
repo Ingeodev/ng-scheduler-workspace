@@ -6,6 +6,7 @@
     "@angular/core": "^20.3.0"
   },
   "dependencies": {
+    "@angular/cdk": "^21.0.5",
     "@ngrx/signals": "^21.0.0",
     "tslib": "^2.3.0"
   },
