@@ -10,10 +10,12 @@ describe('HeaderSchedule', () => {
     await TestBed.configureTestingModule({
       imports: [HeaderSchedule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(HeaderSchedule);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('title', 'Test Title');
+    fixture.componentRef.setInput('activeView', 'month');
     await fixture.whenStable();
   });
 
