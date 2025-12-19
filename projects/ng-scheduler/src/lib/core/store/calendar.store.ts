@@ -1,28 +1,25 @@
-import { computed, inject } from '@angular/core';
+import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { DEFAULT_CONFIG } from '../config/default-schedule-config';
 import { SchedulerConfig, ViewMode } from '../models/config-schedule';
-import { EventModel, ResourceModel } from '../models/event-model';
+import { withDataFeature } from './features/data.feature';
 
 interface CalendarState {
   currentDate: Date;
   viewMode: ViewMode;
   config: SchedulerConfig;
-  events: EventModel[];
-  resources: ResourceModel[];
 }
 
-const initialState: CalendarState = {
+const initialCalendarState: CalendarState = {
   currentDate: new Date(),
   viewMode: 'month',
   config: DEFAULT_CONFIG,
-  events: [],
-  resources: []
 };
 
 export const CalendarStore = signalStore(
   { providedIn: 'root' },
-  withState(initialState),
+  withState(initialCalendarState),
+  withDataFeature(), // <-- Composable Feature
   withComputed(({ currentDate, viewMode, config }) => ({
     viewDate: computed(() => currentDate()),
     currentView: computed(() => viewMode()),
@@ -48,12 +45,6 @@ export const CalendarStore = signalStore(
         currentDate: config.initialDate ? new Date(config.initialDate) : state.currentDate,
         viewMode: config.initialView || state.viewMode
       }));
-    },
-    setEvents(events: EventModel[]) {
-      patchState(store, { events });
-    },
-    setResources(resources: ResourceModel[]) {
-      patchState(store, { resources });
     },
     next() {
       const mode = store.viewMode();

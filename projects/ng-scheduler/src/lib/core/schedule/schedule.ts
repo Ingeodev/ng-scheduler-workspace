@@ -36,7 +36,19 @@ export class Schedule {
       today: () => this.store.today(),
       changeView: (view: ViewMode) => this.store.changeView(view),
       setDate: (date: Date) => this.store.setDate(date),
-      addEvent: () => console.log('Add event clicked')
+
+      // Data API
+      setEvents: (events: any[]) => this.store.setEvents(events),
+      addEvent: (event: any) => this.store.addEvent(event),
+      removeEvent: (id: string) => this.store.removeEvent(id),
+      updateEvent: (id: string, changes: any) => this.store.updateEvent(id, changes),
+      setResources: (resources: any[]) => this.store.setResources(resources)
     };
+  }
+
+  // Internal UI handlers
+  handleAddClick() {
+    console.log('User clicked add button in header');
+    // Here functionality to open a modal or create a default event would go
   }
 }

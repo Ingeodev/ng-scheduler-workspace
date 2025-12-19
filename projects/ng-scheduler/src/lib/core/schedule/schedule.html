@@ -1,7 +1,7 @@
 <div class="ng-sched-schedule">
   <!-- Header Component -->
   <mglon-header-schedule [title]="store.formattedDate()" [activeView]="store.viewMode()" (next)="store.next()"
-    (prev)="store.prev()" (today)="store.today()" (viewChange)="store.changeView($event)" (add)="api.addEvent()">
+    (prev)="store.prev()" (today)="store.today()" (viewChange)="store.changeView($event)" (add)="handleAddClick()">
   </mglon-header-schedule>
 
   <!-- Body -->
