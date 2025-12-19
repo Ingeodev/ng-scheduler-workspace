@@ -39,3 +39,143 @@
 @mixin animate-natural($property: all, $duration: 0.4s) {
   transition: $property $duration cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+// ============================================
+// Responsive Breakpoints (Media Queries - Viewport based)
+// ============================================
+
+// Extra small devices (portrait phones, less than 576px)
+@mixin xs {
+  @media (max-width: 575.98px) {
+    @content;
+  }
+}
+
+// Small devices (landscape phones, less than 768px)
+@mixin sm {
+  @media (max-width: 767.98px) {
+    @content;
+  }
+}
+
+// Medium devices (tablets, less than 992px)
+@mixin md {
+  @media (max-width: 991.98px) {
+    @content;
+  }
+}
+
+// Large devices (desktops, less than 1200px)
+@mixin lg {
+  @media (max-width: 1199.98px) {
+    @content;
+  }
+}
+
+// Extra large devices (large desktops, less than 1400px)
+@mixin xl {
+  @media (max-width: 1399.98px) {
+    @content;
+  }
+}
+
+// Min-width breakpoints (for mobile-first approach)
+@mixin sm-up {
+  @media (min-width: 576px) {
+    @content;
+  }
+}
+
+@mixin md-up {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin lg-up {
+  @media (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin xl-up {
+  @media (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin xxl-up {
+  @media (min-width: 1400px) {
+    @content;
+  }
+}
+
+// ============================================
+// Container Queries (Container based - more flexible)
+// ============================================
+
+// Container query: Extra small (less than 576px)
+@mixin container-xs {
+  @container (max-width: 575.98px) {
+    @content;
+  }
+}
+
+// Container query: Small (less than 768px)
+@mixin container-sm {
+  @container (max-width: 767.98px) {
+    @content;
+  }
+}
+
+// Container query: Medium (less than 992px)
+@mixin container-md {
+  @container (max-width: 991.98px) {
+    @content;
+  }
+}
+
+// Container query: Large (less than 1200px)
+@mixin container-lg {
+  @container (max-width: 1199.98px) {
+    @content;
+  }
+}
+
+// Container query: Extra large (less than 1400px)
+@mixin container-xl {
+  @container (max-width: 1399.98px) {
+    @content;
+  }
+}
+
+// Min-width container queries
+@mixin container-sm-up {
+  @container (min-width: 576px) {
+    @content;
+  }
+}
+
+@mixin container-md-up {
+  @container (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin container-lg-up {
+  @container (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin container-xl-up {
+  @container (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin container-xxl-up {
+  @container (min-width: 1400px) {
+    @content;
+  }
+}

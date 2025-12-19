@@ -2,94 +2,183 @@
 @use '../../../../styles/_mixins' as mixins;
 
 :host {
-  display: inline-flex;
-  background-color: var(--mglon-schedule-primary-100, #f1f3f4); // Surface background
-  border: 1px solid transparent; // Optional: border if needed, usually surface variant is enough
-  padding: var(--mglon-schedule-padding-xs, 4px); // Padding for floating effect
-  gap: 0; // Gap handled by logic or zero for connected groups usually? 
-  // User said "background movible" which implies a segmented control look.
-  // Standard segmented control has no gap between touch targets but visual gap is padding.
+  // ============================================
+  // Component-Specific CSS Variables
+  // These inherit from global utility variables but can be overridden
+  // ============================================
 
+  // Layout & Spacing
+  --mglon-button-group-gap: 0;
+  --mglon-button-group-padding: var(--mglon-schedule-padding-xs);
+
+  // Border & Radius
+  --mglon-button-group-border-width: 2px;
+  --mglon-button-group-border-radius: var(--mglon-schedule-radius-full);
+
+  // Colors - Solid appearance (default)
+  --mglon-button-group-background: var(--mglon-schedule-surface-1);
+  --mglon-button-group-border-color: transparent;
+
+  // Selection Indicator
+  --mglon-button-group-indicator-background: var(--mglon-schedule-primary);
+  --mglon-button-group-indicator-radius: calc(var(--mglon-button-group-border-radius) - var(--mglon-button-group-padding));
+
+  // Button Colors (for projected buttons)
+  --mglon-button-group-button-color: var(--mglon-schedule-on-surface-1);
+  --mglon-button-group-button-active-color: var(--mglon-schedule-on-primary);
+  --mglon-button-group-button-active-font-weight: 500;
+
+  // Transitions
+  --mglon-button-group-transition-duration: 0.3s;
+  --mglon-button-group-indicator-transition-duration: 0.4s;
+
+  // Disabled State
+  --mglon-button-group-disabled-opacity: 0.5;
+
+  // ============================================
+  // Base Layout & Structure
+  // ============================================
+  display: inline-flex;
   position: relative;
   overflow: hidden;
   z-index: 0;
+  gap: var(--mglon-button-group-gap);
+  flex-shrink: 0; // Prevent shrinking in flex containers
 
-  // Border Radius Logic
-  &.rounded-sm {
-    --group-radius: var(--mglon-schedule-radius-sm);
+  // ============================================
+  // Default Styling
+  // ============================================
+  background-color: var(--mglon-button-group-background);
+  border: var(--mglon-button-group-border-width) solid var(--mglon-button-group-border-color);
+  padding: var(--mglon-button-group-padding);
+  border-radius: var(--mglon-button-group-border-radius);
+
+  // ============================================
+  // Border Radius Variants
+  // ============================================
+  &[rounded="none"] {
+    --mglon-button-group-border-radius: 0;
   }
 
-  &.rounded-md {
-    --group-radius: var(--mglon-schedule-radius-md);
+  &[rounded="sm"] {
+    --mglon-button-group-border-radius: var(--mglon-schedule-radius-sm);
   }
 
-  &.rounded-lg {
-    --group-radius: var(--mglon-schedule-radius-lg);
+  &[rounded="md"] {
+    --mglon-button-group-border-radius: var(--mglon-schedule-radius-md);
   }
 
-  &.rounded-full {
-    --group-radius: var(--mglon-schedule-radius-full);
+  &[rounded="lg"] {
+    --mglon-button-group-border-radius: var(--mglon-schedule-radius-lg);
   }
 
-  border-radius: var(--group-radius, var(--mglon-schedule-radius-full));
-
-  &.type-icon {
-    border-radius: var(--mglon-schedule-radius-full); // Pill shape for icons
+  &[rounded="full"] {
+    --mglon-button-group-border-radius: var(--mglon-schedule-radius-full);
   }
 
-  &.vertical {
+  // ============================================
+  // Orientation Variants
+  // ============================================
+  &[orientation="vertical"] {
     flex-direction: column;
   }
 
+  // ============================================
+  // Appearance Variants
+  // ============================================
+  &[appereance="outline"] {
+    --mglon-button-group-background: transparent;
+    --mglon-button-group-border-color: var(--mglon-schedule-primary-200);
+  }
+
+  &[appereance="ghost"] {
+    --mglon-button-group-background: transparent;
+    --mglon-button-group-border-color: transparent;
+    --mglon-button-group-padding: 0px;
+  }
+
+  &[appereance="link"] {
+    --mglon-button-group-background: transparent;
+    --mglon-button-group-border-color: transparent;
+    --mglon-button-group-padding: 0px;
+    --mglon-button-group-gap: var(--mglon-schedule-spacing-sm);
+  }
+
+  // ============================================
+  // Density Variants
+  // ============================================
+  &[density="compact"] {
+    --mglon-button-group-padding: 0px;
+
+    &[appereance="link"] {
+      --mglon-button-group-gap: var(--mglon-schedule-spacing-xs);
+    }
+  }
+
+  // ============================================
+  // Disabled State
+  // ============================================
+  &[disabled] {
+    opacity: var(--mglon-button-group-disabled-opacity);
+    cursor: not-allowed;
+    pointer-events: none; // Prevent all click events on the group
+
+    .selection-indicator {
+      pointer-events: none;
+    }
+
+    button,
+    a {
+      pointer-events: none;
+    }
+  }
+
+  // ============================================
+  // Selection Indicator
+  // ============================================
   .selection-indicator {
     position: absolute;
     top: 0;
     left: 0;
-    // Selection is usually White with Shadow on Gray Surface (iOS) or Primary Color (Android/Material)
-    // User mentioned "background movible" and previously used primary.
-    // Let's use Surface (Paper) White for the indicator if the track is Gray, to look like a physical toggle?
-    // OR keep Primary. Let's stick to Primary Color + OnPrimary Text for contrast if that was the theme.
-    // However, typical "Segmented Button" is: Track Gray, Indicator White (Shadow), Text Black (Selected).
-    // OR Track Transparent, Indicator Primary, Text White (Selected).
-    // The user said "background para todos los botones en un color gris de tipo surface".
-    // This implies Track = Gray.
-    // Let's use White indicator with Shadow (Clean look).
-    background-color: var(--mglon-schedule-primary);
-    //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-
-    // Radius matches the host type
-
-    //border-radius: 9999px;
-
-    @include mixins.animate-natural(all, 0.4s);
+    background-color: var(--mglon-button-group-indicator-background);
+    border-radius: var(--mglon-button-group-indicator-radius);
     z-index: 0;
+    transition: all var(--mglon-button-group-indicator-transition-duration) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  // Children Styles Override
+  // ============================================
+  // Projected Button Styles
+  // ============================================
   ::ng-deep>button[mglon-button],
   ::ng-deep>button[mglon-icon-button],
   ::ng-deep>a[mglon-button],
   ::ng-deep>a[mglon-icon-button] {
+    // Reset styles
     background-color: transparent !important;
     border: none !important;
     margin: 0 !important;
-    z-index: 1;
-    position: relative;
-    border-radius: var(--group-radius, var(--mglon-schedule-radius-full)) !important;
-    // Ensure text color reacts to selection
-    // Since indicator is white/surface, text should be primary or strong text?
-    // If indicator is white, selected text should be standard text color (maybe darker/bolder).
-    // Unselected text on gray background should be secondary/medium.
-    color: var(--mglon-schedule-text-secondary);
-    transition: color 0.3s ease;
 
-    &[data-active="true"],
-    // For ButtonComponent
-    &.active {
-      // For IconButtonComponent
-      // For IconButtonComponent
-      color: var(--mglon-schedule-on-primary) !important; // High contrast on white indicator
-      font-weight: 500;
+    // Positioning
+    position: relative;
+    z-index: 1;
+
+    // Inherit group radius
+    border-radius: var(--mglon-button-group-border-radius) !important;
+
+    // Text color states
+    color: var(--mglon-button-group-button-color);
+    transition: color var(--mglon-button-group-transition-duration) ease;
+
+    &[active] {
+      color: var(--mglon-button-group-button-active-color) !important;
+      font-weight: var(--mglon-button-group-button-active-font-weight);
+    }
+
+    // Individual button disabled state
+    &[disabled] {
+      opacity: var(--mglon-button-group-disabled-opacity);
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 }

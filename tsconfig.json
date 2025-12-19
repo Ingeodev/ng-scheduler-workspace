@@ -8,6 +8,9 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "paths": {
+      "miguelon-ui": [
+        "./dist/miguelon-ui"
+      ],
       "ng-scheduler": [
         "./projects/ng-scheduler/src/public-api.ts"
       ]
@@ -27,19 +30,12 @@
     "typeCheckHostBindings": true,
     "strictTemplates": true
   },
-  "files": [],
   "references": [
     {
-      "path": "./projects/ng-scheduler/tsconfig.lib.json"
+      "path": "./projects/miguelon-ui/tsconfig.lib.json"
     },
     {
-      "path": "./projects/ng-scheduler/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/playground/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/playground/tsconfig.spec.json"
+      "path": "./projects/miguelon-ui/tsconfig.spec.json"
     }
   ]
 }

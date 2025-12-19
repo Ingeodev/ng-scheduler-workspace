@@ -2,57 +2,169 @@
 @use '../../../../styles/mixins' as mixins;
 
 :host {
+  // ============================================
+  // Base Layout & Structure
+  // ============================================
   display: inline-flex;
   align-items: center;
   justify-content: center;
   position: relative;
   box-sizing: border-box;
-  border: none;
   outline: none;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  // ============================================
+  // CSS Custom Properties
+  // ============================================
+  --icon-btn-size: 40px;
+  --icon-btn-icon-size: 24px;
+
+  // ============================================
+  // Default Styling
+  // ============================================
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+  font-size: var(--icon-btn-icon-size);
+  border-radius: 50%; // Always circular for icon buttons
+  border: 2px solid transparent;
   background-color: transparent;
   color: var(--mglon-schedule-text-secondary);
-  cursor: pointer;
-  border-radius: 50%; // Always circular
-  overflow: hidden;
   transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  // Sizes
-  &.size-sm {
-    width: 32px;
-    height: 32px;
-    font-size: 18px; // Icon size
+  // ============================================
+  // Size Variants
+  // ============================================
+  &[size="sm"] {
+    --icon-btn-size: 32px;
+    --icon-btn-icon-size: 18px;
   }
 
-  &.size-md {
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
+  &[size="md"] {
+    --icon-btn-size: 40px;
+    --icon-btn-icon-size: 24px;
   }
 
-  &.size-lg {
-    width: 48px;
-    height: 48px;
-    font-size: 28px;
+  &[size="lg"] {
+    --icon-btn-size: 48px;
+    --icon-btn-icon-size: 28px;
   }
 
-  // Interaction
-  &:hover {
-    background-color: rgba(60, 64, 67, 0.04);
-    color: var(--mglon-schedule-text-primary);
+  // ============================================
+  // Appearance Variants
+  // ============================================
+  &[appereance="ghost"] {
+    background-color: transparent;
+    border-color: transparent;
+
+    &:hover:not([disabled]) {
+      background-color: rgba(60, 64, 67, 0.04);
+    }
   }
 
-  // Active state
-  &.active {
+  &[appereance="solid"] {
+    @include mixins.elevation-sm;
+
+    &:hover:not([disabled]) {
+      @include mixins.elevation-md;
+      opacity: 0.92;
+    }
+  }
+
+  &[appereance="outline"] {
+    background-color: transparent;
+    border-color: currentColor;
+
+    &:hover:not([disabled]) {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  // ============================================
+  // Color Variants (Ghost)
+  // ============================================
+  &[appereance="ghost"][color="primary"] {
+    color: var(--mglon-schedule-text-secondary);
+
+    &:hover:not([disabled]) {
+      color: var(--mglon-schedule-text-primary);
+      background-color: rgba(103, 58, 183, 0.04);
+    }
+  }
+
+  &[appereance="ghost"][color="secondary"] {
+    color: var(--mglon-schedule-text-secondary);
+  }
+
+  &[appereance="ghost"][color="error"] {
+    color: #d32f2f;
+  }
+
+  // ============================================
+  // Color Variants (Solid)
+  // ============================================
+  &[appereance="solid"][color="primary"] {
+    background-color: var(--mglon-schedule-primary);
+    color: var(--mglon-schedule-on-primary);
+  }
+
+  &[appereance="solid"][color="secondary"] {
+    background-color: var(--mglon-schedule-surface-3);
+    color: var(--mglon-schedule-on-surface-3);
+  }
+
+  &[appereance="solid"][color="error"] {
+    background-color: #d32f2f;
+    color: #ffffff;
+  }
+
+  // ============================================
+  // Color Variants (Outline)
+  // ============================================
+  &[appereance="outline"][color="primary"] {
+    color: var(--mglon-schedule-primary);
+    border-color: var(--mglon-schedule-primary);
+
+    &:hover:not([disabled]) {
+      background-color: rgba(103, 58, 183, 0.04);
+    }
+  }
+
+  &[appereance="outline"][color="secondary"] {
+    color: var(--mglon-schedule-text-secondary);
+    border-color: var(--mglon-schedule-text-secondary);
+  }
+
+  &[appereance="outline"][color="error"] {
+    color: #d32f2f;
+    border-color: #d32f2f;
+  }
+
+  // ============================================
+  // Active State
+  // ============================================
+  &[active] {
     color: var(--mglon-schedule-primary);
     background-color: var(--mglon-schedule-selection);
+    font-weight: 600;
+
+    &[appereance="solid"] {
+      background-color: var(--mglon-schedule-primary);
+      color: var(--mglon-schedule-on-primary);
+    }
   }
 
-  // Disabled
-  &:disabled,
+  // ============================================
+  // Disabled State
+  // ============================================
   &[disabled] {
-    cursor: default;
-    opacity: 0.38;
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
     background-color: transparent !important;
   }
 }

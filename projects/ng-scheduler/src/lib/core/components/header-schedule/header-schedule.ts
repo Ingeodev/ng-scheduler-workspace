@@ -1,5 +1,5 @@
-import { Component, input, output, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, signal, inject, PLATFORM_ID, ElementRef, OnDestroy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon';
 import { ViewMode } from '../../models/config-schedule';
 import { IconName } from '../../../shared/components/icon/icon-set';
@@ -14,7 +14,11 @@ import { IconButtonComponent } from '../../../shared/components/buttons/icon-but
   templateUrl: './header-schedule.html',
   styleUrl: './header-schedule.scss',
 })
-export class HeaderSchedule {
+export class HeaderSchedule implements OnDestroy {
+  private platformId = inject(PLATFORM_ID);
+  private elementRef = inject(ElementRef);
+  private resizeObserver?: ResizeObserver;
+
   // Inputs
   readonly title = input.required<string>();
   readonly activeView = input.required<ViewMode>();
@@ -34,4 +38,28 @@ export class HeaderSchedule {
     'resource': 'calendar-week', // Fallback
     'list': 'calendar-month' // Fallback
   };
+
+  // Responsive signal to track container size
+  readonly isSmallScreen = signal<boolean>(false);
+
+  constructor() {
+    if (isPlatformBrowser(this.platformId)) {
+      // Use ResizeObserver to watch the component's own width
+      this.resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const width = entry.contentRect.width;
+          // Match the 'sm' breakpoint (767.98px)
+          this.isSmallScreen.set(width <= 767.98);
+        }
+      });
+
+      // Start observing the host element
+      this.resizeObserver.observe(this.elementRef.nativeElement);
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up the observer
+    this.resizeObserver?.disconnect();
+  }
 }

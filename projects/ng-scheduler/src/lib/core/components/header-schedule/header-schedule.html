@@ -1,12 +1,12 @@
 <div class="mglon-header">
 
   <!-- Row 2: Navigation + Title -->
-  <div class="mglon-header__bottom-row">
-    <div class="mglon-header__nav">
+  <div class="mglon-header__nav">
+    <div class="mglon-header__nav__actions">
       <button mglon-icon-button (click)="prev.emit()">
         <mglon-icon name="chevron-left"></mglon-icon>
       </button>
-      <button mglon-button variant="outlined" (click)="today.emit()">
+      <button mglon-button appereance="ghost" (click)="today.emit()">
         Today
       </button>
       <button mglon-icon-button (click)="next.emit()">
@@ -15,22 +15,32 @@
     </div>
 
     <h2 class="mglon-header__title">{{ title() }}</h2>
+  </div>
 
-    <div class="mglon-header__views">
-      <mglon-button-group type="icon">
-        @for (view of views(); track view) {
-        <button mglon-icon-button [active]="activeView() === view" (click)="viewChange.emit(view)">
-          <mglon-icon [name]="viewIcons[view]" size="20px"></mglon-icon>
-        </button>
-        }
-      </mglon-button-group>
-    </div>
-
-    <div class="mglon-header__actions">
-      <button mglon-button variant="filled" (click)="add.emit()">
-        Add Event
+  <div class="mglon-header__actions">
+    @if (isSmallScreen()) {
+    <!-- Icon buttons for small screens -->
+    <mglon-button-group type="icon" [disabled]="false" appereance="outline">
+      @for (view of views(); track view) {
+      <button mglon-icon-button appereance="ghost" [active]="activeView() === view" (click)="viewChange.emit(view)">
+        <mglon-icon [name]="viewIcons[view]" size="20px"></mglon-icon>
       </button>
-    </div>
+      }
+    </mglon-button-group>
+    } @else {
+    <!-- Text buttons for larger screens -->
+    <mglon-button-group type="text" [disabled]="false" appereance="outline">
+      @for (view of views(); track view) {
+      <button mglon-button appereance="ghost" [active]="activeView() === view" (click)="viewChange.emit(view)">
+        {{ view }}
+      </button>
+      }
+    </mglon-button-group>
+    }
+
+    <button mglon-icon-button (click)="add.emit()">
+      <mglon-icon name="add"></mglon-icon>
+    </button>
   </div>
 
 </div>

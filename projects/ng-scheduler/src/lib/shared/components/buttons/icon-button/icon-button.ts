@@ -1,6 +1,8 @@
-import { Component, input, computed, ElementRef, inject } from '@angular/core';
+import { Component, input, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonSize } from '../button/button';
+import { ButtonSize, ButtonColor } from '../button/button';
+
+export type IconButtonAppereance = 'solid' | 'outline' | 'ghost';
 
 @Component({
   selector: 'button[mglon-icon-button], a[mglon-icon-button]',
@@ -9,21 +11,19 @@ import { ButtonSize } from '../button/button';
   template: '<ng-content></ng-content>',
   styleUrl: './icon-button.scss',
   host: {
-    '[class]': 'classes()',
-    '[attr.data-size]': 'size()'
+    '[attr.appereance]': 'appereance()',
+    '[attr.color]': 'color()',
+    '[attr.size]': 'size()',
+    '[attr.active]': 'active() || null',
+    '[attr.disabled]': 'disabled() || null'
   }
 })
 export class IconButtonComponent {
+  readonly appereance = input<IconButtonAppereance>('ghost');
+  readonly color = input<ButtonColor>('primary');
   readonly size = input<ButtonSize>('md');
   readonly active = input<boolean>(false);
+  readonly disabled = input<boolean>(false);
 
   public elementRef = inject(ElementRef);
-
-  classes = computed(() => {
-    return [
-      'mglon-icon-button',
-      `size-${this.size()}`,
-      this.active() ? 'active' : ''
-    ].join(' ');
-  });
 }
