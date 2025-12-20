@@ -1,0 +1,43 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.mglon-week-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 200px);
+  user-select: none;
+  cursor: crosshair;
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--mglon-schedule-surface-variant, #f5f5f5);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--mglon-schedule-border-color, #e0e0e0);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--mglon-schedule-on-surface-variant, #999);
+    }
+  }
+}
+
+.mglon-week-grid__time-column {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
+  background: var(--mglon-schedule-surface-variant, #fafafa);
+}
+
+.mglon-week-grid__day-column {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,48 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.mglon-month-cell {
+  position: relative;
+  padding: var(--mglon-schedule-padding-sm);
+  background-color: var(--mglon-schedule-surface);
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &:hover {
+    background-color: var(--mglon-schedule-surface-1);
+  }
+
+  // Days from other months (padding days)
+  &--other-month {
+    //background-color: var(--mglon-schedule-surface-variant);
+
+    .mglon-month-cell__day-number {
+      color: var(--mglon-schedule-text-secondary);
+      opacity: 0.5;
+    }
+  }
+
+  // Days from current month
+  &--current-month {
+    .mglon-month-cell__day-number {
+      color: var(--mglon-schedule-text-primary);
+    }
+  }
+
+  &__day-number {
+    font-size: var(--mglon-schedule-font-size-sm);
+    font-weight: 500;
+    line-height: 1;
+  }
+}

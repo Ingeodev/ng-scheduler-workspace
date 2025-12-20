@@ -5,11 +5,13 @@ import { SchedulerConfig, ViewMode } from '../../models/config-schedule';
 import { ResourceView } from '../../../features/resource/resource-view/resource-view';
 import { IconComponent } from '../../../shared/components/icon/icon';
 import { HeaderSchedule } from '../header-schedule/header-schedule';
+import { MonthView } from '../../../features/month/month-view/month-view';
+import { WeekView } from '../../../features/week/week-view/week-view';
 
 @Component({
   selector: 'mglon-schedule',
   standalone: true,
-  imports: [CommonModule, ResourceView, IconComponent, HeaderSchedule],
+  imports: [CommonModule, ResourceView, MonthView, HeaderSchedule, WeekView],
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss',
   providers: [CalendarStore],

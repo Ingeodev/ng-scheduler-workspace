@@ -1,0 +1,6 @@
+<div class="mglon-time-slot" [class.mglon-time-slot--hour]="slot().minute === 0"
+  [class.mglon-time-slot--today]="slot().isToday">
+  @if (showTimeLabel()) {
+  <span class="mglon-time-slot__time-label">{{ slot().timeLabel }}</span>
+  }
+</div>

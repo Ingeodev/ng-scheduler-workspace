@@ -10,6 +10,12 @@
     @case ('resource') {
     <mglon-resource-view></mglon-resource-view>
     }
+    @case ('month') {
+    <mglon-month-view></mglon-month-view>
+    }
+    @case ('week') {
+    <mglon-week-view></mglon-week-view>
+    }
     @default {
     <div class="ng-sched-placeholder">
       View '{{ store.viewMode() }}' not implemented yet.

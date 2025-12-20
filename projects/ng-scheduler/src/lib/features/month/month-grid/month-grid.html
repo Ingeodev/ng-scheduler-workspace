@@ -1,0 +1,18 @@
+<div class="mglon-month-grid" [mglonSelectable]="this" (selectionStart)="onSelectionStart($event)"
+  (selectionChange)="onSelectionChange($event)" (selectionEnd)="onSelectionEnd($event)">
+
+  @for (week of weeks(); track $index) {
+  <div class="mglon-month-grid__week">
+    @for (day of week.days; track day.date.getTime()) {
+    <mglon-month-cell [day]="day" [attr.data-date]="day.date.toISOString()"></mglon-month-cell>
+    }
+  </div>
+  }
+
+  <!-- Selection overlay -->
+  @if (selectableDirective()) {
+  <mglon-selection [selection]="selectableDirective()!.selection()"
+    [isSelecting]="selectableDirective()!.isSelecting()">
+  </mglon-selection>
+  }
+</div>

@@ -1,0 +1,15 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.mglon-month-view {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}

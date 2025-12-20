@@ -1,0 +1,26 @@
+<div class="mglon-week-grid" [mglonSelectable]="this" (selectionStart)="onSelectionStart($event)"
+  (selectionChange)="onSelectionChange($event)" (selectionEnd)="onSelectionEnd($event)">
+
+  <!-- Time column -->
+  <div class="mglon-week-grid__time-column">
+    @for (slot of timeSlots()[0]; track slot.date.getTime()) {
+    <mglon-time-slot [slot]="slot" [showTimeLabel]="true"></mglon-time-slot>
+    }
+  </div>
+
+  <!-- Day columns -->
+  @for (daySlots of timeSlots(); track $index) {
+  <div class="mglon-week-grid__day-column">
+    @for (slot of daySlots; track slot.date.getTime()) {
+    <mglon-time-slot [slot]="slot"></mglon-time-slot>
+    }
+  </div>
+  }
+
+  <!-- Selection overlay -->
+  @if (selectableDirective()) {
+  <mglon-selection [selection]="selectableDirective()!.selection()"
+    [isSelecting]="selectableDirective()!.isSelecting()">
+  </mglon-selection>
+  }
+</div>
