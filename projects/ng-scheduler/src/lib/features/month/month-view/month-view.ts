@@ -94,6 +94,7 @@ export class MonthView {
     // Set up grid synchronization after view init
     afterNextRender(() => {
       const grid = this.gridElement()?.nativeElement;
+
       if (grid) {
         // Observe grid for resize
         this.gridSync.observeGrid(grid, (rect) => ({

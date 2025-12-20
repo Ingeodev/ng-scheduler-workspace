@@ -7,13 +7,33 @@
 }
 
 .mglon-month-view {
-  display: grid;
-  grid-template-rows: auto 1fr;
   height: 100%;
+
+  &__content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%; // Take full height from parent
+    overflow-x: auto; // Single scroll for both header and grid
+    overflow-y: hidden;
+    min-width: 0;
+  }
+
+  &__header-wrapper {
+
+    // No overflow here - parent handles it
+    >mglon-month-header {
+      min-width: 700px; // Ensures scrollable width
+    }
+  }
 
   &__grid-container {
     position: relative;
-    overflow: hidden;
+    // No overflow here - parent handles it
+    min-width: 0;
+
+    >mglon-month-grid {
+      min-width: 700px; // Ensures scrollable width
+    }
   }
 
   &__events-layer {

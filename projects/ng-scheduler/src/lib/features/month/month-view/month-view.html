@@ -1,17 +1,23 @@
 <div class="mglon-month-view">
-  <mglon-month-header></mglon-month-header>
+  <!-- Single scrollable container for header and grid -->
+  <div class="mglon-month-view__content">
+    <!-- Header wrapper -->
+    <div class="mglon-month-view__header-wrapper">
+      <mglon-month-header></mglon-month-header>
+    </div>
 
-  <!-- Grid container with reference -->
-  <div class="mglon-month-view__grid-container" #gridRef>
-    <mglon-month-grid [currentDate]="calendarStore.currentDate()"></mglon-month-grid>
+    <!-- Grid container with reference -->
+    <div class="mglon-month-view__grid-container" #gridRef>
+      <mglon-month-grid [currentDate]="calendarStore.currentDate()"></mglon-month-grid>
 
-    <!-- Events overlay -->
-    <div class="mglon-month-view__events-layer">
-      @for (item of eventsToRender(); track item.event.id) {
-      <mglon-event-render [event]="item.event" [renderData]="item.renderData" [eventColor]="item.color"
-        [showTime]="false">
-      </mglon-event-render>
-      }
+      <!-- Events overlay -->
+      <div class="mglon-month-view__events-layer">
+        @for (item of eventsToRender(); track item.event.id) {
+        <mglon-event-render [event]="item.event" [renderData]="item.renderData" [eventColor]="item.color"
+          [showTime]="false">
+        </mglon-event-render>
+        }
+      </div>
     </div>
   </div>
 </div>
