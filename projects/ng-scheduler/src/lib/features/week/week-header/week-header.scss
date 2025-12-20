@@ -9,6 +9,9 @@
   z-index: 10;
   background: var(--mglon-schedule-surface, #ffffff);
   border-bottom: 2px solid var(--mglon-schedule-border-color, #e0e0e0);
+
+  // Reserve space for scrollbar to align with grid
+  padding-right: 8px;
 }
 
 .mglon-week-header__time-column {
@@ -21,27 +24,41 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px 8px;
+  padding: 8px 4px;
   border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
 
   &--today {
-    background: var(--mglon-schedule-primary-50, rgba(66, 133, 244, 0.1));
+    // Remove background color
+    position: relative;
 
     .mglon-week-header__day-number {
-      background: var(--mglon-schedule-primary, #4285f4);
-      color: var(--mglon-schedule-on-primary, #ffffff);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      // Perfectly symmetrical teardrop shape
+      background: var(--mglon-schedule-error, #ea4335);
+      color: var(--mglon-schedule-on-error, #ffffff);
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      position: relative;
+
+      // Perfect teardrop: circle with one pointed corner
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+
+      // Counter-rotate the text to keep it upright
+      span {
+        display: block;
+        transform: rotate(45deg);
+      }
     }
   }
 }
 
 .mglon-week-header__day-name {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--mglon-schedule-on-surface-variant, #666);
   text-transform: uppercase;
@@ -49,7 +66,7 @@
 }
 
 .mglon-week-header__day-number {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--mglon-schedule-on-surface, #000);
 }

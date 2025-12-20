@@ -12,11 +12,6 @@
   &--hour {
     border-bottom: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
   }
-
-  // Today's slots have a subtle highlight
-  &--today {
-    background: var(--mglon-schedule-primary-50, rgba(66, 133, 244, 0.05));
-  }
 }
 
 .mglon-time-slot__time-label {

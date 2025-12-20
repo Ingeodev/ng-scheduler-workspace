@@ -6,7 +6,9 @@
   @for (day of weekDays(); track day.date.getTime()) {
   <div class="mglon-week-header__day" [class.mglon-week-header__day--today]="day.isToday">
     <div class="mglon-week-header__day-name">{{ day.dayName }}</div>
-    <div class="mglon-week-header__day-number">{{ day.dayNumber }}</div>
+    <div class="mglon-week-header__day-number">
+      <span>{{ day.dayNumber }}</span>
+    </div>
   </div>
   }
 </div>

@@ -10,6 +10,7 @@
   max-height: calc(100vh - 200px);
   user-select: none;
   cursor: crosshair;
+  padding-top: 12px;
 
   // Scrollbar styling
   &::-webkit-scrollbar {
@@ -33,11 +34,25 @@
 .mglon-week-grid__time-column {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
+  //border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
   background: var(--mglon-schedule-surface-variant, #fafafa);
 }
 
 .mglon-week-grid__day-column {
   display: flex;
   flex-direction: column;
+}
+
+.mglon-week-grid__today-indicator {
+  // CSS variable with fallback to global error color
+  --mglon-week-grid-today-color: var(--mglon-schedule-error, #ea4335);
+
+  position: absolute;
+  top: -60px; // Extend up to connect with header teardrop (adjusted for smaller header)
+  height: calc(2400px + 60px); // 48 slots × 50px + header extension
+  width: 2px;
+  background: var(--mglon-week-grid-today-color);
+  pointer-events: none;
+  z-index: 5;
+  transform: translateX(-1px); // Center the line
 }

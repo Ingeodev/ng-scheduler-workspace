@@ -59,6 +59,14 @@ export class WeekGrid implements Selectable {
   });
 
   /**
+   * Computed index of today's column (-1 if today is not in this week)
+   */
+  readonly todayColumnIndex = computed<number>(() => {
+    const days = this.weekDays();
+    return days.findIndex(day => day.isToday);
+  });
+
+  /**
    * Slot height in pixels (matches CSS min-height)
    */
   private readonly SLOT_HEIGHT = 50;
@@ -67,6 +75,24 @@ export class WeekGrid implements Selectable {
    * Time column width in pixels (matches CSS grid-template-columns)
    */
   private readonly TIME_COLUMN_WIDTH = 60;
+
+  /**
+   * Calculates the left position for the today indicator line
+   * @returns Position in pixels from the left edge
+   */
+  getTodayIndicatorPosition(): number {
+    const index = this.todayColumnIndex();
+    if (index === -1) return 0;
+
+    const gridElement = this.elementRef.nativeElement as HTMLElement;
+    if (!gridElement) return 0;
+
+    const gridRect = gridElement.getBoundingClientRect();
+    const dayColumnWidth = (gridRect.width - this.TIME_COLUMN_WIDTH - 8) / 7; // -8 for scrollbar
+
+    // Position at the center of the column
+    return this.TIME_COLUMN_WIDTH + (dayColumnWidth * index) + (dayColumnWidth / 2);
+  }
 
   /**
    * Implements Selectable.getDateFromPoint()

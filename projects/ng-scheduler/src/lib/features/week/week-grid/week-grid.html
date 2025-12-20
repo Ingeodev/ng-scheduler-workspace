@@ -23,4 +23,10 @@
     [isSelecting]="selectableDirective()!.isSelecting()">
   </mglon-selection>
   }
+
+  <!-- Today indicator line -->
+  @if (todayColumnIndex() !== -1) {
+  <div class="mglon-week-grid__today-indicator" [style.left.px]="getTodayIndicatorPosition()">
+  </div>
+  }
 </div>

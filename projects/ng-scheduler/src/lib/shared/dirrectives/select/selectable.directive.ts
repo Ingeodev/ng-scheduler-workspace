@@ -124,17 +124,18 @@ export class SelectableDirective {
 
   /**
    * Converts mouse event coordinates to coordinates relative to the container
+   * Takes into account scroll position for scrollable containers.
    * 
    * @param event - Mouse event with clientX/clientY
-   * @returns Coordinates relative to the container's top-left corner
+   * @returns Coordinates relative to the container's top-left corner (including scroll)
    */
   private getRelativeCoordinates(event: MouseEvent): RelativeCoordinates {
     const containerElement = this.elementRef.nativeElement as HTMLElement;
     const rect = containerElement.getBoundingClientRect();
 
     return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
+      x: event.clientX - rect.left + containerElement.scrollLeft,
+      y: event.clientY - rect.top + containerElement.scrollTop
     };
   }
 

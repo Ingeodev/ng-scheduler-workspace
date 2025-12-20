@@ -1,6 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { WeekHeader } from '../week-header/week-header';
 import { WeekGrid } from '../week-grid/week-grid';
+import { CalendarStore } from '../../../core/store/calendar.store';
 
 /**
  * Week view container component.
@@ -17,7 +18,7 @@ import { WeekGrid } from '../week-grid/week-grid';
  * 
  * @example
  * ```html
- * <mglon-week-view [currentDate]="selectedDate"></mglon-week-view>
+ * <mglon-week-view></mglon-week-view>
  * ```
  */
 @Component({
@@ -29,9 +30,7 @@ import { WeekGrid } from '../week-grid/week-grid';
 })
 export class WeekView {
   /**
-   * The date to display the week for.
-   * Can be any date within the target week.
-   * @default new Date() (current week)
+   * Calendar store for accessing current date and navigation
    */
-  readonly currentDate = input<Date>(new Date());
+  readonly store = inject(CalendarStore);
 }

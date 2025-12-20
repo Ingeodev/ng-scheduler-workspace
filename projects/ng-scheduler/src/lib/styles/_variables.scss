@@ -43,6 +43,10 @@
   --mglon-schedule-hover: var(--mglon-schedule-neutral-100);
   --mglon-schedule-selection: var(--mglon-schedule-primary-50);
 
+  // Error/Danger (for current time indicator)
+  --mglon-schedule-error: #ea4335;
+  --mglon-schedule-on-error: #ffffff;
+
   // Spacing (Base)
   --mglon-schedule-spacing-xs: 4px;
   --mglon-schedule-spacing-sm: 8px;
