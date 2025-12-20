@@ -9,6 +9,9 @@ export * from './lib/features/schedule/schedule/schedule';
 // Declarative Event Components
 export * from './lib/features/events';
 
+// Event Store
+export * from './lib/core/store/event.store';
+
 // Buttons
 export * from './lib/core/models/config-schedule';
 export * from './lib/shared/components/buttons/index';

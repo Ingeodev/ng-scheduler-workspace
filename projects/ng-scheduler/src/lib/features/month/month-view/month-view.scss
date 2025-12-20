@@ -7,9 +7,25 @@
 }
 
 .mglon-month-view {
-  position: relative;
-  overflow: auto;
-  height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
+  height: 100%;
+
+  &__grid-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__events-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+
+    >* {
+      pointer-events: auto;
+    }
+  }
 }

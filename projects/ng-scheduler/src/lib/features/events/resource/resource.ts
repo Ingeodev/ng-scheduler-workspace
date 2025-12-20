@@ -1,7 +1,13 @@
-import { Component, input, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, input, OnInit, OnDestroy, inject, Injector, EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Resource } from '../../../core/models/resource';
 import { EventStore } from '../../../core/store/event.store';
+import { InjectionToken } from '@angular/core';
+
+/**
+ * Injection token for providing resource ID to child components
+ */
+export const RESOURCE_ID_TOKEN = new InjectionToken<string>('RESOURCE_ID');
 
 /**
  * ResourceComponent - Declarative component representing a calendar resource
@@ -19,7 +25,14 @@ import { EventStore } from '../../../core/store/event.store';
   standalone: true,
   imports: [CommonModule],
   template: `<ng-content></ng-content>`,
-  styles: [`:host { display: contents; }`]
+  styles: [`:host { display: contents; }`],
+  providers: [
+    {
+      provide: RESOURCE_ID_TOKEN,
+      useFactory: (component: ResourceComponent) => component.id(),
+      deps: [ResourceComponent]
+    }
+  ]
 })
 export class ResourceComponent implements OnInit, OnDestroy {
   private readonly store = inject(EventStore);

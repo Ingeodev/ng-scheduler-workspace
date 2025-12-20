@@ -1,208 +1,158 @@
+/**
+ * @fileoverview Event Rendering System - Core Renderer Implementation
+ * @module ng-scheduler/rendering
+ */
+
+import { AnyEvent, Event, AllDayEvent, RecurrentEvent } from '../models/event';
 import { ViewMode } from '../models/config-schedule';
-import { AnyEvent } from '../models/event';
 
 /**
- * Abstract base class for event renderers.
- * Implements the Strategy pattern to handle view-specific rendering logic.
+ * Event slice for multi-day event rendering
+ */
+export interface EventSlice {
+  id: string;
+  eventId: string;
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+  isStart: boolean;
+  isEnd: boolean;
+  position: EventRenderData['position'];
+}
+
+/**
+ * Complete render data for an event
+ */
+export interface EventRenderData {
+  position: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  };
+  zIndex: number;
+  slices?: EventSlice[];
+  layout: {
+    column: number;
+    overlap: number;
+    totalOverlaps: number;
+  };
+  isResizing: boolean;
+  isDragging: boolean;
+  isHovered: boolean;
+  isSelected: boolean;
+}
+
+/**
+ * Abstract base class for event renderers (Strategy Pattern)
+ * 
+ * Each view mode (Month, Week, Day) has different rendering requirements,
+ * so we use the Strategy pattern to encapsulate these differences.
+ * 
+ * @abstract
  */
 export abstract class EventRenderer {
   /**
-   * Renders an event for a specific view mode
-   * @param event The event to render
-   * @param viewMode The current view mode
-   * @returns Rendering data/instructions for the view
+   * Renders an event for the specific view
+   * @param event - The event to render
+   * @param viewDate - The current view date
+   * @param cellDimensions - Optional cell dimensions from the grid
+   * @returns Render data including position, layout, and metadata
    */
-  abstract render(event: AnyEvent, viewMode: ViewMode): EventRenderData;
+  abstract render(
+    event: AnyEvent,
+    viewDate: Date,
+    cellDimensions?: { width: number; height: number }
+  ): EventRenderData;
 
   /**
-   * Calculates the position and dimensions of an event in the view
-   * @param event The event to position
-   * @param viewMode The current view mode
-   * @returns Position and dimension data
+   * Calculates slices for multi-day events
+   * @param event - The event to slice
+   * @param viewDate - The current view date
+   * @returns Array of event slices
    */
-  abstract calculateLayout(event: AnyEvent, viewMode: ViewMode): EventLayout;
-}
-
-/**
- * Data structure for event rendering
- */
-export interface EventRenderData {
-  /** CSS classes to apply */
-  classes: string[];
-
-  /** Inline styles to apply */
-  styles: Record<string, string>;
-
-  /** Display text (may be truncated based on view) */
-  displayText: string;
-
-  /** Whether to show time in the event */
-  showTime: boolean;
-
-  /** Whether the event is clickable */
-  isClickable: boolean;
-}
-
-/**
- * Layout information for positioning an event
- */
-export interface EventLayout {
-  /** Top position (px or %) */
-  top: number;
-
-  /** Left position (px or %) */
-  left: number;
-
-  /** Width (px or %) */
-  width: number;
-
-  /** Height (px or %) */
-  height: number;
-
-  /** Z-index for stacking */
-  zIndex: number;
-
-  /** Grid column span (for grid-based layouts) */
-  columnSpan?: number;
-
-  /** Grid row span (for grid-based layouts) */
-  rowSpan?: number;
-}
-
-/**
- * Month view renderer implementation
- */
-export class MonthViewRenderer extends EventRenderer {
-  render(event: AnyEvent, viewMode: ViewMode): EventRenderData {
-    return {
-      classes: ['event-month', `event-${event.type}`],
-      styles: {
-        backgroundColor: event.color || '#0860c4',
-      },
-      displayText: event.title,
-      showTime: false,
-      isClickable: true,
-    };
-  }
-
-  calculateLayout(event: AnyEvent, viewMode: ViewMode): EventLayout {
-    // Placeholder implementation - will be enhanced with actual logic
-    return {
-      top: 0,
-      left: 0,
-      width: 100,
-      height: 20,
-      zIndex: 1,
-    };
-  }
-}
-
-/**
- * Week view renderer implementation
- */
-export class WeekViewRenderer extends EventRenderer {
-  render(event: AnyEvent, viewMode: ViewMode): EventRenderData {
-    return {
-      classes: ['event-week', `event-${event.type}`],
-      styles: {
-        backgroundColor: event.color || '#0860c4',
-      },
-      displayText: event.title,
-      showTime: true,
-      isClickable: true,
-    };
-  }
-
-  calculateLayout(event: AnyEvent, viewMode: ViewMode): EventLayout {
-    // Placeholder implementation - will be enhanced with actual logic
-    return {
-      top: 0,
-      left: 0,
-      width: 100,
-      height: 60,
-      zIndex: 1,
-    };
-  }
-}
-
-/**
- * Day view renderer implementation
- */
-export class DayViewRenderer extends EventRenderer {
-  render(event: AnyEvent, viewMode: ViewMode): EventRenderData {
-    return {
-      classes: ['event-day', `event-${event.type}`],
-      styles: {
-        backgroundColor: event.color || '#0860c4',
-      },
-      displayText: event.title,
-      showTime: true,
-      isClickable: true,
-    };
-  }
-
-  calculateLayout(event: AnyEvent, viewMode: ViewMode): EventLayout {
-    // Placeholder implementation - will be enhanced with actual logic
-    return {
-      top: 0,
-      left: 0,
-      width: 100,
-      height: 80,
-      zIndex: 1,
-    };
-  }
-}
-
-/**
- * Resource view renderer implementation
- */
-export class ResourceViewRenderer extends EventRenderer {
-  render(event: AnyEvent, viewMode: ViewMode): EventRenderData {
-    return {
-      classes: ['event-resource', `event-${event.type}`],
-      styles: {
-        backgroundColor: event.color || '#0860c4',
-      },
-      displayText: event.title,
-      showTime: true,
-      isClickable: true,
-    };
-  }
-
-  calculateLayout(event: AnyEvent, viewMode: ViewMode): EventLayout {
-    // Placeholder implementation - will be enhanced with actual logic
-    return {
-      top: 0,
-      left: 0,
-      width: 100,
-      height: 60,
-      zIndex: 1,
-    };
-  }
-}
-
-/**
- * Factory for creating view-specific renderers.
- * Implements the Factory pattern.
- */
-export class EventRendererFactory {
-  private static renderers = new Map<ViewMode, EventRenderer>([
-    ['month', new MonthViewRenderer()],
-    ['week', new WeekViewRenderer()],
-    ['day', new DayViewRenderer()],
-    ['resource', new ResourceViewRenderer()],
-  ]);
+  abstract calculateSlices(event: AnyEvent, viewDate: Date): EventSlice[];
 
   /**
-   * Gets the appropriate renderer for a view mode
-   * @param viewMode The current view mode
-   * @returns The renderer for that view mode
+   * Gets snap points for the view (for drag & drop snapping)
+   * @param date - Reference date for snap points
+   * @returns Array of snap point dates
    */
-  static getRenderer(viewMode: ViewMode): EventRenderer {
-    const renderer = this.renderers.get(viewMode);
-    if (!renderer) {
-      throw new Error(`No renderer found for view mode: ${viewMode}`);
+  abstract getSnapPoints(date: Date): Date[];
+
+  /**
+   * Helper: Check if event spans multiple days
+   */
+  protected isMultiDay(event: AnyEvent): boolean {
+    if (event.type === 'all-day') {
+      const allDay = event as AllDayEvent;
+      return !!allDay.endDate &&
+        this.startOfDay(allDay.date).getTime() !== this.startOfDay(allDay.endDate).getTime();
     }
-    return renderer;
+
+    if (event.type === 'event') {
+      const regular = event as Event;
+      return this.startOfDay(regular.start).getTime() !== this.startOfDay(regular.end).getTime();
+    }
+
+    return false;
+  }
+
+  /**
+   * Helper: Get start of day
+   */
+  protected startOfDay(date: Date): Date {
+    const result = new Date(date);
+    result.setHours(0, 0, 0, 0);
+    return result;
+  }
+
+  /**
+   * Helper: Get end of day
+   */
+  protected endOfDay(date: Date): Date {
+    const result = new Date(date);
+    result.setHours(23, 59, 59, 999);
+    return result;
+  }
+
+  /**
+   * Helper: Check if two dates are the same day
+   */
+  protected isSameDay(date1: Date, date2: Date): boolean {
+    return this.startOfDay(date1).getTime() === this.startOfDay(date2).getTime();
+  }
+
+  /**
+   * Helper: Add days to a date
+   */
+  protected addDays(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  /**
+   * Helper: Format date as YYYY-MM-DD
+   */
+  protected formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  /**
+   * Helper: Get day of week (0 = Sunday, 6 = Saturday)
+   */
+  protected getDayOfWeek(date: Date): number {
+    return date.getDay();
+  }
+
+  /**
+   * Helper: Get week number of month
+   */
+  protected getWeekOfMonth(date: Date): number {
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const firstDayOfWeek = firstDay.getDay();
+    const offsetDate = date.getDate() + firstDayOfWeek - 1;
+    return Math.floor(offsetDate / 7);
   }
 }

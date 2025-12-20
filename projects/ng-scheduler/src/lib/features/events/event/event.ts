@@ -2,36 +2,43 @@ import { Component, input, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Event } from '../../../core/models/event';
 import { EventStore } from '../../../core/store/event.store';
+import { RESOURCE_ID_TOKEN } from '../resource/resource';
 
 /**
- * EventComponent - Declarative component for regular calendar events
+ * EventComponent - Declarative component representing a calendar event
  * 
- * Usage:
- * <mglon-event
- *   id="event-1"
- *   title="Team Meeting"
- *   [start]="startDate"
- *   [end]="endDate"
- *   [resourceId]="'room-1'">
- * </mglon-event>
+ * @example
+ * ```html
+ * <mglon-resource id="room-1">
+ *   <mglon-event 
+ *     id="evt-1"
+ *     title="Team Meeting"
+ *     [start]="startDate"
+ *     [end]="endDate">
+ *   </mglon-event>
+ * </mglon-resource>
+ * ```
  */
 @Component({
   selector: 'mglon-event',
   standalone: true,
   imports: [CommonModule],
-  template: ``,
+  template: `<!-- Events are managed declaratively -->`,
   styles: [`:host { display: none; }`]
 })
 export class EventComponent implements OnInit, OnDestroy {
   private readonly store = inject(EventStore);
 
+  // Automatically inject parent resource ID
+  private readonly parentResourceId = inject(RESOURCE_ID_TOKEN, { optional: true });
+
   /** Unique identifier for the event */
   readonly id = input.required<string>();
 
-  /** Foreign key: ID of the resource this event belongs to (optional) */
+  /** Optional explicit resource ID (if not nested in mglon-resource) */
   readonly resourceId = input<string>();
 
-  /** Display title of the event */
+  /** Event title */
   readonly title = input.required<string>();
 
   /** Additional description or notes for the event */
@@ -69,7 +76,7 @@ export class EventComponent implements OnInit, OnDestroy {
   private registerEvent(): void {
     const event: Event = {
       id: this.id(),
-      resourceId: this.resourceId(),
+      resourceId: this.resourceId() || this.parentResourceId || undefined,
       title: this.title(),
       description: this.description(),
       tags: this.tags(),
