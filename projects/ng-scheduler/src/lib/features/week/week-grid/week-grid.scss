@@ -44,13 +44,18 @@
 .mglon-week-grid__time-column {
   display: flex;
   flex-direction: column;
-  //border-right: 1px solid var(--mglon-schedule-border-color);
+  border-right: 1px solid var(--mglon-schedule-border);
   background: var(--week-grid-time-col-bg);
 }
 
 .mglon-week-grid__day-column {
   display: flex;
   flex-direction: column;
+  border-right: 1px solid var(--mglon-schedule-border);
+
+  &:last-child {
+    border-right: none; // No border on the last column
+  }
 }
 
 .mglon-week-grid__today-indicator {
