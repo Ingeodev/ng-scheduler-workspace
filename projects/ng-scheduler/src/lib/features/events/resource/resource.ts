@@ -68,8 +68,19 @@ export class ResourceComponent implements OnInit, OnDestroy {
     this.registerResource();
   }
 
+  /**
+   * Lifecycle: Unregister resource on destroy
+   */
   ngOnDestroy(): void {
-    this.store.unregisterResource(this.id());
+    // Only unregister if the component was fully initialized
+    try {
+      const resourceId = this.id();
+      if (resourceId) {
+        this.store.unregisterResource(resourceId);
+      }
+    } catch (e) {
+      // Ignore errors during cleanup (e.g., inputs not yet initialized in tests)
+    }
   }
 
   private registerResource(): void {

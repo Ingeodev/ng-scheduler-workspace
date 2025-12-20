@@ -41,7 +41,7 @@ export class ScheduleDocComponent {
   event1End = new Date(2024, 11, 20, 11, 0);   // Dec 20, 2024 11:00 AM
 
   event2Start = new Date(2024, 11, 21, 14, 0); // Dec 21, 2024 2:00 PM
-  event2End = new Date(2024, 11, 21, 15, 30);  // Dec 21, 2024 3:30 PM
+  event2End = new Date(2024, 11, 21, 15, 38);  // Dec 21, 2024 3:30 PM
 
   event3Start = new Date(2024, 11, 22, 9, 0);  // Dec 22, 2024 9:00 AM
   event3End = new Date(2024, 11, 22, 10, 30);  // Dec 22, 2024 10:30 AM

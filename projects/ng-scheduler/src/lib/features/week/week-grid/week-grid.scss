@@ -66,3 +66,16 @@
   z-index: 5;
   transform: translateX(-1px); // Center the line
 }
+
+.mglon-week-grid__events-overlay {
+  position: absolute;
+  top: var(--week-grid-padding-top); // Match grid's padding-top (12px)
+  left: var(--week-grid-time-col-width); // Skip time column (60px)
+  right: 0;
+  bottom: 0;
+  pointer-events: none; // Allow clicks to pass through
+
+  >* {
+    pointer-events: auto; // Enable events on children
+  }
+}

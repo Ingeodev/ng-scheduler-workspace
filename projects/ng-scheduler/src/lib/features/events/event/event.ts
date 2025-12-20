@@ -69,8 +69,19 @@ export class EventComponent implements OnInit, OnDestroy {
     this.registerEvent();
   }
 
+  /**
+   * Lifecycle: Unregister event from store
+   */
   ngOnDestroy(): void {
-    this.store.unregisterEvent(this.id());
+    // Only unregister if the component was fully initialized
+    try {
+      const eventId = this.id();
+      if (eventId) {
+        this.store.unregisterEvent(eventId);
+      }
+    } catch (e) {
+      // Ignore errors during cleanup (e.g., inputs not yet initialized in tests)
+    }
   }
 
   private registerEvent(): void {

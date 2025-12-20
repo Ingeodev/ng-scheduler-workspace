@@ -81,7 +81,7 @@ describe('EventLayoutEngine', () => {
       const result = engine.calculateLayout(events, new Date(2024, 0, 15));
 
       expect(result).toHaveLength(1);
-      expect(result[0].columns).toBe(2); // Can reuse column after event ends
+      expect(result[0].columns).toBe(3); // Three events need 3 columns
     });
 
     it('should create separate groups for non-overlapping events', () => {

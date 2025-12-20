@@ -13,7 +13,7 @@ import { AnyEvent, Event } from '../models/event';
  * Height is proportional to event duration.
  */
 export class WeekViewRenderer extends EventRenderer {
-  private readonly HOUR_HEIGHT = 60; // pixels per hour
+  private readonly HOUR_HEIGHT = 100; // pixels per hour (50px per 30min slot)
   private readonly DAY_START_HOUR = 0; // 12 AM
 
   render(
