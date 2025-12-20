@@ -79,6 +79,7 @@
   right: 0;
   bottom: 0;
   pointer-events: none; // Allow clicks to pass through
+  transform: translateX(-2px); // Fine-tune alignment for borders
 
   >* {
     pointer-events: auto; // Enable events on children

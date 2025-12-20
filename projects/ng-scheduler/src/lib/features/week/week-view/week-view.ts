@@ -101,7 +101,8 @@ export class WeekView {
       if (gridComponent) {
         const grid = gridComponent.nativeElement as HTMLElement;
         this.gridSync.observeGrid(grid, (rect) => ({
-          width: (rect.width - 60) / 7, // Subtract time column width (60px)
+          // Subtract: time column (60px) + 6 borders between 7 columns (6px)
+          width: (rect.width - 60 - 6) / 7,
           height: rect.height
         }));
       }
