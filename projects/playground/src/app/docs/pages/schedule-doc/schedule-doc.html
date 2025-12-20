@@ -8,11 +8,30 @@
   <!-- Basic Usage -->
   <section>
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Basic Usage</h2>
-    <p class="text-gray-600 mb-6">Import <code>Schedule</code> into your component and pass a configuration object.</p>
+    <p class="text-gray-600 mb-4">
+      The scheduler uses a declarative API. Events MUST be contained within resources. Define resources first, then nest
+      events inside them.
+    </p>
+    <app-example-viewer [code]="basicExampleCode">
+      <div preview>
+        <div style="height: 600px;">
+          <mglon-schedule [config]="config">
+            <mglon-resource id="resource-1" name="Conference Room A" color="#0860c4">
 
-    <app-example-viewer [code]="basicExampleCode" title="Basic Schedule">
-      <div preview class="w-full h-[600px] border border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
-        <mglon-schedule [config]="config"></mglon-schedule>
+              <mglon-event id="evt-1" title="Team Standup" [start]="event1Start" [end]="event1End">
+              </mglon-event>
+
+              <mglon-event id="evt-2" title="Client Meeting" [start]="event2Start" [end]="event2End">
+              </mglon-event>
+            </mglon-resource>
+
+            <mglon-resource id="resource-2" name="Conference Room B" color="#e91e63">
+
+              <mglon-event id="evt-3" title="Design Review" [start]="event3Start" [end]="event3End">
+              </mglon-event>
+            </mglon-resource>
+          </mglon-schedule>
+        </div>
       </div>
     </app-example-viewer>
   </section>
