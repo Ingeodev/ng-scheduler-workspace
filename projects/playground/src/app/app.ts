@@ -1,19 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { Schedule, SchedulerConfig, ButtonComponent, ButtonGroupComponent, FabButtonComponent, IconButtonComponent } from 'ng-scheduler';
-
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
-  imports: [Schedule, ButtonComponent, ButtonGroupComponent, FabButtonComponent, IconButtonComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   title = 'playground';
-
-  demoValue = 'month';
-
-  config: SchedulerConfig = {
-    initialView: 'week',
-    initialDate: new Date()
-  };
 }

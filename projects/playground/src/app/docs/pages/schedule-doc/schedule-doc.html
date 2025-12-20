@@ -1,0 +1,38 @@
+<div class="space-y-12">
+  <!-- Header -->
+  <header>
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Schedule</h1>
+    <p class="text-xl text-gray-500">The main component that creates a full-featured calendar instance.</p>
+  </header>
+
+  <!-- Basic Usage -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Basic Usage</h2>
+    <p class="text-gray-600 mb-6">Import <code>Schedule</code> into your component and pass a configuration object.</p>
+
+    <app-example-viewer [code]="basicExampleCode" title="Basic Schedule">
+      <div preview class="w-full h-[600px] border border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+        <mglon-schedule [config]="config"></mglon-schedule>
+      </div>
+    </app-example-viewer>
+  </section>
+
+  <!-- API Reference -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">API Reference</h2>
+
+    <h3 class="text-lg font-semibold text-gray-800 mt-8 mb-2">Inputs</h3>
+    <app-api-table [properties]="inputs"></app-api-table>
+
+    <h3 class="text-lg font-semibold text-gray-800 mt-8 mb-2">Outputs</h3>
+    <app-api-table [properties]="outputs"></app-api-table>
+  </section>
+
+  <!-- Styling -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Styling</h2>
+    <p class="text-gray-600 mb-4">The following CSS custom properties are available for customization:</p>
+
+    <app-code-block [code]="stylingCode" language="scss"></app-code-block>
+  </section>
+</div>

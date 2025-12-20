@@ -1,0 +1,28 @@
+<div class="space-y-12">
+  <header>
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">EventModel</h1>
+    <p class="text-xl text-gray-500">Interface representing a calendar event.</p>
+  </header>
+
+  <!-- Description -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Description</h2>
+    <p class="text-gray-600 mb-4">
+      The <code class="text-pink-500 bg-gray-100 px-2 py-0.5 rounded">EventModel</code> interface represents a
+      time-based event on the calendar. It includes support for basic events, all-day events, recurring events, and
+      resource assignment.
+    </p>
+  </section>
+
+  <!-- Properties -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Properties</h2>
+    <app-api-table [properties]="properties"></app-api-table>
+  </section>
+
+  <!-- Usage Example -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Usage Example</h2>
+    <app-code-block [code]="usageExample" language="typescript"></app-code-block>
+  </section>
+</div>

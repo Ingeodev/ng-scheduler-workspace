@@ -1,25 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
 @use '../../ng-scheduler/src/lib/styles/variables' as vars;
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'prismjs/themes/prism-okaidia.css';
+
 :root {
   @include vars.google-calendar-theme;
 
   // Theme Overrides (Playground Customization)
 
-  // Primary Palette (Neutral Gray)
-  --mglon-schedule-primary-50: #f1eeee;
-  --mglon-schedule-primary-100: #eceaea;
-  --mglon-schedule-primary-200: #eeeeee;
-  --mglon-schedule-primary-300: #e0e0e0;
-  --mglon-schedule-primary-400: #bdbdbd;
-  --mglon-schedule-primary-500: #9e9e9e;
-  --mglon-schedule-primary-600: #757575;
-  --mglon-schedule-primary-700: #616161;
-  --mglon-schedule-primary-800: #424242;
-  --mglon-schedule-primary-900: #212121;
-  --mglon-schedule-primary-950: #0a0a0a;
+  // Primary Palette (Blue - Based on #0860c4)
+  --mglon-schedule-primary-50: #e6f2ff;
+  --mglon-schedule-primary-100: #cce5ff;
+  --mglon-schedule-primary-200: #99cbff;
+  --mglon-schedule-primary-300: #66b0ff;
+  --mglon-schedule-primary-400: #3396ff;
+  --mglon-schedule-primary-500: #0860c4;
+  --mglon-schedule-primary-600: #0651a3;
+  --mglon-schedule-primary-700: #054282;
+  --mglon-schedule-primary-800: #043461;
+  --mglon-schedule-primary-900: #022541;
+  --mglon-schedule-primary-950: #011220;
 
-  --mglon-schedule-primary: var(--mglon-schedule-primary-900);
+  --mglon-schedule-primary: var(--mglon-schedule-primary-500);
 
   --mglon-schedule-on-primary: #ffffff;
 
@@ -39,7 +45,7 @@
 
   // Semantic mappings using the palette
   --mglon-schedule-selection: var(--mglon-schedule-primary-50);
-  --mglon-schedule-surface-variant: var(--mglon-schedule-primary-50); // Using primary tint for surface
+  --mglon-schedule-surface-variant: var(--mglon-schedule-primary-50);
   --mglon-schedule-text-primary: var(--mglon-schedule-primary-900);
 
   // Sharp Theme
