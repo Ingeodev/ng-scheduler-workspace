@@ -1,4 +1,4 @@
-import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core';
+import { Component, input, computed, viewChild, ElementRef, inject, output } from '@angular/core';
 import { getWeekTimeSlots, getWeekDays, TimeSlot, WeekDay } from '../../../shared/helpers';
 import { TimeSlotComponent } from '../time-slot/time-slot';
 import { Selection } from '../../../core/background-selection/selection/selection';
@@ -48,6 +48,13 @@ export class WeekGrid implements Selectable {
    * The date to display the week for
    */
   readonly currentDate = input<Date>(new Date());
+
+  /**
+   * Selection events
+   */
+  readonly selectionStart = output<SelectionResult>();
+  readonly selectionChange = output<SelectionResult>();
+  readonly selectionEnd = output<SelectionResult>();
 
   /**
    * Computed 2D array of time slots [days][slots]
@@ -145,20 +152,20 @@ export class WeekGrid implements Selectable {
    * Handles selection start event
    */
   onSelectionStart(result: SelectionResult): void {
-    console.log('Week selection started:', result);
+    this.selectionStart.emit(result);
   }
 
   /**
    * Handles selection change event
    */
   onSelectionChange(result: SelectionResult): void {
-    console.log('Week selection changed:', result);
+    this.selectionChange.emit(result);
   }
 
   /**
    * Handles selection end event
    */
   onSelectionEnd(result: SelectionResult): void {
-    console.log('Week selection ended:', result);
+    this.selectionEnd.emit(result);
   }
 }

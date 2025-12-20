@@ -1,4 +1,4 @@
-import { Component, inject, computed, viewChild, ElementRef, afterNextRender } from '@angular/core';
+import { Component, inject, computed, viewChild, ElementRef, afterNextRender, output } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { WeekHeader } from '../week-header/week-header';
 import { WeekGrid } from '../week-grid/week-grid';
@@ -9,6 +9,7 @@ import { EventRendererFactory } from '../../../core/rendering/event-renderer.fac
 import { WeekViewRenderer } from '../../../core/rendering/week-view.renderer';
 import { EventRenderComponent } from '../../../shared/components/event-render/event-render';
 import { AnyEvent } from '../../../core/models/event';
+import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
 import { getWeekDays } from '../../../shared/helpers';
 
 /**
@@ -33,6 +34,19 @@ export class WeekView {
   readonly store = inject(CalendarStore);
   readonly eventStore = inject(EventStore);
   readonly gridSync = inject(GridSyncService);
+
+  // ============================================
+  // OUTPUT EVENTS
+  // ============================================
+
+  /** Emitted when selection starts */
+  readonly selectionStart = output<SelectionResult>();
+
+  /** Emitted while selecting */
+  readonly selectionChange = output<SelectionResult>();
+
+  /** Emitted when selection ends */
+  readonly selectionEnd = output<SelectionResult>();
 
   // Get week grid element reference
   readonly gridElement = viewChild(WeekGrid, { read: ElementRef });

@@ -2,6 +2,8 @@ import { Component, effect, input, inject, ViewEncapsulation, output } from '@an
 import { CommonModule } from '@angular/common';
 import { CalendarStore } from '../../../core/store/calendar.store';
 import { SchedulerConfig, ViewMode } from '../../../core/models/config-schedule';
+import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
+import { AnyEvent } from '../../../core/models/event';
 import { ResourceView } from '../../resource/resource-view/resource-view';
 import { IconComponent } from '../../../shared/components/icon/icon';
 import { HeaderSchedule } from '../header-schedule/header-schedule';
@@ -21,6 +23,28 @@ export class Schedule {
   readonly config = input<Partial<SchedulerConfig>>({});
   readonly add = output<void>();
 
+  // ============================================
+  // OUTPUT EVENTS
+  // ============================================
+
+  /** Emitted when selection starts (mousedown) */
+  readonly selectionStart = output<SelectionResult>();
+
+  /** Emitted while selecting (mousemove) */
+  readonly selectionChange = output<SelectionResult>();
+
+  /** Emitted when selection ends (mouseup) */
+  readonly selectionEnd = output<SelectionResult>();
+
+  /** Emitted when view mode changes */
+  readonly viewChange = output<ViewMode>();
+
+  /** Emitted when displayed date range changes */
+  readonly dateRangeChange = output<{ start: Date; end: Date }>();
+
+  /** Emitted when events have been rendered */
+  readonly eventsRendered = output<AnyEvent[]>();
+
   readonly store = inject(CalendarStore);
 
   constructor() {
@@ -29,6 +53,12 @@ export class Schedule {
       if (conf) {
         this.store.updateConfig(conf);
       }
+    });
+
+    // Emit viewChange when view mode changes
+    effect(() => {
+      const view = this.store.viewMode();
+      this.viewChange.emit(view);
     });
   }
 

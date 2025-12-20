@@ -1,6 +1,7 @@
 <div class="mglon-week-view" [@weekTransition]="animationState()">
   <mglon-week-header [currentDate]="store.currentDate()"></mglon-week-header>
-  <mglon-week-grid [currentDate]="store.currentDate()">
+  <mglon-week-grid [currentDate]="store.currentDate()" (selectionStart)="selectionStart.emit($event)"
+    (selectionChange)="selectionChange.emit($event)" (selectionEnd)="selectionEnd.emit($event)">
     @for (item of eventsToRender(); track item.event.id) {
     <mglon-event-render [event]="item.event" [renderData]="item.renderData" [eventColor]="item.color" [showTime]="true">
     </mglon-event-render>

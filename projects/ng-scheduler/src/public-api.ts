@@ -12,6 +12,9 @@ export * from './lib/features/events';
 // Event Store
 export * from './lib/core/store/event.store';
 
+// Selection Types
+export type { SelectionResult } from './lib/core/background-selection/selectable/selectable.directive';
+
 // Buttons
 export * from './lib/core/models/config-schedule';
 export * from './lib/shared/components/buttons/index';

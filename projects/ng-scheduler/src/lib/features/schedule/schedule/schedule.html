@@ -15,7 +15,9 @@
     <mglon-month-view></mglon-month-view>
     }
     @case ('week') {
-    <mglon-week-view></mglon-week-view>
+    <mglon-week-view (selectionStart)="selectionStart.emit($event)" (selectionChange)="selectionChange.emit($event)"
+      (selectionEnd)="selectionEnd.emit($event)">
+    </mglon-week-view>
     }
     @default {
     <div class="ng-sched-placeholder">
