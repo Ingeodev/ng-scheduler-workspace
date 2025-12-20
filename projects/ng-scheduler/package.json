@@ -2,12 +2,12 @@
   "name": "ng-scheduler",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^20.3.0",
-    "@angular/core": "^20.3.0"
+    "@angular/common": "^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0",
+    "@angular/core": "^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0"
   },
   "dependencies": {
-    "@angular/cdk": "^21.0.5",
-    "@ngrx/signals": "^21.0.0",
+    "@angular/cdk": "^18.0.0",
+    "@ngrx/signals": "^18.0.0",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
