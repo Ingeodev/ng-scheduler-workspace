@@ -1,8 +1,8 @@
 import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core';
 import { getMonthCalendarGrid, CalendarWeek } from '../../../shared/helpers';
 import { MonthCell } from '../month-cell/month-cell';
-import { Selection } from '../../../shared/components/selection/selection';
-import { Selectable, SelectableDirective, SelectionResult } from '../../../shared/dirrectives/select';
+import { Selection } from '../../../core/background-selection/selection/selection';
+import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable';
 
 /**
  * Month calendar grid component that displays a full month view with weeks and days.

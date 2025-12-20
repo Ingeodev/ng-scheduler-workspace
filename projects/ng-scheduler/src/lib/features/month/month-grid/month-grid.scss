@@ -5,6 +5,9 @@
   display: block;
   height: 100%;
   width: 100%;
+
+  // CSS Custom Properties for Month Grid
+  //--month-grid-border: var(--mglon-month-grid-border, 1px solid var(--mglon-schedule-border));
 }
 
 .mglon-month-grid {
@@ -18,7 +21,7 @@
 
   &__week {
     display: grid;
-    border-bottom: 1px solid var(--mglon-schedule-border);
+    border-bottom: 1px solid var(--mglon-schedule-border); // Keeping strict border for grid structure
     grid-template-columns: repeat(7, 1fr);
     min-height: 0;
 

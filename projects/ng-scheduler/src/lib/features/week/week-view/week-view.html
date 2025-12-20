@@ -1,4 +1,4 @@
-<div class="mglon-week-view">
+<div class="mglon-week-view" [@weekTransition]="animationState()">
   <mglon-week-header [currentDate]="store.currentDate()"></mglon-week-header>
   <mglon-week-grid [currentDate]="store.currentDate()"></mglon-week-grid>
 </div>

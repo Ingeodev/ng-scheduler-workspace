@@ -19,8 +19,15 @@
   // ============================================
   // CSS Custom Properties
   // ============================================
-  --icon-btn-size: 40px;
-  --icon-btn-icon-size: 24px;
+  --icon-btn-size: var(--mglon-icon-button-size, 40px);
+  --icon-btn-icon-size: var(--mglon-icon-button-icon-size, 24px);
+  --icon-btn-radius: var(--mglon-icon-button-radius, 50%);
+  --icon-btn-bg: var(--mglon-icon-button-bg, transparent);
+  --icon-btn-color: var(--mglon-icon-button-color, var(--mglon-schedule-text-secondary));
+  --icon-btn-border: var(--mglon-icon-button-border, 2px solid transparent);
+  --icon-btn-transition: var(--mglon-icon-button-transition, background-color var(--mglon-schedule-transition-duration) var(--mglon-schedule-transition-easing),
+      color var(--mglon-schedule-transition-duration) var(--mglon-schedule-transition-easing),
+      border-color var(--mglon-schedule-transition-duration) var(--mglon-schedule-transition-easing));
 
   // ============================================
   // Default Styling
@@ -28,30 +35,28 @@
   width: var(--icon-btn-size);
   height: var(--icon-btn-size);
   font-size: var(--icon-btn-icon-size);
-  border-radius: 50%; // Always circular for icon buttons
-  border: 2px solid transparent;
-  background-color: transparent;
-  color: var(--mglon-schedule-text-secondary);
-  transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    color 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--icon-btn-radius);
+  border: var(--icon-btn-border);
+  background-color: var(--icon-btn-bg);
+  color: var(--icon-btn-color);
+  transition: var(--icon-btn-transition);
 
   // ============================================
   // Size Variants
   // ============================================
   &[size="sm"] {
-    --icon-btn-size: 32px;
-    --icon-btn-icon-size: 18px;
+    --icon-btn-size: var(--mglon-icon-button-sm-size, 32px);
+    --icon-btn-icon-size: var(--mglon-icon-button-sm-icon-size, 18px);
   }
 
   &[size="md"] {
-    --icon-btn-size: 40px;
-    --icon-btn-icon-size: 24px;
+    --icon-btn-size: var(--mglon-icon-button-md-size, 40px);
+    --icon-btn-icon-size: var(--mglon-icon-button-md-icon-size, 24px);
   }
 
   &[size="lg"] {
-    --icon-btn-size: 48px;
-    --icon-btn-icon-size: 28px;
+    --icon-btn-size: var(--mglon-icon-button-lg-size, 48px);
+    --icon-btn-icon-size: var(--mglon-icon-button-lg-icon-size, 28px);
   }
 
   // ============================================
@@ -62,7 +67,7 @@
     border-color: transparent;
 
     &:hover:not([disabled]) {
-      background-color: rgba(60, 64, 67, 0.04);
+      background-color: var(--mglon-icon-button-hover-bg, rgba(60, 64, 67, 0.04));
     }
   }
 
@@ -71,7 +76,7 @@
 
     &:hover:not([disabled]) {
       @include mixins.elevation-md;
-      opacity: 0.92;
+      opacity: var(--mglon-icon-button-hover-opacity, 0.92);
     }
   }
 
@@ -80,7 +85,7 @@
     border-color: currentColor;
 
     &:hover:not([disabled]) {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: var(--mglon-icon-button-hover-bg, var(--mglon-schedule-hover-bg));
     }
   }
 
@@ -92,7 +97,7 @@
 
     &:hover:not([disabled]) {
       color: var(--mglon-schedule-text-primary);
-      background-color: rgba(103, 58, 183, 0.04);
+      background-color: var(--mglon-icon-button-primary-hover-bg, rgba(103, 58, 183, 0.04));
     }
   }
 
@@ -101,36 +106,36 @@
   }
 
   &[appereance="ghost"][color="error"] {
-    color: #d32f2f;
+    color: var(--mglon-schedule-error);
   }
 
   // ============================================
   // Color Variants (Solid)
   // ============================================
   &[appereance="solid"][color="primary"] {
-    background-color: var(--mglon-schedule-primary);
-    color: var(--mglon-schedule-on-primary);
+    background-color: var(--mglon-icon-button-primary-bg, var(--mglon-schedule-primary));
+    color: var(--mglon-icon-button-primary-color, var(--mglon-schedule-on-primary));
   }
 
   &[appereance="solid"][color="secondary"] {
-    background-color: var(--mglon-schedule-surface-3);
-    color: var(--mglon-schedule-on-surface-3);
+    background-color: var(--mglon-icon-button-secondary-bg, var(--mglon-schedule-surface-3));
+    color: var(--mglon-icon-button-secondary-color, var(--mglon-schedule-on-surface-3));
   }
 
   &[appereance="solid"][color="error"] {
-    background-color: #d32f2f;
-    color: #ffffff;
+    background-color: var(--mglon-icon-button-error-bg, var(--mglon-schedule-error));
+    color: var(--mglon-icon-button-error-color, var(--mglon-schedule-on-error));
   }
 
   // ============================================
   // Color Variants (Outline)
   // ============================================
   &[appereance="outline"][color="primary"] {
-    color: var(--mglon-schedule-primary);
-    border-color: var(--mglon-schedule-primary);
+    color: var(--mglon-icon-button-primary-color, var(--mglon-schedule-primary));
+    border-color: var(--mglon-icon-button-primary-color, var(--mglon-schedule-primary));
 
     &:hover:not([disabled]) {
-      background-color: rgba(103, 58, 183, 0.04);
+      background-color: var(--mglon-icon-button-primary-hover-bg, rgba(103, 58, 183, 0.04));
     }
   }
 
@@ -140,8 +145,8 @@
   }
 
   &[appereance="outline"][color="error"] {
-    color: #d32f2f;
-    border-color: #d32f2f;
+    color: var(--mglon-schedule-error);
+    border-color: var(--mglon-schedule-error);
   }
 
   // ============================================
@@ -162,7 +167,7 @@
   // Disabled State
   // ============================================
   &[disabled] {
-    opacity: 0.5;
+    opacity: var(--mglon-schedule-disabled-opacity, 0.5);
     cursor: not-allowed;
     pointer-events: none;
     background-color: transparent !important;

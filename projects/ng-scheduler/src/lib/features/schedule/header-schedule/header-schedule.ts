@@ -1,11 +1,11 @@
 import { Component, input, output, signal, inject, PLATFORM_ID, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon';
-import { ViewMode } from '../../models/config-schedule';
 import { IconName } from '../../../shared/components/icon/icon-set';
 import { ButtonGroupComponent } from '../../../shared/components/buttons/button-group/button-group';
 import { ButtonComponent } from '../../../shared/components/buttons/button/button';
 import { IconButtonComponent } from '../../../shared/components/buttons/icon-button/icon-button';
+import { ViewMode } from '../../../core/models/config-schedule';
 
 @Component({
   selector: 'mglon-header-schedule',
@@ -23,6 +23,7 @@ export class HeaderSchedule implements OnDestroy {
   readonly title = input.required<string>();
   readonly activeView = input.required<ViewMode>();
   readonly views = input<ViewMode[]>(['month', 'week', 'day', 'resource']);
+  readonly editable = input<boolean>(true);
 
   // Outputs
   readonly next = output<void>();

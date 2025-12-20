@@ -41,4 +41,21 @@ export interface SchedulerConfig {
 
   /** Altura del calendario (ej: 'auto', '100%', '600px'). Defecto: '100%' */
   height?: string;
+
+  // --- 6. Interaccion y Visualizacion ---
+  /** Array con los tipos de visualizacion que desea usar.
+   * Defecto: ['month', 'week', 'day', 'resource'] */
+  views?: ViewMode[];
+
+  /** Activar o desactivar la opcion de seleccion.
+   * Defecto: true */
+  backgroundSelection?: boolean;
+
+  /** Decidir si quiere ver la indicacion del dia actual.
+   * Defecto: true */
+  showNowIndicator?: boolean;
+
+  /** Propiedad para activar o desactivar las opciones de edicion (como el boton add del header).
+   * Defecto: true */
+  editable?: boolean;
 }

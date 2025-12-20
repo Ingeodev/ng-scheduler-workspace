@@ -4,6 +4,15 @@
 :host {
   display: block;
   width: 100%;
+
+  // CSS Custom Properties for Month Header
+  --month-header-bg: var(--mglon-month-header-bg, var(--mglon-schedule-surface));
+  --month-header-border: var(--mglon-month-header-border, 1px solid var(--mglon-schedule-border));
+  --month-header-padding: var(--mglon-month-header-padding, var(--mglon-schedule-padding-md));
+  --month-header-text-color: var(--mglon-month-header-text-color, var(--mglon-schedule-text-primary));
+  --month-header-font-size: var(--mglon-month-header-font-size, var(--mglon-schedule-font-size-md));
+  --month-header-font-weight: var(--mglon-month-header-font-weight, 500);
+  --month-header-z-index: var(--mglon-month-header-z-index, var(--mglon-schedule-z-sticky));
 }
 
 .mglon-month-header {
@@ -13,16 +22,16 @@
   width: 100%;
   //position: sticky;
   top: 0;
-  z-index: var(--mglon-schedule-z-sticky);
-  background-color: var(--mglon-schedule-surface);
-  border-bottom: 1px solid var(--mglon-schedule-border);
+  z-index: var(--month-header-z-index);
+  background-color: var(--month-header-bg);
+  border-bottom: var(--month-header-border);
 
   >div {
-    padding: var(--mglon-schedule-padding-md);
+    padding: var(--month-header-padding);
     text-align: center;
-    font-weight: 500;
-    font-size: var(--mglon-schedule-font-size-md);
-    color: var(--mglon-schedule-text-primary);
+    font-weight: var(--month-header-font-weight);
+    font-size: var(--month-header-font-size);
+    color: var(--month-header-text-color);
     //border-right: 1px solid var(--mglon-schedule-border);
 
     &:last-child {

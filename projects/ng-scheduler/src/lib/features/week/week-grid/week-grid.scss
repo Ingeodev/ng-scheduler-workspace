@@ -2,31 +2,41 @@
 @use '../../../styles/mixins' as *;
 
 .mglon-week-grid {
+  // CSS Custom Properties for Week Grid
+  --week-grid-time-col-width: var(--mglon-week-grid-time-column-width, 60px);
+  --week-grid-height: var(--mglon-week-grid-height, calc(100vh - 200px));
+  --week-grid-padding-top: var(--mglon-week-grid-padding-top, 12px);
+  --week-grid-scrollbar-width: var(--mglon-week-grid-scrollbar-width, 8px);
+  --week-grid-scrollbar-track-bg: var(--mglon-week-grid-scrollbar-track-bg, var(--mglon-schedule-surface-variant));
+  --week-grid-scrollbar-thumb-bg: var(--mglon-week-grid-scrollbar-thumb-bg, var(--mglon-schedule-border-color));
+  --week-grid-scrollbar-thumb-hover-bg: var(--mglon-week-grid-scrollbar-thumb-hover-bg, var(--mglon-schedule-on-surface-variant));
+  --week-grid-time-col-bg: var(--mglon-week-grid-time-column-bg, var(--mglon-schedule-surface-variant));
+
   display: grid;
-  grid-template-columns: 60px repeat(7, 1fr);
+  grid-template-columns: var(--week-grid-time-col-width) repeat(7, 1fr);
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100vh - 200px);
+  max-height: var(--week-grid-height);
   user-select: none;
   cursor: crosshair;
-  padding-top: 12px;
+  padding-top: var(--week-grid-padding-top);
 
   // Scrollbar styling
   &::-webkit-scrollbar {
-    width: 8px;
+    width: var(--week-grid-scrollbar-width);
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--mglon-schedule-surface-variant, #f5f5f5);
+    background: var(--week-grid-scrollbar-track-bg);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--mglon-schedule-border-color, #e0e0e0);
+    background: var(--week-grid-scrollbar-thumb-bg);
     border-radius: 4px;
 
     &:hover {
-      background: var(--mglon-schedule-on-surface-variant, #999);
+      background: var(--week-grid-scrollbar-thumb-hover-bg);
     }
   }
 }
@@ -34,8 +44,8 @@
 .mglon-week-grid__time-column {
   display: flex;
   flex-direction: column;
-  //border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
-  background: var(--mglon-schedule-surface-variant, #fafafa);
+  //border-right: 1px solid var(--mglon-schedule-border-color);
+  background: var(--week-grid-time-col-bg);
 }
 
 .mglon-week-grid__day-column {
@@ -45,7 +55,7 @@
 
 .mglon-week-grid__today-indicator {
   // CSS variable with fallback to global error color
-  --mglon-week-grid-today-color: var(--mglon-schedule-error, #ea4335);
+  --mglon-week-grid-today-color: var(--mglon-schedule-error);
 
   position: absolute;
   top: -60px; // Extend up to connect with header teardrop (adjusted for smaller header)

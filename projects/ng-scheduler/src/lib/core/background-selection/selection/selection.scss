@@ -21,13 +21,12 @@
   position: absolute;
   pointer-events: none;
 
-  // Use color-mix to add transparency (modern browsers)
+  // Use color-mix to add transparency
   background-color: var(--mglon-selection-background, color-mix(in srgb, var(--mglon-schedule-primary-900, #1a237e) 30%, transparent));
 
   // Custom dashed border using SVG background
-  $border-color: var(--mglon-selection-border-color, var(--mglon-schedule-primary, rgb(66, 133, 244)));
+  $border-color: var(--mglon-selection-border-color, var(--mglon-schedule-primary));
   $border-width: var(--mglon-selection-border-width, 2px);
-  $border-radius: var(--mglon-selection-border-radius, --mglon-schedule-border-radius-sm);
 
   background-image:
     // Top border
@@ -51,5 +50,5 @@
     0 0, // Left
     100% 0; // Right
 
-  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-repeat: no-repeat;
 }

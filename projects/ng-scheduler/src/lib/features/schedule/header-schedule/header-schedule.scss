@@ -3,7 +3,17 @@
 
 :host {
   display: block;
-  background-color: var(--mglon-schedule-surface);
+  // CSS Custom Properties for Header
+  --header-bg: var(--mglon-header-bg, var(--mglon-schedule-surface));
+  --header-padding: var(--mglon-header-padding, var(--mglon-schedule-spacing-md));
+  --header-gap: var(--mglon-header-gap, var(--mglon-schedule-spacing-md));
+  --header-title-size: var(--mglon-header-title-size, 1.5rem);
+  --header-title-weight: var(--mglon-header-title-weight, 500);
+  --header-title-color: var(--mglon-header-title-color, var(--mglon-schedule-text-primary));
+  --header-title-mobile-size: var(--mglon-header-title-mobile-size, 1.25rem);
+  --header-nav-gap: var(--mglon-header-nav-gap, var(--mglon-schedule-spacing-sm));
+
+  background-color: var(--header-bg);
   //border-bottom: 1px solid var(--mglon-schedule-border);
 
   // Enable container queries for this component
@@ -14,8 +24,8 @@
 .mglon-header {
   display: flex;
   align-items: center;
-  gap: var(--mglon-schedule-spacing-md);
-  padding: var(--mglon-schedule-spacing-md);
+  gap: var(--header-gap);
+  padding: var(--header-padding);
 
   // Responsive: Change to column layout on medium and smaller containers
   @include container-sm {
@@ -27,7 +37,7 @@
     display: flex;
     align-items: center;
     flex-grow: 1;
-    gap: var(--mglon-schedule-spacing-sm);
+    gap: var(--header-nav-gap);
     justify-self: start;
 
     @include container-sm {
@@ -40,7 +50,7 @@
   &__nav__actions {
     display: flex;
     align-items: center;
-    gap: var(--mglon-schedule-spacing-sm);
+    gap: var(--header-nav-gap);
     justify-self: start;
     flex-grow: 0;
 
@@ -52,20 +62,21 @@
   &__title {
     margin: 0;
     font-family: var(--mglon-schedule-font-family);
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--mglon-schedule-text-primary);
+    font-size: var(--header-title-size);
+    font-weight: var(--header-title-weight);
+    color: var(--header-title-color);
     justify-self: center;
+    text-align: center;
 
     @include container-sm {
       order: -1; // Move title to top on mobile
-      font-size: 1.25rem;
+      font-size: var(--header-title-mobile-size);
     }
   }
 
   &__actions {
     display: flex;
-    gap: var(--mglon-schedule-spacing-md);
+    gap: var(--header-gap);
     align-items: center;
     justify-self: end;
 

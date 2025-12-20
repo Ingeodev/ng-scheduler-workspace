@@ -2,21 +2,36 @@
 @use '../../../styles/mixins' as *;
 
 .mglon-week-header {
+  // CSS Custom Properties
+  --week-header-time-col-width: var(--mglon-week-header-time-column-width, 60px);
+  --week-header-bg: var(--mglon-week-header-bg, var(--mglon-schedule-surface));
+  --week-header-border: var(--mglon-week-header-border, 2px solid var(--mglon-schedule-border-color));
+  --week-header-scrollbar-width: var(--mglon-week-header-scrollbar-width, 8px);
+  --week-header-z-index: var(--mglon-week-header-z-index, 10);
+  --week-header-day-padding: var(--mglon-week-header-day-padding, 8px 4px);
+  --week-header-day-name-size: var(--mglon-week-header-day-name-size, 11px);
+  --week-header-day-name-color: var(--mglon-week-header-day-name-color, var(--mglon-schedule-on-surface-variant));
+  --week-header-day-number-size: var(--mglon-week-header-day-number-size, 16px);
+  --week-header-day-number-color: var(--mglon-week-header-day-number-color, var(--mglon-schedule-on-surface));
+  --week-header-today-bg: var(--mglon-week-header-today-bg, var(--mglon-schedule-error));
+  --week-header-today-color: var(--mglon-week-header-today-color, var(--mglon-schedule-on-error));
+  --week-header-today-size: var(--mglon-week-header-today-size, 24px);
+
   display: grid;
-  grid-template-columns: 60px repeat(7, 1fr);
+  grid-template-columns: var(--week-header-time-col-width) repeat(7, 1fr);
   position: sticky;
   top: 0;
-  z-index: 10;
-  background: var(--mglon-schedule-surface, #ffffff);
-  border-bottom: 2px solid var(--mglon-schedule-border-color, #e0e0e0);
+  z-index: var(--week-header-z-index);
+  background: var(--week-header-bg);
+  border-bottom: var(--week-header-border);
 
   // Reserve space for scrollbar to align with grid
-  padding-right: 8px;
+  padding-right: var(--week-header-scrollbar-width);
 }
 
 .mglon-week-header__time-column {
   // Empty spacer for the time column
-  border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
+  border-right: 1px solid var(--mglon-schedule-border-color);
 }
 
 .mglon-week-header__day {
@@ -24,8 +39,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 4px;
-  border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
+  padding: var(--week-header-day-padding);
+  border-right: 1px solid var(--mglon-schedule-border-color);
 
   &--today {
     // Remove background color
@@ -33,10 +48,10 @@
 
     .mglon-week-header__day-number {
       // Perfectly symmetrical teardrop shape
-      background: var(--mglon-schedule-error, #ea4335);
-      color: var(--mglon-schedule-on-error, #ffffff);
-      width: 24px;
-      height: 24px;
+      background: var(--week-header-today-bg);
+      color: var(--week-header-today-color);
+      width: var(--week-header-today-size);
+      height: var(--week-header-today-size);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -58,15 +73,15 @@
 }
 
 .mglon-week-header__day-name {
-  font-size: 11px;
+  font-size: var(--week-header-day-name-size);
   font-weight: 500;
-  color: var(--mglon-schedule-on-surface-variant, #666);
+  color: var(--week-header-day-name-color);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .mglon-week-header__day-number {
-  font-size: 16px;
+  font-size: var(--week-header-day-number-size);
   font-weight: 400;
-  color: var(--mglon-schedule-on-surface, #000);
+  color: var(--week-header-day-number-color);
 }

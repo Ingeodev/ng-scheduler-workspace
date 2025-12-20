@@ -96,4 +96,13 @@
   // Z-Index
   --mglon-schedule-z-sticky: 10;
   --mglon-schedule-z-header: 20;
+
+  // Interaction States
+  --mglon-schedule-hover-bg: rgba(0, 0, 0, 0.04);
+  --mglon-schedule-focus-ring-color: var(--mglon-schedule-primary-200);
+  --mglon-schedule-disabled-opacity: 0.5;
+
+  // Animations & Transitions
+  --mglon-schedule-transition-duration: 200ms;
+  --mglon-schedule-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }

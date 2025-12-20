@@ -1,5 +1,6 @@
-<div class="mglon-week-grid" [mglonSelectable]="this" (selectionStart)="onSelectionStart($event)"
-  (selectionChange)="onSelectionChange($event)" (selectionEnd)="onSelectionEnd($event)">
+<div class="mglon-week-grid" [mglonSelectable]="backgroundSelection() ? this : null"
+  (selectionStart)="onSelectionStart($event)" (selectionChange)="onSelectionChange($event)"
+  (selectionEnd)="onSelectionEnd($event)">
 
   <!-- Time column -->
   <div class="mglon-week-grid__time-column">
@@ -18,14 +19,14 @@
   }
 
   <!-- Selection overlay -->
-  @if (selectableDirective()) {
+  @if (selectableDirective() && backgroundSelection()) {
   <mglon-selection [selection]="selectableDirective()!.selection()"
     [isSelecting]="selectableDirective()!.isSelecting()">
   </mglon-selection>
   }
 
   <!-- Today indicator line -->
-  @if (todayColumnIndex() !== -1) {
+  @if (todayColumnIndex() !== -1 && showNowIndicator()) {
   <div class="mglon-week-grid__today-indicator" [style.left.px]="getTodayIndicatorPosition()">
   </div>
   }

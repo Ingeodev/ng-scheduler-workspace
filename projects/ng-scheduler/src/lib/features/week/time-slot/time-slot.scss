@@ -2,15 +2,23 @@
 @use '../../../styles/mixins' as *;
 
 .mglon-time-slot {
-  min-height: 50px;
-  border-right: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
-  border-bottom: 1px solid var(--mglon-schedule-border-color-light, #f0f0f0);
+  // CSS Custom Properties
+  --time-slot-height: var(--mglon-time-slot-height, 50px);
+  --time-slot-border-color: var(--mglon-time-slot-border-color, var(--mglon-schedule-border-color));
+  --time-slot-border-col-light: var(--mglon-time-slot-light-border-color, var(--mglon-schedule-border-color-light, #f0f0f0));
+  --time-slot-bg: var(--mglon-time-slot-bg, var(--mglon-schedule-surface));
+  --time-slot-label-color: var(--mglon-time-slot-label-color, var(--mglon-schedule-on-surface-variant));
+  --time-slot-label-size: var(--mglon-time-slot-label-size, 12px);
+
+  min-height: var(--time-slot-height);
+  border-right: 1px solid var(--time-slot-border-color);
+  border-bottom: 1px solid var(--time-slot-border-col-light);
   position: relative;
-  background: var(--mglon-schedule-surface, #ffffff);
+  background: var(--time-slot-bg);
 
   // Hour slots have a stronger border
   &--hour {
-    border-bottom: 1px solid var(--mglon-schedule-border-color, #e0e0e0);
+    border-bottom: 1px solid var(--time-slot-border-color);
   }
 }
 
@@ -18,8 +26,8 @@
   position: absolute;
   top: -8px;
   right: 8px;
-  font-size: 12px;
-  color: var(--mglon-schedule-on-surface-variant, #666);
-  background: var(--mglon-schedule-surface, #ffffff);
+  font-size: var(--time-slot-label-size);
+  color: var(--time-slot-label-color);
+  background: var(--time-slot-bg);
   padding: 0 4px;
 }

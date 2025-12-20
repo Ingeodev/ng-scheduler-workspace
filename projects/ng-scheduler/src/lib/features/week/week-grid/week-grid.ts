@@ -1,8 +1,9 @@
 import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core';
 import { getWeekTimeSlots, getWeekDays, TimeSlot, WeekDay } from '../../../shared/helpers';
 import { TimeSlotComponent } from '../time-slot/time-slot';
-import { Selection } from '../../../shared/components/selection/selection';
-import { Selectable, SelectableDirective, SelectionResult } from '../../../shared/dirrectives/select';
+import { Selection } from '../../../core/background-selection/selection/selection';
+import { CalendarStore } from '../../../core/store/calendar.store';
+import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable';
 
 /**
  * Week grid component displaying time slots for 7 days.
@@ -33,6 +34,10 @@ import { Selectable, SelectableDirective, SelectionResult } from '../../../share
 })
 export class WeekGrid implements Selectable {
   private readonly elementRef = inject(ElementRef);
+  private readonly store = inject(CalendarStore);
+
+  readonly backgroundSelection = computed(() => this.store.config().backgroundSelection ?? true);
+  readonly showNowIndicator = computed(() => this.store.config().showNowIndicator ?? true);
 
   /**
    * Reference to the SelectableDirective instance

@@ -2,8 +2,11 @@
 @use '../../../styles/mixins' as *;
 
 .mglon-week-view {
+  // CSS Custom Properties for Week View
+  --week-view-bg: var(--mglon-week-view-bg, var(--mglon-schedule-surface));
+
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--mglon-schedule-surface, #ffffff);
+  background: var(--week-view-bg);
 }

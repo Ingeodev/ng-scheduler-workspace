@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MonthHeader } from '../month-header/month-header';
 import { MonthGrid } from '../month-grid/month-grid';
 import { CalendarStore } from '../../../core/store/calendar.store';
-import { Selectable } from '../../../shared/dirrectives/select/selectable.abstract';
 
 @Component({
   selector: 'mglon-month-view',

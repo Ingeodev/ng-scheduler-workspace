@@ -1,12 +1,12 @@
 import { Component, effect, input, inject, ViewEncapsulation, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarStore } from '../../store/calendar.store';
-import { SchedulerConfig, ViewMode } from '../../models/config-schedule';
-import { ResourceView } from '../../../features/resource/resource-view/resource-view';
+import { CalendarStore } from '../../../core/store/calendar.store';
+import { SchedulerConfig, ViewMode } from '../../../core/models/config-schedule';
+import { ResourceView } from '../../resource/resource-view/resource-view';
 import { IconComponent } from '../../../shared/components/icon/icon';
 import { HeaderSchedule } from '../header-schedule/header-schedule';
-import { MonthView } from '../../../features/month/month-view/month-view';
-import { WeekView } from '../../../features/week/week-view/week-view';
+import { MonthView } from '../../month/month-view/month-view';
+import { WeekView } from '../../week/week-view/week-view';
 
 @Component({
   selector: 'mglon-schedule',

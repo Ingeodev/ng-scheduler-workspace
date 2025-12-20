@@ -10,7 +10,7 @@
   justify-content: center;
   position: relative;
   box-sizing: border-box;
-  min-width: 64px;
+  min-width: var(--mglon-button-min-width, 64px);
   outline: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -21,11 +21,16 @@
   // ============================================
   // CSS Custom Properties
   // ============================================
-  --btn-padding-y: 0;
-  --btn-padding-x: 16px;
-  --btn-height: 40px;
-  --btn-radius: var(--mglon-schedule-radius-md);
-  --btn-font-size: var(--mglon-schedule-font-size-md, 14px);
+  --btn-padding-y: var(--mglon-button-padding-y, 0);
+  --btn-padding-x: var(--mglon-button-padding-x, 16px);
+  --btn-height: var(--mglon-button-height, 40px);
+  --btn-radius: var(--mglon-button-radius, var(--mglon-schedule-radius-md));
+  --btn-font-size: var(--mglon-button-font-size, var(--mglon-schedule-font-size-md, 14px));
+  --btn-border-width: var(--mglon-button-border-width, 2px);
+  --btn-transition: var(--mglon-button-transition, background-color var(--mglon-schedule-transition-duration) var(--mglon-schedule-transition-easing),
+      box-shadow 280ms var(--mglon-schedule-transition-easing),
+      color var(--mglon-schedule-transition-duration) var(--mglon-schedule-transition-easing),
+      border-color var(--mglon-schedule-transition-duration) var(--mglon-schedule-transition-easing));
 
   // ============================================
   // Default Styling
@@ -35,14 +40,11 @@
   border-radius: var(--btn-radius);
   font-size: var(--btn-font-size);
   font-family: var(--mglon-schedule-font-family, Roboto, sans-serif);
-  font-weight: 500;
-  border: 2px solid transparent;
-  background-color: var(--mglon-schedule-primary);
-  color: var(--mglon-schedule-on-primary);
-  transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
-    color 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: var(--mglon-button-font-weight, 500);
+  border: var(--btn-border-width) solid transparent;
+  background-color: var(--mglon-button-primary-bg, var(--mglon-schedule-primary));
+  color: var(--mglon-button-primary-color, var(--mglon-schedule-on-primary));
+  transition: var(--btn-transition);
 
   // ============================================
   // Border Radius Variants
@@ -71,28 +73,28 @@
   // Size Variants
   // ============================================
   &[size="sm"] {
-    --btn-height: 32px;
-    --btn-padding-x: 12px;
-    --btn-font-size: var(--mglon-schedule-font-size-sm, 12px);
+    --btn-height: var(--mglon-button-sm-height, 32px);
+    --btn-padding-x: var(--mglon-button-sm-padding-x, 12px);
+    --btn-font-size: var(--mglon-button-sm-font-size, var(--mglon-schedule-font-size-sm, 12px));
   }
 
   &[size="md"] {
-    --btn-height: 40px;
-    --btn-padding-x: 16px;
-    --btn-font-size: var(--mglon-schedule-font-size-md, 14px);
+    --btn-height: var(--mglon-button-md-height, 40px);
+    --btn-padding-x: var(--mglon-button-md-padding-x, 16px);
+    --btn-font-size: var(--mglon-button-md-font-size, var(--mglon-schedule-font-size-md, 14px));
   }
 
   &[size="lg"] {
-    --btn-height: 48px;
-    --btn-padding-x: 24px;
-    --btn-font-size: var(--mglon-schedule-font-size-lg, 16px);
+    --btn-height: var(--mglon-button-lg-height, 48px);
+    --btn-padding-x: var(--mglon-button-lg-padding-x, 24px);
+    --btn-font-size: var(--mglon-button-lg-font-size, var(--mglon-schedule-font-size-lg, 16px));
   }
 
   // ============================================
   // Density Variants
   // ============================================
   &[density="compact"] {
-    --btn-padding-x: 8px;
+    --btn-padding-x: var(--mglon-button-compact-padding-x, 8px);
   }
 
   // ============================================
@@ -103,7 +105,7 @@
 
     &:hover:not([disabled]) {
       @include mixins.elevation-md;
-      opacity: 0.92;
+      opacity: var(--mglon-button-hover-opacity, 0.92);
     }
   }
 
@@ -112,7 +114,7 @@
     border-color: currentColor;
 
     &:hover:not([disabled]) {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: var(--mglon-button-hover-bg, var(--mglon-schedule-hover-bg));
     }
   }
 
@@ -121,7 +123,7 @@
     border-color: transparent;
 
     &:hover:not([disabled]) {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: var(--mglon-button-hover-bg, var(--mglon-schedule-hover-bg));
     }
   }
 
@@ -141,29 +143,29 @@
   // Color Variants (Solid)
   // ============================================
   &[appereance="solid"][color="primary"] {
-    background-color: var(--mglon-schedule-primary);
-    color: var(--mglon-schedule-on-primary);
+    background-color: var(--mglon-button-primary-bg, var(--mglon-schedule-primary));
+    color: var(--mglon-button-primary-color, var(--mglon-schedule-on-primary));
   }
 
   &[appereance="solid"][color="secondary"] {
-    background-color: var(--mglon-schedule-surface-3);
-    color: var(--mglon-schedule-on-surface-3);
+    background-color: var(--mglon-button-secondary-bg, var(--mglon-schedule-surface-3));
+    color: var(--mglon-button-secondary-color, var(--mglon-schedule-on-surface-3));
   }
 
   &[appereance="solid"][color="error"] {
-    background-color: #d32f2f;
-    color: #ffffff;
+    background-color: var(--mglon-button-error-bg, var(--mglon-schedule-error));
+    color: var(--mglon-button-error-color, var(--mglon-schedule-on-error));
   }
 
   // ============================================
   // Color Variants (Outline)
   // ============================================
   &[appereance="outline"][color="primary"] {
-    color: var(--mglon-schedule-primary);
-    border-color: var(--mglon-schedule-primary);
+    color: var(--mglon-button-primary-bg, var(--mglon-schedule-primary));
+    border-color: var(--mglon-button-primary-bg, var(--mglon-schedule-primary));
 
     &:hover:not([disabled]) {
-      background-color: rgba(103, 58, 183, 0.04);
+      background-color: var(--mglon-button-primary-hover-bg, rgba(103, 58, 183, 0.04));
     }
   }
 
@@ -173,8 +175,8 @@
   }
 
   &[appereance="outline"][color="error"] {
-    color: #d32f2f;
-    border-color: #d32f2f;
+    color: var(--mglon-schedule-error);
+    border-color: var(--mglon-schedule-error);
   }
 
   // ============================================
@@ -184,7 +186,7 @@
     color: var(--mglon-schedule-primary);
 
     &:hover:not([disabled]) {
-      background-color: rgba(103, 58, 183, 0.04);
+      background-color: var(--mglon-button-primary-hover-bg, rgba(103, 58, 183, 0.04));
     }
   }
 
@@ -193,7 +195,7 @@
   }
 
   &[appereance="ghost"][color="error"] {
-    color: #d32f2f;
+    color: var(--mglon-schedule-error);
   }
 
   // ============================================
@@ -208,7 +210,7 @@
   }
 
   &[appereance="link"][color="error"] {
-    color: #d32f2f;
+    color: var(--mglon-schedule-error);
   }
 
   // ============================================
@@ -230,7 +232,7 @@
   // Disabled State
   // ============================================
   &[disabled] {
-    opacity: 0.5;
+    opacity: var(--mglon-schedule-disabled-opacity, 0.5);
     cursor: not-allowed;
     pointer-events: none;
     box-shadow: none !important;

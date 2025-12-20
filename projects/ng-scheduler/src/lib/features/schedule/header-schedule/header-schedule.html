@@ -38,9 +38,11 @@
     </mglon-button-group>
     }
 
+    @if (editable()) {
     <button mglon-icon-button (click)="add.emit()">
       <mglon-icon name="add"></mglon-icon>
     </button>
+    }
   </div>
 
 </div>

@@ -1,7 +1,7 @@
 import { Directive, ElementRef, inject, PLATFORM_ID, output, signal, HostListener, Input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Selectable } from './selectable.abstract';
-import { SelectionCorner } from '../../components/selection/selection';
+import { SelectionCorner } from '../selection/selection';
 
 /**
  * Result of a selection operation containing start and end dates/resources
@@ -47,7 +47,7 @@ export class SelectableDirective {
    * The component that implements Selectable interface.
    * Provides the getDateFromPoint() method to translate coordinates to dates.
    */
-  @Input('mglonSelectable') selectable!: Selectable;
+  @Input('mglonSelectable') selectable: Selectable | null = null;
 
   /**
    * Emitted when user starts a selection (mousedown)
@@ -151,6 +151,7 @@ export class SelectableDirective {
     this.startPoint = coords;
 
     // Get the date/resource from the starting point
+    if (!this.selectable) return;
     this.startData = this.selectable.getDateFromPoint(coords.x, coords.y);
     this.currentData = this.startData;
 
@@ -184,6 +185,7 @@ export class SelectableDirective {
     this.selection.set(rect);
 
     // Get the date/resource from the current point
+    if (!this.selectable) return;
     this.currentData = this.selectable.getDateFromPoint(coords.x, coords.y);
 
     // Emit selection change event

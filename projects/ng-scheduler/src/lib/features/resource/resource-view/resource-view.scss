@@ -4,9 +4,19 @@
 :host {
   @include google-calendar-theme;
   display: block;
-  font-family: var(--mglon-schedule-font-family);
-  color: var(--mglon-schedule-text-primary);
-  background-color: var(--mglon-schedule-background);
+  // CSS Custom Properties for Resource View
+  --resource-view-bg: var(--mglon-resource-view-bg, var(--mglon-schedule-background));
+  --resource-view-font-family: var(--mglon-resource-view-font-family, var(--mglon-schedule-font-family));
+  --resource-view-text-color: var(--mglon-resource-view-text-color, var(--mglon-schedule-text-primary));
+  --resource-sidebar-width: var(--mglon-resource-sidebar-width, var(--mglon-schedule-sidebar-width));
+  --resource-header-height: var(--mglon-resource-header-height, var(--mglon-schedule-header-height));
+  --resource-cell-height: var(--mglon-resource-cell-height, var(--mglon-schedule-cell-height));
+  --resource-border: var(--mglon-resource-border, 1px solid var(--mglon-schedule-border));
+  //--resource-cell-width: 100px; // Fixed width for time slots (flex-basis)
+
+  font-family: var(--resource-view-font-family);
+  color: var(--resource-view-text-color);
+  background-color: var(--resource-view-bg);
   height: 100%;
   overflow: auto;
   /* Allow scrolling of the entire scheduler */
@@ -15,8 +25,8 @@
 
 .ngx-cal-resource-view {
   display: grid;
-  grid-template-columns: var(--mglon-schedule-sidebar-width) 1fr;
-  grid-template-rows: var(--mglon-schedule-header-height) 1fr;
+  grid-template-columns: var(--resource-sidebar-width) 1fr;
+  grid-template-rows: var(--resource-header-height) 1fr;
   min-width: fit-content;
 
   // Header Area (Top Left + Top Right)
@@ -30,8 +40,8 @@
     z-index: 30; // Highest z-index for corner
     grid-row: 1;
     grid-column: 1;
-    border-right: 1px solid var(--mglon-schedule-border);
-    border-bottom: 1px solid var(--mglon-schedule-border);
+    border-right: var(--resource-border);
+    border-bottom: var(--resource-border);
     background-color: var(--mglon-schedule-surface);
   }
 
@@ -40,7 +50,7 @@
     grid-row: 1;
     grid-column: 2;
     display: flex;
-    border-bottom: 1px solid var(--mglon-schedule-border);
+    border-bottom: var(--resource-border);
     background-color: var(--mglon-schedule-surface);
   }
 
@@ -48,7 +58,7 @@
     @include flex-center;
     flex: 0 0 100px; // Fixed width for time slots
     height: 100%;
-    border-right: 1px solid var(--mglon-schedule-border);
+    border-right: var(--resource-border);
     font-size: var(--mglon-schedule-font-size-sm);
     color: var(--mglon-schedule-text-secondary);
   }
@@ -63,15 +73,15 @@
 
   &__resource-cell {
     @include sticky-left;
-    height: var(--mglon-schedule-cell-height);
+    height: var(--resource-cell-height);
     display: flex;
     align-items: center;
     padding: 0 var(--mglon-schedule-spacing-sm);
-    border-right: 1px solid var(--mglon-schedule-border);
-    border-bottom: 1px solid var(--mglon-schedule-border);
+    border-right: var(--resource-border);
+    border-bottom: var(--resource-border);
     font-size: var(--mglon-schedule-font-size-md);
     background-color: var(--mglon-schedule-surface);
-    width: var(--mglon-schedule-sidebar-width);
+    width: var(--resource-sidebar-width);
     box-sizing: border-box;
     @include text-ellipsis;
   }
@@ -85,13 +95,13 @@
 
   &__row {
     display: flex;
-    height: var(--mglon-schedule-cell-height);
-    border-bottom: 1px solid var(--mglon-schedule-border);
+    height: var(--resource-cell-height);
+    border-bottom: var(--resource-border);
   }
 
   &__cell {
     flex: 0 0 100px; // Must match time slot width
-    border-right: 1px solid var(--mglon-schedule-border);
+    border-right: var(--resource-border);
     height: 100%;
 
     &:hover {
