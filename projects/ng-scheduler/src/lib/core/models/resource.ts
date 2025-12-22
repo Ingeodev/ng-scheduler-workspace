@@ -20,6 +20,9 @@ export interface Resource {
   /** Tags for filtering */
   tags?: string[];
 
+  // -- Control & Logic --
+  isActive?: boolean;   // If true, resource is active and visible. Default: true
+
   /** If true, events for this resource cannot be edited */
   isReadOnly?: boolean;
 

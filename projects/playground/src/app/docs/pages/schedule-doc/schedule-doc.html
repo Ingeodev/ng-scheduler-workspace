@@ -15,8 +15,10 @@
     <app-example-viewer [code]="basicExampleCode">
       <div preview style="width: 100%;">
         <div style="width: 100%; height: 600px;">
-          <mglon-schedule [config]="config">
-            <mglon-resource id="resource-1" name="Conference Room A" color="#000000">
+          <mglon-schedule [config]="config" (resourceShow)="onResourceShow($event)"
+            (resourceHide)="onResourceHide($event)">
+            <mglon-resource id="resource-1" name="Conference Room A" color="#4285f4"
+              avatar="https://i.pravatar.cc/150?img=1" [isActive]="true">
 
               <mglon-event id="evt-1" title="Team Standup" [start]="event1Start" [end]="event1End" color="#C1C1C1">
               </mglon-event>
@@ -25,10 +27,19 @@
               </mglon-event>
             </mglon-resource>
 
-            <mglon-resource id="resource-2" name="Conference Room B" color="#e91e63">
+            <mglon-resource id="resource-2" name="Conference Room B" color="#ea4335"
+              avatar="https://i.pravatar.cc/150?img=2" [isActive]="true">
 
               <mglon-event id="evt-3" title="Design Review" [start]="event3Start" [end]="event3End">
               </mglon-event>
+            </mglon-resource>
+
+            <mglon-resource id="resource-3" name="John Doe" color="#34a853" avatar="https://i.pravatar.cc/150?img=3"
+              [isActive]="false">
+            </mglon-resource>
+
+            <mglon-resource id="resource-4" name="Jane Smith" color="#fbbc04" avatar="https://i.pravatar.cc/150?img=4"
+              [isActive]="true">
             </mglon-resource>
           </mglon-schedule>
         </div>

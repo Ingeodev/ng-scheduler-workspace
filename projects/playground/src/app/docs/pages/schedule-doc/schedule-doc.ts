@@ -20,8 +20,6 @@ import { ExampleViewerComponent } from '../../shared/example-viewer/example-view
     Schedule,
     ResourceComponent, // Added ResourceComponent
     EventComponent,
-    AllDayEventComponent,
-    RecurrentEventComponent,
     ApiTableComponent,
     CodeBlockComponent,
     ExampleViewerComponent
@@ -154,4 +152,14 @@ export class MyComponent {
       typeLink: '/docs/api/view-mode'
     },
   ];
+
+  onResourceShow(resourceId: string): void {
+    console.log('Resource shown:', resourceId);
+    alert(`Resource shown: ${resourceId}`);
+  }
+
+  onResourceHide(resourceId: string): void {
+    console.log('Resource hidden:', resourceId);
+    alert(`Resource hidden: ${resourceId}`);
+  }
 }

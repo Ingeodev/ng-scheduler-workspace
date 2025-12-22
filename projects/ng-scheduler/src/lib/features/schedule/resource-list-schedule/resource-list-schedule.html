@@ -1,0 +1,12 @@
+<div class="resource-list">
+  @if (resources().length > 0) {
+  @for (resource of resources(); track resource.id) {
+  <mglon-resource-item-schedule [resource]="resource" (toggle)="toggleResource.emit($event)" />
+  }
+  } @else {
+  <div class="resource-list-empty">
+    <span class="empty-icon">📋</span>
+    <span class="empty-text">No resources available</span>
+  </div>
+  }
+</div>

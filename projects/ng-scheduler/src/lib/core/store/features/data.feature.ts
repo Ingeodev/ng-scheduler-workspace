@@ -37,6 +37,27 @@ export function withDataFeature() {
       },
       addResource(resource: ResourceModel) {
         patchState(store, (state) => ({ resources: [...state.resources, resource] }));
+      },
+      toggleResource(id: string) {
+        patchState(store, (state) => ({
+          resources: state.resources.map(r =>
+            r.id === id ? { ...r, isActive: r.isActive === false ? true : false } : r
+          )
+        }));
+      },
+      activateResource(id: string) {
+        patchState(store, (state) => ({
+          resources: state.resources.map(r =>
+            r.id === id ? { ...r, isActive: true } : r
+          )
+        }));
+      },
+      deactivateResource(id: string) {
+        patchState(store, (state) => ({
+          resources: state.resources.map(r =>
+            r.id === id ? { ...r, isActive: false } : r
+          )
+        }));
       }
     })),
     withComputed(({ events, resources }) => ({
@@ -44,6 +65,8 @@ export function withDataFeature() {
       // o validaciones de integridad referencial
       eventsCount: computed(() => events().length),
       resourcesCount: computed(() => resources().length),
+      activeResources: computed(() => resources().filter(r => r.isActive !== false)),
+      inactiveResources: computed(() => resources().filter(r => r.isActive === false)),
     }))
   );
 }

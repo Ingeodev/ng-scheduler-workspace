@@ -6,24 +6,33 @@
   </mglon-header-schedule>
 
   <!-- Body -->
+
   <main class="ng-sched-body">
-    @switch (store.viewMode()) {
-    @case ('resource') {
-    <mglon-resource-view></mglon-resource-view>
-    }
-    @case ('month') {
-    <mglon-month-view></mglon-month-view>
-    }
-    @case ('week') {
-    <mglon-week-view (selectionStart)="selectionStart.emit($event)" (selectionChange)="selectionChange.emit($event)"
-      (selectionEnd)="selectionEnd.emit($event)">
-    </mglon-week-view>
-    }
-    @default {
-    <div class="ng-sched-placeholder">
-      View '{{ store.viewMode() }}' not implemented yet.
+    @if (store.config().showSidebar) {
+    <div class="ng-sched-body__sidebar">
+      <mglon-sidebar-schedule></mglon-sidebar-schedule>
     </div>
     }
-    }
+    <div class="ng-sched-body__content">
+      @switch (store.viewMode()) {
+      @case ('resource') {
+      <mglon-resource-view></mglon-resource-view>
+      }
+      @case ('month') {
+      <mglon-month-view></mglon-month-view>
+      }
+      @case ('week') {
+      <mglon-week-view (selectionStart)="selectionStart.emit($event)" (selectionChange)="selectionChange.emit($event)"
+        (selectionEnd)="selectionEnd.emit($event)">
+      </mglon-week-view>
+      }
+      @default {
+      <div class="ng-sched-placeholder">
+        View '{{ store.viewMode() }}' not implemented yet.
+      </div>
+      }
+      }
+    </div>
+
   </main>
 </div>

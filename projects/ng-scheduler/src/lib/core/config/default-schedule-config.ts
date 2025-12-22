@@ -15,5 +15,6 @@ export const DEFAULT_CONFIG: SchedulerConfig = {
   height: '100%',
   backgroundSelection: true,
   showNowIndicator: true,
-  editable: true
+  editable: true,
+  showSidebar: true
 };

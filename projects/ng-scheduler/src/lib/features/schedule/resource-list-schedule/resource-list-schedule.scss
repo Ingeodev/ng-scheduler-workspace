@@ -1,0 +1,29 @@
+@use '../../../styles/variables' as *;
+
+.resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.resource-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ngx-cal-spacing-lg, 16px);
+  gap: var(--ngx-cal-spacing-sm, 8px);
+  color: var(--ngx-cal-text-secondary);
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-size: 0.875rem;
+}

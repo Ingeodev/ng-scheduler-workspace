@@ -152,6 +152,34 @@ export const EventStore = signalStore(
     },
 
     /**
+     * Shows/activates a resource by ID
+     */
+    showResource(id: string): void {
+      patchState(store, (state) => {
+        const newResources = new Map(state.resources);
+        const existing = newResources.get(id);
+        if (existing) {
+          newResources.set(id, { ...existing, isActive: true });
+        }
+        return { resources: newResources };
+      });
+    },
+
+    /**
+     * Hides/deactivates a resource by ID
+     */
+    hideResource(id: string): void {
+      patchState(store, (state) => {
+        const newResources = new Map(state.resources);
+        const existing = newResources.get(id);
+        if (existing) {
+          newResources.set(id, { ...existing, isActive: false });
+        }
+        return { resources: newResources };
+      });
+    },
+
+    /**
      * Clears all events and resources from the store
      */
     clear(): void {

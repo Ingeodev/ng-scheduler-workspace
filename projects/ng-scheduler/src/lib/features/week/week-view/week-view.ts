@@ -67,6 +67,10 @@ export class WeekView {
     const currentDate = this.store.currentDate();
     const gridBounds = this.gridSync.gridBounds();
 
+    // Get active resources to filter events
+    const activeResources = this.store.activeResources();
+    const activeResourceIds = new Set(activeResources.map(r => r.id));
+
     // Guard: Only render if grid has been measured
     if (gridBounds.cellWidth === 0) {
       return [];
@@ -79,6 +83,11 @@ export class WeekView {
     weekEnd.setHours(23, 59, 59, 999);
 
     const eventsInWeek = events.filter(event => {
+      // Filter by active resources FIRST
+      if (event.resourceId && !activeResourceIds.has(event.resourceId)) {
+        return false; // Skip events from inactive resources
+      }
+
       if (event.type === 'event') {
         const eventStart = event.start;
         const eventEnd = event.end;

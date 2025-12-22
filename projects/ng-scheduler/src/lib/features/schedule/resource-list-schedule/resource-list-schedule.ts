@@ -1,0 +1,19 @@
+import { Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ResourceModel } from '../../../core/models/event-model';
+import { ResourceItemSchedule } from '../resource-item-schedule/resource-item-schedule';
+
+@Component({
+  selector: 'mglon-resource-list-schedule',
+  standalone: true,
+  imports: [CommonModule, ResourceItemSchedule],
+  templateUrl: './resource-list-schedule.html',
+  styleUrl: './resource-list-schedule.scss',
+})
+export class ResourceListSchedule {
+  /** Array of resources to display */
+  readonly resources = input<ResourceModel[]>([]);
+
+  /** Emitted when a resource is toggled */
+  readonly toggleResource = output<string>();
+}

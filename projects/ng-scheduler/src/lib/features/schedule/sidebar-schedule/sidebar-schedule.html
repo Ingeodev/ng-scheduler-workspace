@@ -1,0 +1,8 @@
+<aside class="sidebar-schedule">
+  <header class="sidebar-header">
+    <h3 class="sidebar-title">Resources</h3>
+  </header>
+  <div class="sidebar-content">
+    <mglon-resource-list-schedule [resources]="store.resources()" (toggleResource)="onToggleResource($event)" />
+  </div>
+</aside>

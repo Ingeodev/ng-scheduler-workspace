@@ -1,4 +1,4 @@
-import { Component, input, OnInit, OnDestroy, inject, Injector, EnvironmentInjector, runInInjectionContext } from '@angular/core';
+import { Component, input, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Resource } from '../../../core/models/resource';
 import { EventStore } from '../../../core/store/event.store';
@@ -61,8 +61,27 @@ export class ResourceComponent implements OnInit, OnDestroy {
   /** If true, this resource does not accept new events */
   readonly isBlocked = input<boolean>(false);
 
+  /** If true, resource is active and visible. Default: true */
+  readonly isActive = input<boolean>(true);
+
   /** Flexible user-defined data */
   readonly metadata = input<any>();
+
+  constructor() {
+    // Sync isActive input changes to EventStore
+    effect(() => {
+      const shouldBeActive = this.isActive();
+      const resourceId = this.id();
+
+      if (resourceId) {
+        if (shouldBeActive) {
+          this.store.showResource(resourceId);
+        } else {
+          this.store.hideResource(resourceId);
+        }
+      }
+    }, { allowSignalWrites: true });
+  }
 
   ngOnInit(): void {
     this.registerResource();
@@ -93,6 +112,7 @@ export class ResourceComponent implements OnInit, OnDestroy {
       tags: this.tags(),
       isReadOnly: this.isReadOnly(),
       isBlocked: this.isBlocked(),
+      isActive: this.isActive(),
       metadata: this.metadata()
     };
 
