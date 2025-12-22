@@ -1,0 +1,34 @@
+@use '../../../styles/variables' as *;
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ngx-cal-spacing-sm, 8px);
+  padding: var(--ngx-cal-spacing-xs, 6px) var(--ngx-cal-spacing-sm, 8px);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: var(--ngx-cal-hover, rgba(0, 0, 0, 0.04));
+  }
+
+  &:active {
+    background-color: var(--ngx-cal-selection, rgba(0, 0, 0, 0.08));
+  }
+}
+
+.resource-name {
+  font-size: 0.875rem;
+  color: var(--ngx-cal-text-primary);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+
+  &.inactive {
+    color: var(--ngx-cal-text-secondary);
+    opacity: 0.6;
+  }
+}

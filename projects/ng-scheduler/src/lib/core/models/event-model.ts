@@ -47,6 +47,7 @@ export interface ResourceModel {
   tags?: string[],      // Etiquetas para filtrado
 
   // -- Control & Lógica --
+  isActive?: boolean,   // Si true, el recurso está activo y visible. Defecto: true
   isReadOnly?: boolean, // Si true, no se pueden editar sus eventos
   isBlocked?: boolean,  // Si true, no acepta nuevos eventos
   metadata?: any,       // Datos flexibles del usuario

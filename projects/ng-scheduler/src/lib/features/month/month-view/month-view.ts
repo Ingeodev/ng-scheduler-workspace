@@ -35,6 +35,10 @@ export class MonthView {
     const currentDate = this.calendarStore.currentDate();
     const gridBounds = this.gridSync.gridBounds();
 
+    // Get active resources to filter events
+    const activeResources = this.calendarStore.activeResources();
+    const activeResourceIds = new Set(activeResources.map(r => r.id));
+
     // Guard: Only render if grid has been measured
     if (gridBounds.cellWidth === 0 || gridBounds.cellHeight === 0) {
       return [];
@@ -45,6 +49,11 @@ export class MonthView {
     const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
     const eventsInMonth = events.filter(event => {
+      // Filter by active resources FIRST
+      if (event.resourceId && !activeResourceIds.has(event.resourceId)) {
+        return false; // Skip events from inactive resources
+      }
+
       if (event.type === 'event') {
         const eventStart = event.start;
         const eventEnd = event.end;

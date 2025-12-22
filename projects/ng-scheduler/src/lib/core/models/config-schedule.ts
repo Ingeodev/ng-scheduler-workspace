@@ -1,3 +1,5 @@
+import { ResourceModel } from './event-model';
+
 export type ViewMode = 'day' | 'week' | 'month' | 'resource' | 'list';
 
 export interface SchedulerConfig {
@@ -58,4 +60,12 @@ export interface SchedulerConfig {
   /** Propiedad para activar o desactivar las opciones de edicion (como el boton add del header).
    * Defecto: true */
   editable?: boolean;
+
+  /** Mostrar u ocultar el sidebar lateral.
+   * Defecto: true */
+  showSidebar?: boolean;
+
+  /** Array de recursos a mostrar en el sidebar.
+   * Defecto: [] */
+  resources?: ResourceModel[];
 }

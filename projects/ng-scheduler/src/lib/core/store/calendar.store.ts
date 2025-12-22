@@ -45,6 +45,11 @@ export const CalendarStore = signalStore(
         currentDate: config.initialDate ? new Date(config.initialDate) : state.currentDate,
         viewMode: config.initialView || state.viewMode
       }));
+
+      // Update resources if provided in config
+      if (config.resources) {
+        store.setResources(config.resources);
+      }
     },
     next() {
       const mode = store.viewMode();

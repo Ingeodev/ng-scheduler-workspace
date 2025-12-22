@@ -1,0 +1,30 @@
+@use '../../../styles/variables' as *;
+
+.sidebar-schedule {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 250px;
+  background-color: var(--ngx-cal-surface);
+  border-right: 1px solid var(--ngx-cal-border);
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: var(--ngx-cal-spacing-md, 12px) var(--ngx-cal-spacing-md, 12px);
+  border-bottom: 1px solid var(--ngx-cal-border);
+  background-color: var(--ngx-cal-background);
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ngx-cal-text-primary);
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--ngx-cal-spacing-sm, 8px);
+}

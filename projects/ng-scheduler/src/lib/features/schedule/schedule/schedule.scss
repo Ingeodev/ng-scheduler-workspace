@@ -56,21 +56,41 @@
   font-family: inherit;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease-in-out;
+  border-radius: 4px;
+  outline: none;
+  user-select: none;
 
   &--icon {
     padding: 6px 10px;
     border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--ngx-cal-hover);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ngx-cal-primary);
+    outline-offset: 2px;
   }
 
   &--active {
     background-color: var(--ngx-cal-selection);
     color: var(--ngx-cal-primary);
     font-weight: 500;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   // Grouped buttons (views) style
@@ -88,15 +108,38 @@
 .ng-sched-body {
   position: relative;
   height: 100%;
-  overflow: hidden; // Allow child views to handle their own scrolling
-  display: flex;
-  flex-direction: column;
+  overflow: hidden; // Prevent body from scrolling
+  display: grid;
+  grid-template-columns: auto 1fr; // Sidebar auto-width, calendar takes remaining space
+  gap: 0;
+
+  // Si solo hay un elemento (sin sidebar), ocupar todo el ancho
+  &:has(> :only-child) {
+    grid-template-columns: 1fr;
+  }
+
+  // Calendar content area should be scrollable
+  > :last-child {
+    overflow: auto; // Enable horizontal and vertical scroll for calendar
+    min-width: 0; // Allow shrinking below content width
+  }
 }
 
 .ng-sched-placeholder {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
+  padding: var(--ngx-cal-spacing-lg);
   color: var(--ngx-cal-text-secondary);
+  font-size: 1rem;
+  text-align: center;
+  gap: var(--ngx-cal-spacing-md);
+
+  &::before {
+    content: '📅';
+    font-size: 3rem;
+    opacity: 0.3;
+  }
 }

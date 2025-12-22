@@ -300,4 +300,99 @@ describe('EventStore', () => {
       expect(allResources).toHaveLength(2);
     });
   });
+
+  describe('Show/Hide Resource', () => {
+    it('should show (activate) a resource', () => {
+      const resource: Resource = {
+        id: 'res-1',
+        name: 'Room A',
+        color: '#0860c4',
+        isActive: false
+      };
+
+      store.registerResource(resource);
+      expect(store.getResource('res-1')?.isActive).toBe(false);
+
+      store.showResource('res-1');
+
+      const updated = store.getResource('res-1');
+      expect(updated?.isActive).toBe(true);
+    });
+
+    it('should hide (deactivate) a resource', () => {
+      const resource: Resource = {
+        id: 'res-1',
+        name: 'Room A',
+        color: '#0860c4',
+        isActive: true
+      };
+
+      store.registerResource(resource);
+      expect(store.getResource('res-1')?.isActive).toBe(true);
+
+      store.hideResource('res-1');
+
+      const updated = store.getResource('res-1');
+      expect(updated?.isActive).toBe(false);
+    });
+
+    it('should handle showing an already active resource', () => {
+      const resource: Resource = {
+        id: 'res-1',
+        name: 'Room A',
+        color: '#0860c4',
+        isActive: true
+      };
+
+      store.registerResource(resource);
+      store.showResource('res-1');
+
+      const updated = store.getResource('res-1');
+      expect(updated?.isActive).toBe(true);
+    });
+
+    it('should handle hiding an already inactive resource', () => {
+      const resource: Resource = {
+        id: 'res-1',
+        name: 'Room A',
+        color: '#0860c4',
+        isActive: false
+      };
+
+      store.registerResource(resource);
+      store.hideResource('res-1');
+
+      const updated = store.getResource('res-1');
+      expect(updated?.isActive).toBe(false);
+    });
+
+    it('should not error when showing non-existent resource', () => {
+      expect(() => store.showResource('non-existent')).not.toThrow();
+      expect(store.getResource('non-existent')).toBeUndefined();
+    });
+
+    it('should not error when hiding non-existent resource', () => {
+      expect(() => store.hideResource('non-existent')).not.toThrow();
+      expect(store.getResource('non-existent')).toBeUndefined();
+    });
+
+    it('should toggle resource visibility correctly', () => {
+      const resource: Resource = {
+        id: 'res-1',
+        name: 'Room A',
+        color: '#0860c4',
+        isActive: true
+      };
+
+      store.registerResource(resource);
+
+      // Hide it
+      store.hideResource('res-1');
+      expect(store.getResource('res-1')?.isActive).toBe(false);
+
+      // Show it again
+      store.showResource('res-1');
+      expect(store.getResource('res-1')?.isActive).toBe(true);
+    });
+  });
 });
