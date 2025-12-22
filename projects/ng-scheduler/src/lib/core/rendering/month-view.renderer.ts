@@ -13,16 +13,18 @@ import { AnyEvent, Event, AllDayEvent } from '../models/event';
  * Multi-day events span across multiple cells.
  */
 export class MonthViewRenderer extends EventRenderer {
-  private readonly EVENT_HEIGHT = 20;  // pixels per event bar
+  private readonly EVENT_HEIGHT_EM = 1.5;  // em units per event slot
   private readonly DAY_NUMBER_HEIGHT = 24; // Space reserved for day number at top
+  private readonly DAY_WIDTH_PERCENT = 100 / 7; // 14.2857% per day
+  private readonly EVENT_SPACING_XS = 4; // Gap between events in pixels
 
   render(
     event: AnyEvent,
     viewDate: Date,
-    cellDimensions?: { width: number; height: number }
+    cellDimensions?: { width: number; height: number },
+    slotIndex?: number
   ): EventRenderData {
     // Use provided dimensions or fallback to defaults
-    const cellWidth = cellDimensions?.width || 121; // Real grid width
     const cellHeight = cellDimensions?.height || 76;
 
     const isMultiDay = this.isMultiDay(event);
@@ -39,19 +41,29 @@ export class MonthViewRenderer extends EventRenderer {
     // Calculate duration in days (for width)
     const durationDays = this.calculateDurationDays(startDate, endDate);
 
+    // Use percentage-based positioning for X axis (Google Calendar style)
+    const leftPercent = startDayOfWeek * this.DAY_WIDTH_PERCENT;
+    const widthPercent = durationDays * this.DAY_WIDTH_PERCENT;
+
+    // Convert em to pixels for Y positioning with spacing between events
+    // Note: We use pixels for top to avoid unit mixing issues
+    const emToPx = 24; // Approximate conversion (1.5em * 16px base font = 24px)
+    const slotHeight = emToPx + this.EVENT_SPACING_XS; // Event height + gap
+    const slotOffsetPx = (slotIndex !== undefined ? slotIndex : 0) * slotHeight;
+
     return {
       position: {
-        left: startDayOfWeek * cellWidth,
-        top: weekOfMonth * cellHeight + this.DAY_NUMBER_HEIGHT, // Add offset for day number
-        width: durationDays * cellWidth,
-        height: this.EVENT_HEIGHT
+        left: `${leftPercent.toFixed(4)}%`,    // Percentage for X (14.2857%)
+        top: weekOfMonth * cellHeight + this.DAY_NUMBER_HEIGHT + slotOffsetPx, // px for Y
+        width: `${widthPercent.toFixed(4)}%`,  // Percentage for width
+        height: `${this.EVENT_HEIGHT_EM}em`    // em for height
       },
       zIndex: 1,
       slices,
       layout: {
         column: startDayOfWeek,
-        overlap: 0,
-        totalOverlaps: 1
+        overlap: slotIndex || 0,
+        totalOverlaps: (slotIndex || 0) + 1
       },
       isResizing: false,
       isDragging: false,

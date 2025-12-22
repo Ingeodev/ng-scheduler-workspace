@@ -35,14 +35,21 @@ export class ScheduleDocComponent {
   };
 
   // Sample event dates
-  event1Start = new Date(2024, 11, 20, 10, 0); // Dec 20, 2024 10:00 AM
-  event1End = new Date(2024, 11, 20, 11, 0);   // Dec 20, 2024 11:00 AM
+  event1Start = new Date(2025, 11, 21, 10, 0); // Dec 20, 2024 10:00 AM
+  event1End = new Date(2025, 11, 21, 11, 0);   // Dec 20, 2024 11:00 AM
 
-  event2Start = new Date(2024, 11, 21, 14, 0); // Dec 21, 2024 2:00 PM
-  event2End = new Date(2024, 11, 21, 15, 38);  // Dec 21, 2024 3:30 PM
+  event2Start = new Date(2025, 11, 21, 14, 0); // Dec 21, 2024 2:00 PM
+  event2End = new Date(2025, 11, 21, 15, 38);  // Dec 21, 2024 3:30 PM
 
-  event3Start = new Date(2024, 11, 22, 9, 0);  // Dec 22, 2024 9:00 AM
-  event3End = new Date(2024, 11, 22, 10, 30);  // Dec 22, 2024 10:30 AM
+  event3Start = new Date(2025, 11, 21, 9, 0);  // Dec 22, 2025 9:00 AM
+  event3End = new Date(2025, 11, 21, 10, 30);  // Dec 22, 2025 10:30 AM
+
+  // Additional events on SAME DAY as event1 (Dec 20) for Tetris demo
+  event4Start = new Date(2025, 11, 20, 14, 0); // Dec 20, 2025 2:00 PM
+  event4End = new Date(2025, 11, 20, 15, 0);   // Dec 20, 2025 3:00 PM
+
+  event5Start = new Date(2025, 11, 20, 16, 30); // Dec 20, 2025 4:30 PM  
+  event5End = new Date(2025, 11, 20, 17, 30);   // Dec 20, 2025 5:30 PM
 
   basicExampleCode = `
 import { Component } from '@angular/core';

@@ -74,16 +74,23 @@ export class EventRenderComponent {
 
   /**
    * Computes dynamic styles for event positioning
+   * Supports mixed units: px, %, em
    */
   eventStyles = computed(() => {
     const data = this.renderData();
     const color = this.eventColor();
 
+    // Helper to format value with unit
+    const formatValue = (value: number | string) => {
+      if (typeof value === 'string') return value;
+      return `${value}px`;
+    };
+
     return {
-      '--event-x': `${data.position.left}px`,
-      '--event-y': `${data.position.top}px`,
-      '--event-width': `${data.position.width}px`,
-      '--event-height': `${data.position.height}px`,
+      '--event-x': formatValue(data.position.left),
+      '--event-y': formatValue(data.position.top),
+      '--event-width': formatValue(data.position.width),
+      '--event-height': formatValue(data.position.height),
       '--event-z': data.zIndex,
       'background-color': color,
       'border-left-color': color

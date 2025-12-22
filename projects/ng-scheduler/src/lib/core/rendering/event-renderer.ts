@@ -25,10 +25,10 @@ export interface EventSlice {
  */
 export interface EventRenderData {
   position: {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
+    top: number | string;    // px, em, or % (e.g., 100 or '14.28%' or '1.5em')
+    left: number | string;   // px or % (e.g., 100 or '28.57%')
+    width: number | string;  // px or % (e.g., 100 or '14.28%')
+    height: number | string; // px or em (e.g., 20 or '1.5em')
   };
   zIndex: number;
   slices?: EventSlice[];
@@ -57,12 +57,14 @@ export abstract class EventRenderer {
    * @param event - The event to render
    * @param viewDate - The current view date
    * @param cellDimensions - Optional cell dimensions from the grid
+   * @param slotIndex - Optional slot index for vertical stacking (Month view)
    * @returns Render data including position, layout, and metadata
    */
   abstract render(
     event: AnyEvent,
     viewDate: Date,
-    cellDimensions?: { width: number; height: number }
+    cellDimensions?: { width: number; height: number },
+    slotIndex?: number
   ): EventRenderData;
 
   /**

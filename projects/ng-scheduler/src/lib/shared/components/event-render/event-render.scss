@@ -3,13 +3,16 @@
 
 .event-render {
   position: absolute;
-  transform: translate3d(var(--event-x), var(--event-y), 0);
+
+  // Use left/top for positioning (supports % relative to parent)
+  left: var(--event-x);
+  top: var(--event-y);
   width: var(--event-width);
   height: var(--event-height);
   z-index: var(--event-z, 1);
 
-  // GPU acceleration
-  will-change: transform, width, height;
+  // GPU acceleration for transforms (animations only)
+  will-change: left, top, width, height;
   transition: all var(--ngx-cal-transition-duration, 0.2s) var(--ngx-cal-transition-timing, cubic-bezier(0.4, 0.0, 0.2, 1));
 
   // Visual styling
@@ -25,7 +28,7 @@
 
   &:hover {
     box-shadow: var(--ngx-cal-shadow-md, 0 2px 4px rgba(0, 0, 0, 0.15));
-    transform: translate3d(var(--event-x), var(--event-y), 0) scale(1.02);
+    transform: scale(1.02); // Only transform on hover for effect
   }
 
   &.is-dragging,
