@@ -22,7 +22,8 @@ export class MonthViewRenderer extends EventRenderer {
     event: AnyEvent,
     viewDate: Date,
     cellDimensions?: { width: number; height: number },
-    slotIndex?: number
+    slotIndex?: number,
+    viewBoundaries?: { start: Date; end: Date }
   ): EventRenderData {
     // Use provided dimensions or fallback to defaults
     const cellHeight = cellDimensions?.height || 76;
@@ -34,29 +35,45 @@ export class MonthViewRenderer extends EventRenderer {
     const startDate = this.getEventStart(event);
     const endDate = this.getEventEnd(event);
 
-    // Calculate position in month grid
-    const startDayOfWeek = this.getDayOfWeek(startDate);
-    const weekOfMonth = this.getWeekOfMonth(startDate);
+    // Calculate effective start/end based on view boundaries
+    let effectiveStart = startDate;
+    let effectiveEnd = endDate;
+    let isStart = true;
+    let isEnd = true;
+
+    if (viewBoundaries) {
+      if (startDate < viewBoundaries.start) {
+        effectiveStart = viewBoundaries.start;
+        isStart = false; // Started before this view
+      }
+      if (endDate > viewBoundaries.end) {
+        effectiveEnd = viewBoundaries.end;
+        isEnd = false; // Ends after this view
+      }
+    }
+
+    // Calculate position in month grid using effective dates
+    const startDayOfWeek = this.getDayOfWeek(effectiveStart);
+    const weekOfMonth = this.getWeekOfMonth(effectiveStart); // Relative to clamped start
 
     // Calculate duration in days (for width)
-    const durationDays = this.calculateDurationDays(startDate, endDate);
+    const durationDays = this.calculateDurationDays(effectiveStart, effectiveEnd);
 
     // Use percentage-based positioning for X axis (Google Calendar style)
     const leftPercent = startDayOfWeek * this.DAY_WIDTH_PERCENT;
     const widthPercent = durationDays * this.DAY_WIDTH_PERCENT;
 
-    // Convert em to pixels for Y positioning with spacing between events
-    // Note: We use pixels for top to avoid unit mixing issues
-    const emToPx = 24; // Approximate conversion (1.5em * 16px base font = 24px)
-    const slotHeight = emToPx + this.EVENT_SPACING_XS; // Event height + gap
+    // Convert em to pixels for Y positioning
+    const emToPx = 24;
+    const slotHeight = emToPx + this.EVENT_SPACING_XS;
     const slotOffsetPx = (slotIndex !== undefined ? slotIndex : 0) * slotHeight;
 
     return {
       position: {
-        left: `${leftPercent.toFixed(4)}%`,    // Percentage for X (14.2857%)
-        top: weekOfMonth * cellHeight + this.DAY_NUMBER_HEIGHT + slotOffsetPx, // px for Y
-        width: `${widthPercent.toFixed(4)}%`,  // Percentage for width
-        height: `${this.EVENT_HEIGHT_EM}em`    // em for height
+        left: `${leftPercent.toFixed(4)}%`,
+        top: weekOfMonth * cellHeight + this.DAY_NUMBER_HEIGHT + slotOffsetPx,
+        width: `${widthPercent.toFixed(4)}%`,
+        height: `${this.EVENT_HEIGHT_EM}em`
       },
       zIndex: 1,
       slices,
@@ -68,7 +85,9 @@ export class MonthViewRenderer extends EventRenderer {
       isResizing: false,
       isDragging: false,
       isHovered: false,
-      isSelected: false
+      isSelected: false,
+      isStart,
+      isEnd
     };
   }
 

@@ -27,6 +27,8 @@ import { EventRenderData } from '../../../core/rendering/event-renderer';
       [class.is-resizing]="isResizing()"
       [class.is-hovered]="isHovered()"
       [class.is-selected]="isSelected()"
+      [class.has-continuation-left]="!isStart()"
+      [class.has-continuation-right]="!isEnd()"
       [style]="eventStyles()"
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"

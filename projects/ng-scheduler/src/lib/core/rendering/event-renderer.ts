@@ -41,6 +41,8 @@ export interface EventRenderData {
   isDragging: boolean;
   isHovered: boolean;
   isSelected: boolean;
+  isStart?: boolean; // Is this the true start of the event?
+  isEnd?: boolean;   // Is this the true end of the event?
 }
 
 /**
@@ -58,13 +60,15 @@ export abstract class EventRenderer {
    * @param viewDate - The current view date
    * @param cellDimensions - Optional cell dimensions from the grid
    * @param slotIndex - Optional slot index for vertical stacking (Month view)
+   * @param viewBoundaries - Optional constraints for the current view (e.g., week start/end)
    * @returns Render data including position, layout, and metadata
    */
   abstract render(
     event: AnyEvent,
     viewDate: Date,
     cellDimensions?: { width: number; height: number },
-    slotIndex?: number
+    slotIndex?: number,
+    viewBoundaries?: { start: Date; end: Date }
   ): EventRenderData;
 
   /**

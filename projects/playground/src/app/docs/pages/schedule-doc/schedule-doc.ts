@@ -35,13 +35,13 @@ export class ScheduleDocComponent {
   };
 
   // Sample event dates
-  event1Start = new Date(2025, 11, 21, 10, 0); // Dec 20, 2024 10:00 AM
-  event1End = new Date(2025, 11, 21, 11, 0);   // Dec 20, 2024 11:00 AM
+  event1Start = new Date(2025, 11, 20, 10, 0); // Dec 20, 2025 (Saturday)
+  event1End = new Date(2025, 11, 23, 11, 0);   // Dec 23, 2025 (Tuesday)
 
-  event2Start = new Date(2025, 11, 21, 14, 0); // Dec 21, 2024 2:00 PM
+  event2Start = new Date(2025, 11, 20, 14, 0); // Dec 21, 2024 2:00 PM
   event2End = new Date(2025, 11, 21, 15, 38);  // Dec 21, 2024 3:30 PM
 
-  event3Start = new Date(2025, 11, 21, 9, 0);  // Dec 22, 2025 9:00 AM
+  event3Start = new Date(2025, 11, 20, 9, 0);  // Dec 22, 2025 9:00 AM
   event3End = new Date(2025, 11, 21, 10, 30);  // Dec 22, 2025 10:30 AM
 
   // Additional events on SAME DAY as event1 (Dec 20) for Tetris demo

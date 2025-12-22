@@ -229,7 +229,8 @@ export class MonthView {
               slotted.event,
               currentDate,
               cellDimensions,
-              slotted.slotIndex  // Pass slot index for Y positioning
+              slotted.slotIndex,  // Pass slot index for Y positioning
+              { start: weekStart, end: weekEnd } // [NEW] Pass week boundaries for clamping
             ),
             color: this.getEventColor(slotted.event)
           });

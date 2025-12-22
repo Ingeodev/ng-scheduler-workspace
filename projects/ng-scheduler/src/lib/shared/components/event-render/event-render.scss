@@ -44,6 +44,19 @@
     box-shadow: 0 2px 8px rgba(var(--ngx-cal-primary-rgb, 8, 96, 196), 0.4);
   }
 
+  &.has-continuation-left {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none; // Remove colored border on continuation
+    margin-left: 0;
+  }
+
+  &.has-continuation-right {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0;
+  }
+
   &.is-hovered {
     opacity: 0.95;
   }

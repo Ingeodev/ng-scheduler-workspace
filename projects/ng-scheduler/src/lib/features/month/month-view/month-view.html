@@ -14,7 +14,8 @@
       <div class="mglon-month-view__events-layer">
         @for (item of eventsToRender().events; track item.event.id) {
         <mglon-event-render [event]="item.event" [renderData]="item.renderData" [eventColor]="item.color"
-          [showTime]="false" (eventClicked)="onEventClick($event)">
+          [showTime]="false" (eventClicked)="onEventClick($event)" [isStart]="item.renderData.isStart ?? true"
+          [isEnd]="item.renderData.isEnd ?? true">
         </mglon-event-render>
         }
 
