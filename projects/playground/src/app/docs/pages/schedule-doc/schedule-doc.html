@@ -15,37 +15,39 @@
     <app-example-viewer [code]="basicExampleCode">
       <div preview style="width: 100%;">
         <div style="width: 100%; height: 600px;">
+          <!-- GLOBAL handler: scheduleEventClickHandler -->
           <mglon-schedule [config]="config" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
+            <!-- RESOURCE handler: resourceEventClickHandler -->
             <mglon-resource id="resource-1" name="Conference Room A" color="#4285f4"
               avatar="https://i.pravatar.cc/150?img=1" [isActive]="true">
 
-              <mglon-event id="evt-1" title="Team Standup" [start]="event1Start" [end]="event1End" color="#C1C1C1">
+              <!-- EVENT handler: eventClickHandler (highest priority) -->
+              <mglon-event id="evt-1" title="Team Standup" [start]="event1Start" [end]="event1End" color="#C1C1C1"
+                (eventClick)="eventClickHandler($event)">
               </mglon-event>
 
-              <mglon-event id="evt-4" title="Planning Session" [start]="event4Start" [end]="event4End">
+              <!-- No event handler - uses RESOURCE handler -->
+              <mglon-event id="evt-4" title="Planning Session" [start]="event4Start" [end]="event4End"
+                (eventClick)="eventClickHandler($event)">
               </mglon-event>
 
-              <mglon-event id="evt-5" title="Code Review" [start]="event5Start" [end]="event5End">
+              <mglon-event id="evt-5" title="Code Review" [start]="event5Start" [end]="event5End"
+                (eventClick)="eventClickHandler($event)">
               </mglon-event>
 
-              <mglon-event id="evt-2" title="Client Meeting" [start]="event2Start" [end]="event2End">
+              <mglon-event id="evt-2" title="Client Meeting" [start]="event2Start" [end]="event2End"
+                (eventClick)="eventClickHandler($event)">
               </mglon-event>
             </mglon-resource>
 
+            <!-- No resource handler - events will use GLOBAL handler -->
             <mglon-resource id="resource-2" name="Conference Room B" color="#ea4335"
               avatar="https://i.pravatar.cc/150?img=2" [isActive]="true">
 
-              <mglon-event id="evt-3" title="Design Review" [start]="event3Start" [end]="event3End">
+              <mglon-event id="evt-3" title="Design Review" [start]="event3Start" [end]="event3End"
+                (eventClick)="eventClickHandler($event)">
               </mglon-event>
-            </mglon-resource>
-
-            <mglon-resource id="resource-3" name="John Doe" color="#34a853" avatar="https://i.pravatar.cc/150?img=3"
-              [isActive]="false">
-            </mglon-resource>
-
-            <mglon-resource id="resource-4" name="Jane Smith" color="#fbbc04" avatar="https://i.pravatar.cc/150?img=4"
-              [isActive]="true">
             </mglon-resource>
           </mglon-schedule>
         </div>

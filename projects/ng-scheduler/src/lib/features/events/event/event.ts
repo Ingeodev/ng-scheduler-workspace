@@ -1,6 +1,6 @@
-import { Component, input, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, input, output, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Event } from '../../../core/models/event';
+import { Event, AnyEvent } from '../../../core/models/event';
 import { EventStore } from '../../../core/store/event.store';
 import { RESOURCE_ID_TOKEN } from '../resource/resource';
 
@@ -65,8 +65,20 @@ export class EventComponent implements OnInit, OnDestroy {
   /** Flexible user-defined data */
   readonly metadata = input<any>();
 
+  /**
+   * Emitted when the event is clicked
+   * Provides granular control over individual event clicks
+   * Emits the full event data for context
+   */
+  readonly eventClick = output<AnyEvent>();
+
   ngOnInit(): void {
     this.registerEvent();
+
+    // Register click output reference
+    // this.store.registerEventHandler(this.id(), {
+    //   eventClick: this.eventClick
+    // });
   }
 
   /**
@@ -97,7 +109,8 @@ export class EventComponent implements OnInit, OnDestroy {
       isReadOnly: this.isReadOnly(),
       isBlocked: this.isBlocked(),
       metadata: this.metadata(),
-      type: 'event'
+      type: 'event',
+      _clickEmitter: this.eventClick // DIRECT REGISTRATION
     };
 
     this.store.registerEvent(event);

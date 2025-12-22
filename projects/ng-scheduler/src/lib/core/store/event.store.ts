@@ -1,4 +1,4 @@
-import { computed } from '@angular/core';
+import { computed, OutputEmitterRef } from '@angular/core';
 import {
   patchState,
   signalStore,
@@ -10,11 +10,24 @@ import { AnyEvent, Event, AllDayEvent, RecurrentEvent } from '../models/event';
 import { Resource } from '../models/resource';
 
 /**
+ * Event handler interface for granular event outputs
+ */
+export interface EventHandlers {
+  eventClick?: OutputEmitterRef<AnyEvent>;
+  // Future: dragStart, dragEnd, resizeStart, resizeEnd, etc.
+}
+
+/**
  * State interface for the Event Store
  */
 type EventState = {
   events: Map<string, AnyEvent>;
   resources: Map<string, Resource>;
+
+  // Hierarchical handler registries
+  globalHandlers: EventHandlers;  // From Schedule component
+  resourceHandlers: Map<string, EventHandlers>; // From Resource components (by resourceId)
+  eventHandlers: Map<string, EventHandlers>; // From Event components (by eventId)
 };
 
 /**
@@ -23,6 +36,9 @@ type EventState = {
 const initialState: EventState = {
   events: new Map(),
   resources: new Map(),
+  globalHandlers: {},
+  resourceHandlers: new Map(),
+  eventHandlers: new Map(),
 };
 
 /**
@@ -35,7 +51,7 @@ export const EventStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
 
-  withComputed(({ events, resources }) => ({
+  withComputed(({ events, resources, globalHandlers, resourceHandlers, eventHandlers }) => ({
     /**
      * Returns all events as an array
      */
@@ -180,12 +196,53 @@ export const EventStore = signalStore(
     },
 
     /**
+     * Sets global handlers from Schedule component
+     * @deprecated Hierarchical handling is being removed
+     */
+    setGlobalHandlers(handlers: EventHandlers): void {
+      // No-op
+    },
+
+    /**
+     * Sets resource-level handlers
+     * @deprecated Hierarchical handling is being removed
+     */
+    setResourceHandlers(resourceId: string, handlers: EventHandlers): void {
+      // No-op
+    },
+
+    /**
+     * Registers event handlers for an event
+     * @deprecated Hierarchical handling is being removed
+     */
+    registerEventHandler(eventId: string, handlers: EventHandlers): void {
+      // No-op
+    },
+
+    /**
+     * Resolves final handlers for an event
+     * @deprecated Use direct event._clickEmitter instead
+     */
+    getResolvedHandlers(eventId: string): EventHandlers {
+      return {};
+    },
+
+    /**
+     * Gets handlers for a specific event
+     * @deprecated Use getResolvedHandlers instead
+     */
+    getEventHandlers(eventId: string): EventHandlers | undefined {
+      return undefined;
+    },
+
+    /**
      * Clears all events and resources from the store
      */
     clear(): void {
       patchState(store, {
         events: new Map(),
         resources: new Map(),
+        eventHandlers: new Map(),
       });
     },
   }))

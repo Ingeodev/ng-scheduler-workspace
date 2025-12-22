@@ -19,7 +19,7 @@
       <mglon-resource-view></mglon-resource-view>
       }
       @case ('month') {
-      <mglon-month-view></mglon-month-view>
+      <mglon-month-view (eventClick)="eventClick.emit($event)"></mglon-month-view>
       }
       @case ('week') {
       <mglon-week-view (selectionStart)="selectionStart.emit($event)" (selectionChange)="selectionChange.emit($event)"

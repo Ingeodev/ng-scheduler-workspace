@@ -128,6 +128,8 @@ export class EventRenderComponent {
   }
 
   onEventClick() {
+    //console.log('[EventRender] onEventClick called', this.event().id, this.event().title);
+    //alert(`EventRender clicked: ${this.event().title}`);
     this.eventClicked.emit(this.event());
   }
 

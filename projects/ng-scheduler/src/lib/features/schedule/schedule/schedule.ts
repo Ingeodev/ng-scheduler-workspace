@@ -54,10 +54,18 @@ export class Schedule {
   /** Emitted when a resource is hidden/deactivated */
   readonly resourceHide = output<string>();
 
+  /** Emitted when an event is clicked in any view */
+  readonly eventClick = output<AnyEvent>();
+
   readonly store = inject(CalendarStore);
   private readonly eventStore = inject(EventStore);
 
   constructor() {
+    // Register global handlers
+    // this.eventStore.setGlobalHandlers({
+    //   eventClick: this.eventClick
+    // });
+
     effect(() => {
       const conf = this.config();
       if (conf) {

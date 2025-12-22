@@ -29,6 +29,13 @@ export interface EventBase {
 
   /** Flexible user-defined data */
   metadata?: any;
+
+  /** 
+   * Internal emitter for granular event clicks 
+   * This is populated by the mglon-event component
+   * @internal
+   */
+  _clickEmitter?: import('@angular/core').OutputEmitterRef<any>;
 }
 
 /**

@@ -1,6 +1,7 @@
-import { Component, input, OnInit, OnDestroy, inject, effect } from '@angular/core';
+import { Component, input, output, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Resource } from '../../../core/models/resource';
+import { AnyEvent } from '../../../core/models/event';
 import { EventStore } from '../../../core/store/event.store';
 import { InjectionToken } from '@angular/core';
 
@@ -67,6 +68,12 @@ export class ResourceComponent implements OnInit, OnDestroy {
   /** Flexible user-defined data */
   readonly metadata = input<any>();
 
+  /**
+   * Emitted when any event in this resource is clicked
+   * Provides resource-level event handling
+   */
+  readonly eventClick = output<AnyEvent>();
+
   constructor() {
     // Sync isActive input changes to EventStore
     effect(() => {
@@ -85,6 +92,11 @@ export class ResourceComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.registerResource();
+
+    // Register resource-level handlers
+    // this.store.setResourceHandlers(this.id(), {
+    //   eventClick: this.eventClick
+    // });
   }
 
   /**

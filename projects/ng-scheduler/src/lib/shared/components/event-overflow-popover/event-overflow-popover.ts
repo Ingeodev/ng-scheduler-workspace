@@ -37,7 +37,10 @@ import { AnyEvent } from '../../../core/models/event';
       
       <div class="overflow-popover__list">
         @for (event of events(); track event.id) {
-          <div class="overflow-popover__item" [title]="event.title">
+          <div 
+            class="overflow-popover__item" 
+            [title]="event.title"
+            (click)="onEventClick(event)">
             <div class="overflow-popover__item-indicator" 
                  [style.background-color]="event.color || '#0860c4'">
             </div>
@@ -68,10 +71,23 @@ export class EventOverflowPopover {
   closePopover = output<void>();
 
   /**
+   * Emitted when an event in the list is clicked
+   */
+  eventClick = output<AnyEvent>();
+
+  /**
    * Closes the popover
    */
   close(): void {
     this.closePopover.emit();
+  }
+
+  /**
+   * Handles click on an event item
+   */
+  onEventClick(event: AnyEvent): void {
+    this.eventClick.emit(event);
+    this.close(); // Close popover after clicking an event
   }
 
   /**

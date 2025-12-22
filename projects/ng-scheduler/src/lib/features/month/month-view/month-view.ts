@@ -1,4 +1,4 @@
-import { Component, inject, computed, effect, viewChild, ElementRef, afterNextRender, signal } from '@angular/core';
+import { Component, inject, computed, effect, viewChild, ElementRef, afterNextRender, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -39,6 +39,11 @@ export class MonthView {
   // Overlay service for popover
   private readonly overlay = inject(Overlay);
   private overlayRef: OverlayRef | null = null;
+
+  /**
+   * Emitted when an event is clicked (from grid or popover)
+   */
+  eventClick = output<AnyEvent>();
 
   // Constants for capacity calculation
   private readonly EVENT_HEIGHT = 24;        // px (1.5em)
@@ -345,6 +350,26 @@ export class MonthView {
     componentRef.instance.closePopover.subscribe(() => {
       this.closeOverlay();
     });
+
+    // Listen to event click from popover
+    componentRef.instance.eventClick.subscribe((event: AnyEvent) => {
+      console.log('[MonthView] Received click from popover for event:', event.title);
+      this.onEventClick(event);
+    });
+  }
+
+  /**
+   * Handles event click from grid or popover
+   * Uses direct emitter if available (from mglon-event), otherwise falls back to month view output
+   */
+  onEventClick(event: AnyEvent): void {
+    // Check if event has a direct emitter (registered via mglon-event)
+    if (event._clickEmitter) {
+      event._clickEmitter.emit(event);
+    } else {
+      // Fallback to MonthView output (wrapper level)
+      this.eventClick.emit(event);
+    }
   }
 
   /**

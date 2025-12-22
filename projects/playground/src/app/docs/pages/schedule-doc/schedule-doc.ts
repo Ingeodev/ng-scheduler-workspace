@@ -169,4 +169,9 @@ export class MyComponent {
     console.log('Resource hidden:', resourceId);
     alert(`Resource hidden: ${resourceId}`);
   }
+
+  eventClickHandler(event: any): void {
+    console.log('[Playground] 🎯 EVENT-SPECIFIC handler (highest priority)', event);
+    alert(`🎯 EVENT-SPECIFIC Handler\n\nEvent: ${event.title}\nID: ${event.id}\nThis is the most specific handler!`);
+  }
 }
