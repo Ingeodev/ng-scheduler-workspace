@@ -1,5 +1,6 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CalendarStore } from '../../../core/store/calendar.store';
 import { ResourceModel } from '../../../core/models/event-model';
 import { ResourceItemSchedule } from '../resource-item-schedule/resource-item-schedule';
 
@@ -11,6 +12,12 @@ import { ResourceItemSchedule } from '../resource-item-schedule/resource-item-sc
   styleUrl: './resource-list-schedule.scss',
 })
 export class ResourceListSchedule {
+  private calendarStore = inject(CalendarStore);
+
+  // Sidebar UI Configuration from Store
+  readonly resourceItemRounded = computed(() => this.calendarStore.uiConfig().sidebar.resourceItems.rounded);
+  readonly resourceItemDensity = computed(() => this.calendarStore.uiConfig().sidebar.resourceItems.density);
+
   /** Array of resources to display */
   readonly resources = input<ResourceModel[]>([]);
 

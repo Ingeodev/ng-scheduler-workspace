@@ -1,7 +1,8 @@
 <div class="resource-list">
   @if (resources().length > 0) {
   @for (resource of resources(); track resource.id) {
-  <mglon-resource-item-schedule [resource]="resource" (toggle)="toggleResource.emit($event)" />
+  <mglon-resource-item-schedule [resource]="resource" [rounded]="resourceItemRounded()"
+    [density]="resourceItemDensity()" (toggle)="toggleResource.emit($event)" />
   }
   } @else {
   <div class="resource-list-empty">

@@ -38,6 +38,7 @@ export interface LayoutSegment {
       [isHovered]="isHovered()"
       [isSelected]="isSelected()"
       [showTime]="showTime()"
+      [rounded]="rounded()"
       (slotHover)="onSlotHover($event)"
       (slotClick)="onSlotClick()">
     </mglon-group-slot>
@@ -53,6 +54,9 @@ export class EventRenderComponent {
 
   showTime = input<boolean>(true);
   viewMode = input<'month' | 'week' | 'day'>('month');
+
+  // UI configuration
+  rounded = input<'none' | 'sm' | 'full'>('sm');
 
   // Optional override for color
   eventColor = input<string | undefined>(undefined);

@@ -18,3 +18,6 @@ export type { SelectionResult } from './lib/core/background-selection/selectable
 // Buttons
 export * from './lib/core/models/config-schedule';
 export * from './lib/shared/components/buttons/index';
+
+// UI Configuration
+export * from './lib/core/models/ui-config';

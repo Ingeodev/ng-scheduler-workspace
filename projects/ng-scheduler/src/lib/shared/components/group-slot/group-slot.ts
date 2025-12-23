@@ -1,7 +1,9 @@
-import { Component, input, output, computed } from '@angular/core';
+import { Component, input, output, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnyEvent } from '../../../core/models/event';
 import { EventRenderData } from '../../../core/rendering/event-renderer';
+import { EventSlotRadius } from '../../../core/models/ui-config';
+import { CalendarStore } from '../../../core/store/calendar.store';
 
 export interface GroupSlot {
   renderData: EventRenderData;
@@ -12,6 +14,9 @@ export interface GroupSlot {
   selector: 'mglon-group-slot',
   standalone: true,
   imports: [CommonModule],
+  host: {
+    '[attr.rounded]': '_rounded()'
+  },
   template: `
     @for (slot of slots(); track $index) {
       <div 
@@ -46,6 +51,20 @@ export interface GroupSlot {
 export class GroupSlotComponent {
   slots = input.required<GroupSlot[]>();
   event = input.required<AnyEvent>();
+
+  // UI Configuration
+  /**
+   * Border radius for the event slot.
+   * If not provided, uses the value from CalendarStore.
+   */
+  readonly rounded = input<EventSlotRadius | undefined>(undefined);
+
+  private calendarStore = inject(CalendarStore);
+
+  // Computed rounded value: use input if provided, else use Store config
+  protected _rounded = computed(() =>
+    this.rounded() ?? this.calendarStore.uiConfig().grid.eventSlots.rounded
+  );
 
   // State from parent
   isHovered = input<boolean>(false);

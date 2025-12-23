@@ -27,7 +27,7 @@ export class ButtonComponent {
   readonly color = input<ButtonColor>('primary');
   readonly size = input<ButtonSize>('md');
   readonly rounded = input<ButtonRadius>('md');
-  readonly density = input<'compact' | 'confortable'>('confortable');
+  readonly density = input<'compact' | 'comfortable'>('comfortable');
   readonly active = input<boolean>(false);
   readonly disabled = input<boolean>(false);
 

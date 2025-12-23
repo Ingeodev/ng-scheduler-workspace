@@ -24,7 +24,7 @@ export type ButtonGroupRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 })
 export class ButtonGroupComponent {
   readonly type = input<ButtonGroupType>('text');
-  readonly density = input<'compact' | 'confortable'>('confortable');
+  readonly density = input<'compact' | 'comfortable'>('comfortable');
   readonly appereance = input<'solid' | 'outline' | 'ghost' | 'link'>('solid');
   readonly rounded = input<ButtonGroupRadius>('full');
   readonly orientation = input<'horizontal' | 'vertical'>('horizontal');

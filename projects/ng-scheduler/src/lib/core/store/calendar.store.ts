@@ -2,18 +2,21 @@ import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { DEFAULT_CONFIG } from '../config/default-schedule-config';
 import { SchedulerConfig, ViewMode } from '../models/config-schedule';
+import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUIConfig } from '../models/ui-config';
 import { withDataFeature } from './features/data.feature';
 
 interface CalendarState {
   currentDate: Date;
   viewMode: ViewMode;
   config: SchedulerConfig;
+  uiConfig: UIConfig;
 }
 
 const initialCalendarState: CalendarState = {
   currentDate: new Date(),
   viewMode: 'month',
   config: DEFAULT_CONFIG,
+  uiConfig: DEFAULT_UI_CONFIG,
 };
 
 export const CalendarStore = signalStore(
@@ -89,6 +92,46 @@ export const CalendarStore = signalStore(
     },
     today() {
       patchState(store, { currentDate: new Date() });
+    },
+    setUIConfig(config: {
+      header?: Partial<HeaderUIConfig>;
+      sidebar?: Partial<SidebarUIConfig>;
+      grid?: Partial<GridUIConfig>;
+    }) {
+      patchState(store, (state) => ({
+        uiConfig: {
+          header: config.header
+            ? {
+              buttonGroup: config.header.buttonGroup
+                ? { ...state.uiConfig.header.buttonGroup, ...config.header.buttonGroup }
+                : state.uiConfig.header.buttonGroup,
+              iconButtons: config.header.iconButtons
+                ? { ...state.uiConfig.header.iconButtons, ...config.header.iconButtons }
+                : state.uiConfig.header.iconButtons,
+              todayButton: config.header.todayButton
+                ? { ...state.uiConfig.header.todayButton, ...config.header.todayButton }
+                : state.uiConfig.header.todayButton
+            }
+            : state.uiConfig.header,
+          sidebar: config.sidebar
+            ? {
+              resourceItems: config.sidebar.resourceItems
+                ? { ...state.uiConfig.sidebar.resourceItems, ...config.sidebar.resourceItems }
+                : state.uiConfig.sidebar.resourceItems
+            }
+            : state.uiConfig.sidebar,
+          grid: config.grid
+            ? {
+              eventSlots: config.grid.eventSlots
+                ? { ...state.uiConfig.grid.eventSlots, ...config.grid.eventSlots }
+                : state.uiConfig.grid.eventSlots,
+              overflowIndicator: config.grid.overflowIndicator
+                ? { ...state.uiConfig.grid.overflowIndicator, ...config.grid.overflowIndicator }
+                : state.uiConfig.grid.overflowIndicator
+            }
+            : state.uiConfig.grid
+        }
+      }));
     }
   }))
 );

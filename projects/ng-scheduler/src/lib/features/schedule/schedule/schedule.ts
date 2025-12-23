@@ -6,6 +6,12 @@ import { SchedulerConfig, ViewMode } from '../../../core/models/config-schedule'
 import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
 import { AnyEvent } from '../../../core/models/event';
 import { ResourceModel } from '../../../core/models/event-model';
+import {
+  HeaderUIConfig,
+  SidebarUIConfig,
+  GridUIConfig,
+  UIConfig
+} from '../../../core/models/ui-config';
 import { ResourceView } from '../../resource/resource-view/resource-view';
 import { IconComponent } from '../../../shared/components/icon/icon';
 import { HeaderSchedule } from '../header-schedule/header-schedule';
@@ -24,6 +30,20 @@ import { SidebarSchedule } from '../sidebar-schedule/sidebar-schedule';
 })
 export class Schedule {
   readonly config = input<Partial<SchedulerConfig>>({});
+
+  // ============================================
+  // UI CONFIGURATION INPUTS (Area-Based)
+  // ============================================
+
+  /** Optional UI configuration for header area (button-group, navigation, today button) */
+  readonly headerUI = input<Partial<HeaderUIConfig>>();
+
+  /** Optional UI configuration for sidebar area (resource items) */
+  readonly sidebarUI = input<Partial<SidebarUIConfig>>();
+
+  /** Optional UI configuration for grid area (event slots, overflow indicators) */
+  readonly gridUI = input<Partial<GridUIConfig>>();
+
   readonly add = output<void>();
 
   // ============================================
@@ -70,6 +90,22 @@ export class Schedule {
       const conf = this.config();
       if (conf) {
         this.store.updateConfig(conf);
+      }
+    });
+
+    // Handle UI configuration updates (area-based)
+    effect(() => {
+      const headerConfig = this.headerUI();
+      const sidebarConfig = this.sidebarUI();
+      const gridConfig = this.gridUI();
+
+      // Only update if at least one config is provided
+      if (headerConfig || sidebarConfig || gridConfig) {
+        this.store.setUIConfig({
+          header: headerConfig,
+          sidebar: sidebarConfig,
+          grid: gridConfig
+        });
       }
     });
 

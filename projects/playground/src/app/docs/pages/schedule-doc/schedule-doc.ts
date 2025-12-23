@@ -6,7 +6,10 @@ import {
   ResourceComponent,
   EventComponent,
   AllDayEventComponent,
-  RecurrentEventComponent
+  RecurrentEventComponent,
+  GridUIConfig,
+  HeaderUIConfig,
+  SidebarUIConfig
 } from 'ng-scheduler';
 import { ApiTableComponent, ApiProperty } from '../../shared/api-table/api-table';
 import { CodeBlockComponent } from '../../shared/code-block/code-block';
@@ -32,6 +35,39 @@ export class ScheduleDocComponent {
     views: ['month', 'week', 'day', 'resource'],
     initialDate: new Date(),
     editable: true
+  };
+
+  // UI Configuration Examples
+  gridUIConfig: Partial<GridUIConfig> = {
+    eventSlots: {
+      rounded: 'full'  // Options: 'none' | 'sm' | 'full'
+    },
+    overflowIndicator: {
+      appearance: 'outline',  // Options: 'ghost' | 'outline' | 'solid'
+      rounded: 'full'           // Options: 'none' | 'sm' | 'md' | 'full'
+    }
+  };
+
+  headerUIConfig: Partial<HeaderUIConfig> = {
+    buttonGroup: {
+      appearance: 'outline',
+      rounded: 'full',        // Options: 'none' | 'sm' | 'md' | 'lg' | 'full'
+      density: 'compact' // Options: 'compact' | 'comfortable'
+    },
+    iconButtons: {
+      rounded: 'full'
+    },
+    todayButton: {
+      rounded: 'md',
+      appearance: 'ghost'   // Options: 'solid' | 'outline' | 'ghost'
+    }
+  };
+
+  sidebarUIConfig: Partial<SidebarUIConfig> = {
+    resourceItems: {
+      rounded: 'full',
+      density: 'comfortable'
+    }
   };
 
   // Sample event dates
@@ -111,12 +147,62 @@ export class MyComponent {
 }
   `;
 
+  uiConfigCode = `
+import { GridUIConfig, HeaderUIConfig, SidebarUIConfig } from 'ng-scheduler';
+
+// Configure grid area (event slots and overflow indicators)
+gridUI: Partial<GridUIConfig> = {
+  eventSlots: {
+    rounded: 'sm'  // 'none' | 'sm' | 'full'
+  },
+  overflowIndicator: {
+    appearance: 'outline',  // 'ghost' | 'outline' | 'solid'
+    rounded: 'sm'           // 'none' | 'sm' | 'md' | 'full'
+  }
+};
+
+// Configure header area (button group, navigation, today button)
+headerUI: Partial<HeaderUIConfig> = {
+  buttonGroup: {
+    rounded: 'md',          // 'none' | 'sm' | 'md' | 'lg' | 'full'
+    density: 'comfortable'  // 'compact' | 'comfortable'
+  },
+  iconButtons: {
+    rounded: 'md'
+  },
+  todayButton: {
+    rounded: 'md',
+    appearance: 'ghost'     // 'solid' | 'outline' | 'ghost'
+  }
+};
+
+// Configure sidebar area (resource items)
+sidebarUI: Partial<SidebarUIConfig> = {
+  resourceItems: {
+    rounded: 'sm',
+    density: 'comfortable'
+  }
+};
+
+// Use in template
+<mglon-schedule 
+  [config]="config"
+  [gridUI]="gridUI"
+  [headerUI]="headerUI" 
+  [sidebarUI]="sidebarUI">
+  <!-- ... -->
+</mglon-schedule>
+  `;
+
   stylingCode = `
 // Global Theme Overrides
 :root {
   --mglon-schedule-primary: #3f51b5;
   --mglon-schedule-surface: #ffffff;
-  --mglon-schedule-border-radius-md: 8px;
+  --mglon-schedule-radius-sm: 4px;
+  --mglon-schedule-radius-md: 8px;
+  --mglon-schedule-radius-lg: 12px;
+  --mglon-schedule-radius-full: 9999px;
   
   // Font
   --mglon-schedule-font-family: 'Inter', sans-serif;

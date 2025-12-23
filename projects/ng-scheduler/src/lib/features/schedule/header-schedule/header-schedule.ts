@@ -1,5 +1,6 @@
-import { Component, input, output, signal, inject, PLATFORM_ID, ElementRef, OnDestroy } from '@angular/core';
+import { Component, input, output, signal, inject, PLATFORM_ID, ElementRef, OnDestroy, computed } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CalendarStore } from '../../../core/store/calendar.store';
 import { IconComponent } from '../../../shared/components/icon/icon';
 import { IconName } from '../../../shared/components/icon/icon-set';
 import { ButtonGroupComponent } from '../../../shared/components/buttons/button-group/button-group';
@@ -18,6 +19,15 @@ export class HeaderSchedule implements OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private elementRef = inject(ElementRef);
   private resizeObserver?: ResizeObserver;
+  private calendarStore = inject(CalendarStore);
+
+  // Header UI Configuration from Store
+  readonly buttonGroupAppearance = computed(() => this.calendarStore.uiConfig().header.buttonGroup.appearance);
+  readonly buttonGroupRounded = computed(() => this.calendarStore.uiConfig().header.buttonGroup.rounded);
+  readonly buttonGroupDensity = computed(() => this.calendarStore.uiConfig().header.buttonGroup.density);
+  readonly iconButtonRounded = computed(() => this.calendarStore.uiConfig().header.iconButtons.rounded);
+  readonly todayButtonRounded = computed(() => this.calendarStore.uiConfig().header.todayButton.rounded);
+  readonly todayButtonAppearance = computed(() => this.calendarStore.uiConfig().header.todayButton.appearance);
 
   // Inputs
   readonly title = input.required<string>();

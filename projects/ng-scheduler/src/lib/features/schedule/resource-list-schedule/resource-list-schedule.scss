@@ -3,7 +3,7 @@
 .resource-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--mglon-resource-list-gap, var(--mglon-schedule-gap-xs));
   overflow-y: auto;
   max-height: 100%;
 }
@@ -13,17 +13,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--ngx-cal-spacing-lg, 16px);
-  gap: var(--ngx-cal-spacing-sm, 8px);
-  color: var(--ngx-cal-text-secondary);
+  padding: var(--mglon-resource-list-empty-padding, var(--mglon-schedule-padding-lg));
+  gap: var(--mglon-resource-list-empty-gap, var(--mglon-schedule-gap-sm));
+  color: var(--mglon-resource-list-empty-color, var(--mglon-schedule-text-secondary));
   text-align: center;
 }
 
 .empty-icon {
-  font-size: 2rem;
-  opacity: 0.3;
+  font-size: var(--mglon-resource-list-empty-icon-size, 2rem);
+  opacity: var(--mglon-resource-list-empty-icon-opacity, 0.3);
 }
 
 .empty-text {
-  font-size: 0.875rem;
+  font-size: var(--mglon-resource-list-empty-text-size, var(--mglon-schedule-font-size-sm));
 }

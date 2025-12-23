@@ -51,6 +51,12 @@ export class MonthView {
   private readonly EVENT_SPACING_XS = MONTH_VIEW_LAYOUT.EVENT_SPACING_XS;
   private readonly DAY_NUMBER_HEIGHT = MONTH_VIEW_LAYOUT.DAY_NUMBER_HEIGHT;
   private readonly MORE_INDICATOR_HEIGHT = MONTH_VIEW_LAYOUT.MORE_INDICATOR_HEIGHT;
+  private readonly MAX_VISIBLE_EVENTS = MONTH_VIEW_COMPUTED.SLOT_HEIGHT;
+
+  // Grid UI configuration from Store
+  readonly eventSlotRounded = computed(() => this.calendarStore.uiConfig().grid.eventSlots.rounded);
+  readonly overflowRounded = computed(() => this.calendarStore.uiConfig().grid.overflowIndicator.rounded);
+  readonly overflowAppearance = computed(() => this.calendarStore.uiConfig().grid.overflowIndicator.appearance);
 
   /**
    * Computed: Overflow indicators to render
@@ -225,22 +231,26 @@ export class MonthView {
         for (const slotted of visibleEvents) {
           const eventId = slotted.event.id;
 
-          if (!groupedSegments.has(eventId)) {
-            groupedSegments.set(eventId, {
+          // Use composite key: eventId + weekIndex to support multi-week events
+          // This creates one segment per event per week, not one per day
+          const compositeKey = `${eventId}-week${weekIndex}`;
+
+          // Check if we've already created a segment for this event in this week
+          if (!groupedSegments.has(compositeKey)) {
+            // Use the day where this event starts within this week as the dateContext
+            const eventStartDay = slotted.dayStart;
+            const eventDate = week.days[eventStartDay].date;
+
+            groupedSegments.set(compositeKey, {
               event: slotted.event,
-              segments: []
+              segments: [{
+                slotIndex: slotted.slotIndex,
+                viewBoundaries: { start: weekStart, end: weekEnd },
+                cellDimensions,
+                dateContext: eventDate
+              }]
             });
           }
-
-          // Create layout segment (raw data)
-          const segment: LayoutSegment = {
-            slotIndex: slotted.slotIndex,
-            viewBoundaries: { start: weekStart, end: weekEnd },
-            cellDimensions,
-            dateContext: currentDate
-          };
-
-          groupedSegments.get(eventId)!.segments.push(segment);
         }
       }
     }
