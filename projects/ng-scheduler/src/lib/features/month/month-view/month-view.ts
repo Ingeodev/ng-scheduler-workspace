@@ -231,26 +231,22 @@ export class MonthView {
         for (const slotted of visibleEvents) {
           const eventId = slotted.event.id;
 
-          // Use composite key: eventId + weekIndex to support multi-week events
-          // This creates one segment per event per week, not one per day
-          const compositeKey = `${eventId}-week${weekIndex}`;
-
-          // Check if we've already created a segment for this event in this week
-          if (!groupedSegments.has(compositeKey)) {
-            // Use the day where this event starts within this week as the dateContext
-            const eventStartDay = slotted.dayStart;
-            const eventDate = week.days[eventStartDay].date;
-
-            groupedSegments.set(compositeKey, {
+          if (!groupedSegments.has(eventId)) {
+            groupedSegments.set(eventId, {
               event: slotted.event,
-              segments: [{
-                slotIndex: slotted.slotIndex,
-                viewBoundaries: { start: weekStart, end: weekEnd },
-                cellDimensions,
-                dateContext: eventDate
-              }]
+              segments: []
             });
           }
+
+          // Create layout segment (raw data)
+          const segment: LayoutSegment = {
+            slotIndex: slotted.slotIndex,
+            viewBoundaries: { start: weekStart, end: weekEnd },
+            cellDimensions,
+            dateContext: currentDate
+          };
+
+          groupedSegments.get(eventId)!.segments.push(segment);
         }
       }
     }

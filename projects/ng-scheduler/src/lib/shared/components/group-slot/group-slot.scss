@@ -6,15 +6,15 @@
   // Default is set in the component, these provide overrides
 
   &[rounded="none"] {
-    --mglon-group-slot-border-radius: 0;
+    --mglon-event-slot-border-radius: 0;
   }
 
   &[rounded="sm"] {
-    --mglon-group-slot-border-radius: var(--mglon-schedule-radius-sm, 4px);
+    --mglon-event-slot-border-radius: var(--mglon-schedule-radius-sm, 4px);
   }
 
   &[rounded="full"] {
-    --mglon-group-slot-border-radius: var(--mglon-schedule-radius-full, 9999px);
+    --mglon-event-slot-border-radius: var(--mglon-schedule-radius-full, 9999px);
   }
 }
 
@@ -31,35 +31,34 @@
 
   // GPU acceleration
   will-change: left, top, width, height;
-  transition: all var(--mglon-group-slot-transition-duration, var(--mglon-schedule-transition-duration, 0.2s)) var(--mglon-group-slot-transition-timing, var(--mglon-schedule-transition-timing, cubic-bezier(0.4, 0.0, 0.2, 1)));
+  transition: all var(--ngx-cal-transition-duration, 0.2s) var(--ngx-cal-transition-timing, cubic-bezier(0.4, 0.0, 0.2, 1));
 
   // Visual styling
-  border-radius: var(--mglon-group-slot-border-radius, var(--mglon-schedule-radius-sm, 4px));
-  border-left-width: var(--mglon-group-slot-border-width, 3px);
-  border-left-style: solid;
+  border-radius: var(--mglon-event-slot-border-radius, var(--mglon-schedule-radius-sm, 4px));
+  border-left: 3px solid;
   border-left-color: var(--event-color, #0860c4);
   background-color: var(--event-color, #0860c4);
 
-  padding: var(--mglon-group-slot-padding-y, var(--mglon-schedule-spacing-xs, 4px)) var(--mglon-group-slot-padding-x, var(--mglon-schedule-spacing-sm, 8px));
+  padding: var(--ngx-cal-spacing-xs, 4px) var(--ngx-cal-spacing-sm, 8px);
   cursor: pointer;
   overflow: hidden;
   user-select: none;
 
   // Shadow for depth
-  box-shadow: var(--mglon-group-slot-shadow, var(--mglon-schedule-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.1)));
+  box-shadow: var(--ngx-cal-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.1));
 
   &.is-hovered {
     background-color: var(--event-hover-color, #0860c4);
     border-left-color: var(--event-hover-color, #0860c4);
-    box-shadow: var(--mglon-group-slot-shadow-hover, var(--mglon-schedule-shadow-md, 0 2px 4px rgba(0, 0, 0, 0.15)));
-    transform: scale(var(--mglon-group-slot-hover-scale, 1.02));
-    opacity: var(--mglon-group-slot-hover-opacity, 0.95);
+    box-shadow: var(--ngx-cal-shadow-md, 0 2px 4px rgba(0, 0, 0, 0.15));
+    transform: scale(1.02);
+    opacity: 0.95;
     z-index: 100 !important; // Bring to front on hover
   }
 
   &.is-selected {
-    border-left-width: var(--mglon-group-slot-selected-border-width, 4px);
-    box-shadow: var(--mglon-group-slot-shadow-selected, 0 2px 8px rgba(8, 96, 196, 0.4));
+    border-left-width: 4px;
+    box-shadow: 0 2px 8px rgba(var(--ngx-cal-primary-rgb, 8, 96, 196), 0.4);
   }
 
   // Continuation styles
@@ -80,22 +79,22 @@
 .group-slot__content {
   display: flex;
   flex-direction: column;
-  gap: var(--mglon-group-slot-content-gap, 2px);
+  gap: 2px;
   color: var(--event-text-color, white);
-  font-size: var(--mglon-group-slot-font-size, var(--mglon-schedule-font-size-sm, 12px));
-  line-height: var(--mglon-group-slot-line-height, 1.3);
+  font-size: var(--ngx-cal-font-size-sm, 12px);
+  line-height: 1.3;
 }
 
 .group-slot__title {
-  font-weight: var(--mglon-group-slot-title-weight, 500);
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .group-slot__time {
-  font-size: var(--mglon-group-slot-time-font-size, var(--mglon-schedule-font-size-xs, 10px));
-  opacity: var(--mglon-group-slot-time-opacity, 0.9);
+  font-size: var(--ngx-cal-font-size-xs, 10px);
+  opacity: 0.9;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
