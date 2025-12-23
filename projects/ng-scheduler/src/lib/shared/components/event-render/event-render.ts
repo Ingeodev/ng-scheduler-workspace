@@ -1,148 +1,162 @@
-/**
- * @fileoverview Event Render Component - Visual representation of events
- * @module ng-scheduler/components
- */
-
-import { Component, input, output, computed, signal } from '@angular/core';
+import { Component, input, output, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnyEvent } from '../../../core/models/event';
-import { EventRenderData } from '../../../core/rendering/event-renderer';
+import { EventRendererFactory } from '../../../core/rendering/event-renderer.factory';
+import { GroupSlotComponent, GroupSlot } from '../group-slot/group-slot';
+import { generateEventColorScheme, getEventColor } from '../../helpers/color.helpers';
+import { EventStore } from '../../../core/store/event.store';
+import { MONTH_VIEW_LAYOUT } from '../../../core/config/month-view.config';
 
 /**
- * EventRenderComponent
+ * Raw layout data passed from the View (e.g. MonthView)
+ */
+export interface LayoutSegment {
+  slotIndex: number;
+  viewBoundaries: { start: Date; end: Date };
+  cellDimensions: { width: number; height: number };
+  dateContext: Date; // The context date (e.g. week start or specific day)
+}
+
+/**
+ * EventRenderComponent (Controller)
  * 
- * Basic visual component for rendering events in the scheduler.
- * Handles positioning, styling, and basic state (hover, selection).
+ * Acts as the brain for rendering a single event that may be split across 
+ * multiple visual slots (e.g. multi-day event in Month View).
  * 
- * Future enhancements will add drag & drop interactions.
+ * - Calculates geometry for all segments using the EventRenderer strategy.
+ * - Manages shared state (hover, selection) for the entire group.
+ * - Delegates visual rendering to <mglon-group-slot>.
  */
 @Component({
   selector: 'mglon-event-render',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GroupSlotComponent],
   template: `
-    <div 
-      class="event-render"
-      [class.is-dragging]="isDragging()"
-      [class.is-resizing]="isResizing()"
-      [class.is-hovered]="isHovered()"
-      [class.is-selected]="isSelected()"
-      [class.has-continuation-left]="!isStart()"
-      [class.has-continuation-right]="!isEnd()"
-      [style]="eventStyles()"
-      (mouseenter)="onMouseEnter()"
-      (mouseleave)="onMouseLeave()"
-      (click)="onEventClick()">
-      
-      <!-- Event content -->
-      <div class="event-render__content">
-        <span class="event-render__title">{{ event().title }}</span>
-        <span class="event-render__time" *ngIf="showTime()">
-          {{ formatTime(event()) }}
-        </span>
-      </div>
-      
-      <!-- Continuation indicators for multi-day events -->
-      <div class="event-render__continue-left" *ngIf="!isStart()"></div>
-      <div class="event-render__continue-right" *ngIf="!isEnd()"></div>
-    </div>
+    <mglon-group-slot
+      [slots]="derivedSlots()"
+      [event]="event()"
+      [isHovered]="isHovered()"
+      [isSelected]="isSelected()"
+      [showTime]="showTime()"
+      (slotHover)="onSlotHover($event)"
+      (slotClick)="onSlotClick()">
+    </mglon-group-slot>
   `,
-  styleUrl: './event-render.scss'
+  styleUrl: './event-render.scss' // Keeping empty scss or removing if unused
 })
 export class EventRenderComponent {
   // Inputs
   event = input.required<AnyEvent>();
-  renderData = input.required<EventRenderData>();
+
+  // The raw segments from the view (e.g. "This event is in Week 1, Slot 2 and Week 2, Slot 0")
+  layoutSegments = input.required<LayoutSegment[]>();
+
   showTime = input<boolean>(true);
-  eventColor = input<string>('#0860c4'); // Color with resource inheritance
+  viewMode = input<'month' | 'week' | 'day'>('month');
 
-  // Multi-day slice indicators
-  isStart = input<boolean>(true);
-  isEnd = input<boolean>(true);
-
-  // Internal state
-  private hoveredSignal = signal(false);
-  private selectedSignal = signal(false);
+  // Optional override for color
+  eventColor = input<string | undefined>(undefined);
 
   // Outputs
   eventClicked = output<AnyEvent>();
   eventHovered = output<AnyEvent>();
 
-  // Computed states
-  isDragging = computed(() => this.renderData().isDragging);
-  isResizing = computed(() => this.renderData().isResizing);
+  // Injected services
+  private eventStore = inject(EventStore);
+
+  // Internal State
+  private hoveredSignal = signal(false);
+  private selectedSignal = signal(false);
+
+  // Computed state
   isHovered = computed(() => this.hoveredSignal());
   isSelected = computed(() => this.selectedSignal());
 
+  // Renderer Factory
+  private renderer = computed(() => EventRendererFactory.getRenderer(this.viewMode()));
+
   /**
-   * Computes dynamic styles for event positioning
-   * Supports mixed units: px, %, em
+   * Computed: Generates the list of visual slots by running the renderer for each segment
    */
-  eventStyles = computed(() => {
-    const data = this.renderData();
-    const color = this.eventColor();
+  derivedSlots = computed(() => {
+    const event = this.event();
+    const segments = this.layoutSegments();
+    const renderer = this.renderer();
+    const baseColor = this.getEffectiveColor();
+    const colorScheme = generateEventColorScheme(baseColor);
 
-    // Helper to format value with unit
-    const formatValue = (value: number | string) => {
-      if (typeof value === 'string') return value;
-      return `${value}px`;
-    };
+    return segments.map(seg => {
+      // Execute the strategy for this specific segment context
+      const renderData = renderer.render(
+        event,
+        seg.dateContext,
+        seg.cellDimensions,
+        seg.slotIndex,
+        seg.viewBoundaries
+      );
 
-    return {
-      '--event-x': formatValue(data.position.left),
-      '--event-y': formatValue(data.position.top),
-      '--event-width': formatValue(data.position.width),
-      '--event-height': formatValue(data.position.height),
-      '--event-z': data.zIndex,
-      'background-color': color,
-      'border-left-color': color
-    };
+      // Generate styles with color scheme
+      const style = {
+        '--event-x': this.formatValue(renderData.position.left),
+        '--event-y': this.formatValue(renderData.position.top),
+        '--event-width': this.formatValue(renderData.position.width),
+        '--event-height': this.formatValue(renderData.position.height),
+        '--event-z': renderData.zIndex,
+        '--event-color': colorScheme.base,
+        '--event-hover-color': colorScheme.hover,
+        '--event-bg-color': colorScheme.background,
+        '--event-text-color': colorScheme.text
+      };
+
+      return {
+        renderData,
+        style
+      } as GroupSlot;
+    });
   });
 
-  /**
-   * Formats event time for display
-   */
-  formatTime(event: AnyEvent): string {
-    if (event.type !== 'event') return '';
+  // --- Interaction Handlers ---
 
-    const start = event.start;
-    const end = event.end;
-
-    const formatHour = (date: Date) => {
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12;
-      const displayMinutes = minutes.toString().padStart(2, '0');
-      return `${displayHours}:${displayMinutes} ${ampm}`;
-    };
-
-    return `${formatHour(start)} - ${formatHour(end)}`;
+  onSlotHover(isEntering: boolean) {
+    this.hoveredSignal.set(isEntering);
+    if (isEntering) {
+      this.eventHovered.emit(this.event());
+    }
   }
 
-  onMouseEnter() {
-    this.hoveredSignal.set(true);
-    this.eventHovered.emit(this.event());
-  }
-
-  onMouseLeave() {
-    this.hoveredSignal.set(false);
-  }
-
-  onEventClick() {
-    //console.log('[EventRender] onEventClick called', this.event().id, this.event().title);
-    //alert(`EventRender clicked: ${this.event().title}`);
+  onSlotClick() {
     this.eventClicked.emit(this.event());
   }
 
-  /**
-   * Public API for external selection
-   */
+  // --- Public API ---
+
   select() {
     this.selectedSignal.set(true);
   }
 
   deselect() {
     this.selectedSignal.set(false);
+  }
+
+  // --- Helpers ---
+
+  /**
+   * Resolves the effective color for this event
+   * Priority: explicit override > event.color > resource.color > default
+   */
+  private getEffectiveColor(): string {
+    const override = this.eventColor();
+    if (override) return override;
+
+    return getEventColor(
+      this.event(),
+      (id) => this.eventStore.getResource(id),
+      MONTH_VIEW_LAYOUT.DEFAULT_EVENT_COLOR
+    );
+  }
+
+  private formatValue(value: number | string) {
+    if (typeof value === 'string') return value;
+    return `${value}px`;
   }
 }

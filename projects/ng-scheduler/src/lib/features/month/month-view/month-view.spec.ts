@@ -72,9 +72,9 @@ describe('MonthView', () => {
 
       fixture.detectChanges();
 
-      const renderedEvents = component.eventsToRender();
-      expect(renderedEvents.length).toBe(1);
-      expect(renderedEvents[0].event.id).toBe('evt-1');
+      const renderData = component.eventsToRender();
+      expect(renderData.events.length).toBe(1);
+      expect(renderData.events[0].event.id).toBe('evt-1');
     });
 
     it('should hide events from inactive resources', () => {
@@ -103,8 +103,8 @@ describe('MonthView', () => {
 
       fixture.detectChanges();
 
-      const renderedEvents = component.eventsToRender();
-      expect(renderedEvents.length).toBe(0); // Event should be filtered out
+      const renderData = component.eventsToRender();
+      expect(renderData.events.length).toBe(0); // Event should be filtered out
     });
 
     it('should show events without resourceId regardless of active resources', () => {
@@ -122,8 +122,8 @@ describe('MonthView', () => {
 
       fixture.detectChanges();
 
-      const renderedEvents = component.eventsToRender();
-      expect(renderedEvents.length).toBe(1);
+      const renderData = component.eventsToRender();
+      expect(renderData.events.length).toBe(1);
     });
 
     it('should filter mixed active/inactive resources correctly', () => {
@@ -169,9 +169,9 @@ describe('MonthView', () => {
 
       fixture.detectChanges();
 
-      const renderedEvents = component.eventsToRender();
-      expect(renderedEvents.length).toBe(1);
-      expect(renderedEvents[0].event.id).toBe('evt-1');
+      const renderData = component.eventsToRender();
+      expect(renderData.events.length).toBe(1);
+      expect(renderData.events[0].event.id).toBe('evt-1');
     });
   });
 });

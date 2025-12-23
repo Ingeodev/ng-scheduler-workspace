@@ -1,156 +1,222 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EventRenderComponent } from './event-render';
+import { EventRenderComponent, LayoutSegment } from './event-render';
 import { Event } from '../../../core/models/event';
-import { EventRenderData } from '../../../core/rendering/event-renderer';
+import { EventStore } from '../../../core/store/event.store';
+import { signal } from '@angular/core';
 
 describe('EventRenderComponent', () => {
   let component: EventRenderComponent;
   let fixture: ComponentFixture<EventRenderComponent>;
+  let eventStore: EventStore;
 
   const mockEvent: Event = {
     id: 'evt-1',
     title: 'Test Event',
     start: new Date(2024, 0, 15, 10, 0),
     end: new Date(2024, 0, 15, 11, 0),
-    color: '#0860c4',
+    color: '#e91e63',
     type: 'event'
   };
 
-  const mockRenderData: EventRenderData = {
-    position: {
-      top: 100,
-      left: 50,
-      width: 200,
-      height: 60
+  const mockLayoutSegment: LayoutSegment = {
+    slotIndex: 0,
+    viewBoundaries: {
+      start: new Date(2024, 0, 14),
+      end: new Date(2024, 0, 20)
     },
-    zIndex: 1,
-    layout: {
-      column: 0,
-      overlap: 0,
-      totalOverlaps: 1
+    cellDimensions: {
+      width: 100,
+      height: 100
     },
-    isDragging: false,
-    isResizing: false,
-    isHovered: false,
-    isSelected: false
+    dateContext: new Date(2024, 0, 15)
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventRenderComponent]
+      imports: [EventRenderComponent],
+      providers: [EventStore]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EventRenderComponent);
     component = fixture.componentInstance;
+    eventStore = TestBed.inject(EventStore);
 
     fixture.componentRef.setInput('event', mockEvent);
-    fixture.componentRef.setInput('renderData', mockRenderData);
+    fixture.componentRef.setInput('layoutSegments', [mockLayoutSegment]);
+    fixture.componentRef.setInput('viewMode', 'month');
 
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    eventStore.clear();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display event title', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const title = compiled.querySelector('.event-render__title');
+  describe('Color Resolution', () => {
+    it('should use event color when present', () => {
+      const slots = component.derivedSlots();
+      expect(slots[0].style['--event-color']).toBe('#e91e63');
+    });
 
-    expect(title?.textContent).toContain('Test Event');
+    it('should use resource color when event color absent', (done) => {
+      const eventWithoutColor: Event = {
+        ...mockEvent,
+        color: undefined,
+        resourceId: 'resource-1'
+      };
+
+      eventStore.registerResource({
+        id: 'resource-1',
+        name: 'Test Resource',
+        color: '#00ff00'
+      });
+
+      fixture.componentRef.setInput('event', eventWithoutColor);
+      fixture.detectChanges();
+
+      setTimeout(() => {
+        const slots = component.derivedSlots();
+        expect(slots[0].style['--event-color']).toBe('#00ff00');
+        done();
+      }, 100);
+    });
+
+    it('should use default color when both absent', (done) => {
+      const eventWithoutColor: Event = {
+        ...mockEvent,
+        color: undefined,
+        resourceId: undefined
+      };
+
+      fixture.componentRef.setInput('event', eventWithoutColor);
+      fixture.detectChanges();
+
+      setTimeout(() => {
+        const slots = component.derivedSlots();
+        expect(slots[0].style['--event-color']).toBe('#0860c4');
+        done();
+      }, 100);
+    });
+
+    it('should override with explicit eventColor input', () => {
+      fixture.componentRef.setInput('eventColor', '#ff0000');
+      fixture.detectChanges();
+
+      const slots = component.derivedSlots();
+      expect(slots[0].style['--event-color']).toBe('#ff0000');
+    });
   });
 
-  it('should format and display event time', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const time = compiled.querySelector('.event-render__time');
+  describe('Color Scheme Generation', () => {
+    it('should generate complete color scheme', () => {
+      const slots = component.derivedSlots();
+      const style = slots[0].style;
 
-    expect(time?.textContent).toContain('AM');
+      expect(style['--event-color']).toBeDefined();
+      expect(style['--event-hover-color']).toBeDefined();
+      expect(style['--event-bg-color']).toBeDefined();
+      expect(style['--event-text-color']).toBeDefined();
+    });
+
+    it('should generate darker hover color', () => {
+      const slots = component.derivedSlots();
+      const baseColor = slots[0].style['--event-color'];
+      const hoverColor = slots[0].style['--event-hover-color'];
+
+      expect(baseColor).toBe('#e91e63');
+      expect(hoverColor).not.toBe(baseColor);
+    });
   });
 
-  it('should apply correct positioning styles', () => {
-    const styles = component.eventStyles();
+  describe('Multi-Segment Rendering', () => {
+    it('should render multiple segments', () => {
+      const segment2: LayoutSegment = {
+        ...mockLayoutSegment,
+        slotIndex: 1
+      };
 
-    expect(styles['--event-x']).toBe('50px');
-    expect(styles['--event-y']).toBe('100px');
-    expect(styles['--event-width']).toBe('200px');
-    expect(styles['--event-height']).toBe('60px');
+      fixture.componentRef.setInput('layoutSegments', [mockLayoutSegment, segment2]);
+      fixture.detectChanges();
+
+      const slots = component.derivedSlots();
+      expect(slots.length).toBe(2);
+    });
+
+    it('should compute different positions for each segment', () => {
+      const segment2: LayoutSegment = {
+        ...mockLayoutSegment,
+        slotIndex: 1  // Different slot
+      };
+
+      fixture.componentRef.setInput('layoutSegments', [mockLayoutSegment, segment2]);
+      fixture.detectChanges();
+
+      const slots = component.derivedSlots();
+      expect(slots[0].style['--event-y']).not.toBe(slots[1].style['--event-y']);
+    });
   });
 
-  it('should use event color for background', () => {
-    const styles = component.eventStyles();
+  describe('Hover State Management', () => {
+    it('should set hovered state on slot hover', () => {
+      expect(component.isHovered()).toBe(false);
 
-    expect(styles['background-color']).toBe('#0860c4');
+      component.onSlotHover(true);
+      expect(component.isHovered()).toBe(true);
+
+      component.onSlotHover(false);
+      expect(component.isHovered()).toBe(false);
+    });
+
+    it('should emit eventHovered on hover enter', () => {
+      let hoveredEvent: Event | undefined;
+      component.eventHovered.subscribe(event => hoveredEvent = event);
+
+      component.onSlotHover(true);
+
+      expect(hoveredEvent).toEqual(mockEvent);
+    });
   });
 
-  it('should emit event on click', () => {
-    let clickedEvent: Event | undefined;
-    component.eventClicked.subscribe(event => clickedEvent = event);
+  describe('Click Handling', () => {
+    it('should emit event on slot click', () => {
+      let clickedEvent: Event | undefined;
+      component.eventClicked.subscribe(event => clickedEvent = event);
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    const eventElement = compiled.querySelector('.event-render') as HTMLElement;
-    eventElement.click();
+      component.onSlotClick();
 
-    expect(clickedEvent).toEqual(mockEvent);
+      expect(clickedEvent).toEqual(mockEvent);
+    });
   });
 
-  it('should set hovered state on mouse enter', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const eventElement = compiled.querySelector('.event-render') as HTMLElement;
+  describe('Selection API', () => {
+    it('should support manual selection', () => {
+      component.select();
+      expect(component.isSelected()).toBe(true);
 
-    eventElement.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-
-    expect(component.isHovered()).toBe(true);
+      component.deselect();
+      expect(component.isSelected()).toBe(false);
+    });
   });
 
-  it('should clear hovered state on mouse leave', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const eventElement = compiled.querySelector('.event-render') as HTMLElement;
+  describe('View Mode Switching', () => {
+    it('should use different renderer for month view', () => {
+      fixture.componentRef.setInput('viewMode', 'month');
+      fixture.detectChanges();
 
-    eventElement.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-    expect(component.isHovered()).toBe(true);
+      const monthSlots = component.derivedSlots();
+      expect(monthSlots.length).toBeGreaterThan(0);
+    });
 
-    eventElement.dispatchEvent(new MouseEvent('mouseleave'));
-    fixture.detectChanges();
-    expect(component.isHovered()).toBe(false);
-  });
+    it('should use different renderer for week view', () => {
+      fixture.componentRef.setInput('viewMode', 'week');
+      fixture.detectChanges();
 
-  it('should support manual selection', () => {
-    component.select();
-    expect(component.isSelected()).toBe(true);
-
-    component.deselect();
-    expect(component.isSelected()).toBe(false);
-  });
-
-  it('should hide continuation indicators for single-day events', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    const leftIndicator = compiled.querySelector('.event-render__continue-left');
-    const rightIndicator = compiled.querySelector('.event-render__continue-right');
-
-    expect(leftIndicator).toBeNull();
-    expect(rightIndicator).toBeNull();
-  });
-
-  it('should show left indicator when not start of multi-day event', () => {
-    fixture.componentRef.setInput('isStart', false);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const leftIndicator = compiled.querySelector('.event-render__continue-left');
-
-    expect(leftIndicator).toBeTruthy();
-  });
-
-  it('should show right indicator when not end of multi-day event', () => {
-    fixture.componentRef.setInput('isEnd', false);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const rightIndicator = compiled.querySelector('.event-render__continue-right');
-
-    expect(rightIndicator).toBeTruthy();
+      const weekSlots = component.derivedSlots();
+      expect(weekSlots.length).toBeGreaterThan(0);
+    });
   });
 });

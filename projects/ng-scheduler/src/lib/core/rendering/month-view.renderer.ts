@@ -5,6 +5,7 @@
 
 import { EventRenderer, EventRenderData, EventSlice } from './event-renderer';
 import { AnyEvent, Event, AllDayEvent } from '../models/event';
+import { MONTH_VIEW_LAYOUT } from '../config/month-view.config';
 
 /**
  * Month View Renderer
@@ -13,10 +14,10 @@ import { AnyEvent, Event, AllDayEvent } from '../models/event';
  * Multi-day events span across multiple cells.
  */
 export class MonthViewRenderer extends EventRenderer {
-  private readonly EVENT_HEIGHT_EM = 1.5;  // em units per event slot
-  private readonly DAY_NUMBER_HEIGHT = 24; // Space reserved for day number at top
-  private readonly DAY_WIDTH_PERCENT = 100 / 7; // 14.2857% per day
-  private readonly EVENT_SPACING_XS = 4; // Gap between events in pixels
+  private readonly EVENT_HEIGHT_EM = MONTH_VIEW_LAYOUT.EVENT_HEIGHT_EM;
+  private readonly DAY_NUMBER_HEIGHT = MONTH_VIEW_LAYOUT.DAY_NUMBER_HEIGHT;
+  private readonly DAY_WIDTH_PERCENT = MONTH_VIEW_LAYOUT.DAY_WIDTH_PERCENT;
+  private readonly EVENT_SPACING_XS = MONTH_VIEW_LAYOUT.EVENT_SPACING_XS;
 
   render(
     event: AnyEvent,
@@ -64,7 +65,7 @@ export class MonthViewRenderer extends EventRenderer {
     const widthPercent = durationDays * this.DAY_WIDTH_PERCENT;
 
     // Convert em to pixels for Y positioning
-    const emToPx = 24;
+    const emToPx = MONTH_VIEW_LAYOUT.EM_TO_PX_RATIO;
     const slotHeight = emToPx + this.EVENT_SPACING_XS;
     const slotOffsetPx = (slotIndex !== undefined ? slotIndex : 0) * slotHeight;
 

@@ -7,7 +7,7 @@ import { EventStore } from '../../../core/store/event.store';
 import { GridSyncService } from '../../../core/services/grid-sync.service';
 import { EventRendererFactory } from '../../../core/rendering/event-renderer.factory';
 import { WeekViewRenderer } from '../../../core/rendering/week-view.renderer';
-import { EventRenderComponent } from '../../../shared/components/event-render/event-render';
+import { EventRenderComponent, LayoutSegment } from '../../../shared/components/event-render/event-render';
 import { AnyEvent } from '../../../core/models/event';
 import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
 import { getWeekDays } from '../../../shared/helpers';
@@ -102,21 +102,21 @@ export class WeekView {
       height: 0 // Not used for height in week view, handled by constant
     };
 
-    return eventsInWeek.map(event => ({
-      event,
-      renderData: this.renderer.render(event, currentDate, cellDimensions),
-      color: this.getEventColor(event)
-    }));
-  });
+    return eventsInWeek.map(event => {
+      // Create a single layout segment for the week view
+      const segment = {
+        slotIndex: 0, // WeekView doesn't use vertical slots like MonthView
+        viewBoundaries: { start: weekStart, end: weekEnd },
+        cellDimensions,
+        dateContext: currentDate
+      };
 
-  private getEventColor(event: AnyEvent): string {
-    if (event.color) return event.color;
-    if (event.resourceId) {
-      const resource = this.eventStore.getResource(event.resourceId);
-      if (resource?.color) return resource.color;
-    }
-    return '#0860c4';
-  }
+      return {
+        event,
+        segments: [segment] // Single segment for week view
+      };
+    });
+  });
 
   constructor() {
     afterNextRender(() => {

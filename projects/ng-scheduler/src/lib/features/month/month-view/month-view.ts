@@ -6,7 +6,7 @@ import { MonthHeader } from '../month-header/month-header';
 import { MonthGrid } from '../month-grid/month-grid';
 import { CalendarStore } from '../../../core/store/calendar.store';
 import { EventStore } from '../../../core/store/event.store';
-import { EventRenderComponent } from '../../../shared/components/event-render/event-render';
+import { EventRenderComponent, LayoutSegment } from '../../../shared/components/event-render/event-render';
 import { EventRendererFactory } from '../../../core/rendering/event-renderer.factory';
 import { GridSyncService } from '../../../core/services/grid-sync.service';
 import { EventSlotAssigner, SlottedEvent } from '../../../core/rendering/event-slot-assigner';
@@ -14,6 +14,7 @@ import { EventOverflowIndicator } from '../../../shared/components/event-overflo
 import { EventOverflowPopover } from '../../../shared/components/event-overflow-popover/event-overflow-popover';
 import { AnyEvent } from '../../../core/models/event';
 import { getMonthCalendarGrid } from '../../../shared/helpers';
+import { MONTH_VIEW_LAYOUT, MONTH_VIEW_COMPUTED } from '../../../core/config/month-view.config';
 
 @Component({
   selector: 'mglon-month-view',
@@ -45,11 +46,11 @@ export class MonthView {
    */
   eventClick = output<AnyEvent>();
 
-  // Constants for capacity calculation
-  private readonly EVENT_HEIGHT = 24;        // px (1.5em)
-  private readonly EVENT_SPACING_XS = 4;     // px gap between events
-  private readonly DAY_NUMBER_HEIGHT = 24;   // px reserved for day number
-  private readonly MORE_INDICATOR_HEIGHT = 20; // px for +N more indicator
+  // Constants from config
+  private readonly EVENT_HEIGHT = MONTH_VIEW_LAYOUT.EVENT_HEIGHT_PX;
+  private readonly EVENT_SPACING_XS = MONTH_VIEW_LAYOUT.EVENT_SPACING_XS;
+  private readonly DAY_NUMBER_HEIGHT = MONTH_VIEW_LAYOUT.DAY_NUMBER_HEIGHT;
+  private readonly MORE_INDICATOR_HEIGHT = MONTH_VIEW_LAYOUT.MORE_INDICATOR_HEIGHT;
 
   /**
    * Computed: Overflow indicators to render
@@ -160,12 +161,11 @@ export class MonthView {
     // Calculate cell capacity once
     const cellCapacity = this.calculateCellCapacity(cellDimensions.height);
 
-    // Process events BY WEEK and assign slots (Google Calendar style)
-    const allRenderedEvents: Array<{
+    // Group visible segments by Event ID
+    const groupedSegments = new Map<string, {
       event: AnyEvent;
-      renderData: any;
-      color: string;
-    }> = [];
+      segments: LayoutSegment[];
+    }>();
 
     // Track overflow per week-day combination for indicators
     const overflowByWeekDay = new Map<string, {
@@ -221,25 +221,34 @@ export class MonthView {
           });
         }
 
-        // Render visible events
+        // Collect visible segments into simple groups
         for (const slotted of visibleEvents) {
-          allRenderedEvents.push({
-            event: slotted.event,
-            renderData: this.renderer.render(
-              slotted.event,
-              currentDate,
-              cellDimensions,
-              slotted.slotIndex,  // Pass slot index for Y positioning
-              { start: weekStart, end: weekEnd } // [NEW] Pass week boundaries for clamping
-            ),
-            color: this.getEventColor(slotted.event)
-          });
+          const eventId = slotted.event.id;
+
+          if (!groupedSegments.has(eventId)) {
+            groupedSegments.set(eventId, {
+              event: slotted.event,
+              segments: []
+            });
+          }
+
+          // Create layout segment (raw data)
+          const segment: LayoutSegment = {
+            slotIndex: slotted.slotIndex,
+            viewBoundaries: { start: weekStart, end: weekEnd },
+            cellDimensions,
+            dateContext: currentDate
+          };
+
+          groupedSegments.get(eventId)!.segments.push(segment);
         }
       }
     }
 
-    // Return both events and overflow data (no signal mutation!)
-    return { events: allRenderedEvents, overflow: overflowByWeekDay };
+    // Convert map values to array for template
+    const uniqueEvents = Array.from(groupedSegments.values());
+
+    return { events: uniqueEvents, overflow: overflowByWeekDay };
   });
 
   /**
@@ -278,28 +287,6 @@ export class MonthView {
     });
 
     return byDay;
-  }
-
-  /**
-   * Gets the effective color for an event
-   * Priority: event.color > resource.color > default
-   */
-  private getEventColor(event: AnyEvent): string {
-    // If event has explicit color, use it
-    if (event.color) {
-      return event.color;
-    }
-
-    // If event belongs to a resource, inherit resource color
-    if (event.resourceId) {
-      const resource = this.eventStore.getResource(event.resourceId);
-      if (resource?.color) {
-        return resource.color;
-      }
-    }
-
-    // Default fallback
-    return '#0860c4';
   }
 
   /**
@@ -391,8 +378,8 @@ export class MonthView {
       if (grid) {
         // Observe grid for resize
         this.gridSync.observeGrid(grid, (rect) => ({
-          width: rect.width / 7,  // 7 columns (days per week)
-          height: rect.height / 6  // 6 rows (always consistent)
+          width: rect.width / MONTH_VIEW_LAYOUT.DAYS_PER_WEEK,
+          height: rect.height / MONTH_VIEW_LAYOUT.WEEKS_PER_MONTH
         }));
       }
     });
