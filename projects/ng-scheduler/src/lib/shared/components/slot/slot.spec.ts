@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlotComponent, GroupSlot } from './slot';
 import { ZigzagDirective } from '../../directives/zigzag.directive';
+import { ResizableDirective } from '../../directives/resizable.directive';
 import { Event } from '../../../core/models/event';
 
 describe('SlotComponent', () => {
@@ -348,6 +349,34 @@ describe('SlotComponent', () => {
       const el = fixture.nativeElement.querySelector('.slot');
       expect(el.classList).not.toContain('mglon-zigzag-left');
       expect(el.classList).not.toContain('mglon-zigzag-right');
+    });
+  });
+
+  describe('Resizable Directive Integration', () => {
+    it('should apply mglon-resizable-left for start slot (no zigzag left)', () => {
+      const startSlot = { ...mockSlot };
+      startSlot.renderData.isStart = true;
+      startSlot.renderData.isEnd = false; // Continuation right (zigzag right)
+
+      fixture.componentRef.setInput('slot', startSlot);
+      fixture.detectChanges();
+
+      const el = fixture.nativeElement.querySelector('.slot');
+      expect(el.classList).toContain('mglon-resizable-left');
+      expect(el.classList).not.toContain('mglon-resizable-right');
+    });
+
+    it('should apply mglon-resizable-right for end slot (no zigzag right)', () => {
+      const endSlot = { ...mockSlot };
+      endSlot.renderData.isStart = false; // Continuation left (zigzag left)
+      endSlot.renderData.isEnd = true;
+
+      fixture.componentRef.setInput('slot', endSlot);
+      fixture.detectChanges();
+
+      const el = fixture.nativeElement.querySelector('.slot');
+      expect(el.classList).toContain('mglon-resizable-right');
+      expect(el.classList).not.toContain('mglon-resizable-left');
     });
   });
 });

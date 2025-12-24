@@ -1,6 +1,7 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 @use '../../../styles/zigzag' as *;
+@use '../../../styles/resizable' as *;
 
 :host {
   // Border radius variants for event slots

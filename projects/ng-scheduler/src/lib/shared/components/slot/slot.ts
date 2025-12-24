@@ -1,8 +1,10 @@
-import { Component, input, output, computed } from '@angular/core';
+import { Component, input, output, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnyEvent } from '../../../core/models/event';
 import { EventRenderData } from '../../../core/rendering/event-renderer';
 import { ZigzagDirective, ZigzagSide } from '../../directives/zigzag.directive';
+import { ResizableDirective, ResizeSide, ResizeEvent } from '../../directives/resizable.directive';
+import { EventResizeService } from '../../../core/services/event-resize.service';
 
 export interface GroupSlot {
   renderData: EventRenderData;
@@ -12,7 +14,7 @@ export interface GroupSlot {
 @Component({
   selector: 'mglon-slot',
   standalone: true,
-  imports: [CommonModule, ZigzagDirective],
+  imports: [CommonModule, ZigzagDirective, ResizableDirective],
   host: {
     '[attr.rounded]': 'rounded()',
     '[attr.data-is-start]': 'isStart()',
@@ -21,10 +23,15 @@ export interface GroupSlot {
     '[attr.data-is-complete]': 'isComplete()'
   },
   template: `
-    <div 
+    <div
       class="slot"
       [mglonZigzag]="zigzagSides()"
       zigzagSize="5px"
+      [mglonResizable]="resizeSides()"
+      resizeHandleSize="6"
+      (resizeStart)="onResizeStart($event)"
+      (resizing)="onResizing($event)"
+      (resizeEnd)="onResizeEnd($event)"
       [class.is-hovered]="isHovered()"
       [class.is-selected]="isSelected()"
       [class.has-continuation-left]="!isStart()"
@@ -34,14 +41,14 @@ export interface GroupSlot {
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
       (click)="onClick($event)">
-      
+
       <!-- Event content -->
       <div class="slot__content">
         <span class="slot__title">{{ event().title }}</span>
         @if (showTime()) {
-        <span class="slot__time">
-          {{ formatTime(event()) }}
-        </span>
+          <span class="slot__time">
+            {{ formatTime(event()) }}
+          </span>
         }
       </div>
     </div>
@@ -59,6 +66,9 @@ export class SlotComponent {
 
   // Styling
   rounded = input<string | undefined>(undefined);
+
+  // Injections
+  private resizeService = inject(EventResizeService);
 
   // Slot Positioning State
   isStart = computed(() => !!this.slot().renderData.isStart);
@@ -79,9 +89,23 @@ export class SlotComponent {
     return sides;
   });
 
+  // Resize Sides Calculation
+  resizeSides = computed(() => {
+    const sides: ResizeSide[] = [];
+    if (this.isStart()) {
+      sides.push('left');
+    }
+    if (this.isEnd()) {
+      sides.push('right');
+    }
+    return sides;
+  });
+
+
   // Outputs
   slotHover = output<boolean>();
   slotClick = output<void>();
+  slotResizeEnd = output<ResizeEvent>();
 
   onMouseEnter() {
     this.slotHover.emit(true);
@@ -91,15 +115,30 @@ export class SlotComponent {
     this.slotHover.emit(false);
   }
 
-  onClick(e: MouseEvent) {
-    e.stopPropagation();
+  onClick(event: MouseEvent) {
+    event.stopPropagation();
     this.slotClick.emit();
+  }
+
+  onResizeStart(event: ResizeEvent) {
+    console.log('Resize started:', event);
+    this.resizeService.startResize(this.event(), event.side);
+  }
+
+  onResizing(event: MouseEvent) {
+    this.resizeService.handleMove(event);
+  }
+
+  onResizeEnd(event: MouseEvent) {
+    this.resizeService.stopResize();
+    // this.slotResizeEnd.emit(event); // Revisit if parent needs this
   }
 
   formatTime(event: AnyEvent): string {
     if (event.type !== 'event') return '';
-    const start = event.start;
-    const end = event.end;
+    const start = event.start instanceof Date ? event.start : new Date(event.start);
+    const end = event.end instanceof Date ? event.end : new Date(event.end);
+
     const formatHour = (date: Date) => {
       const hours = date.getHours();
       const minutes = date.getMinutes();
@@ -108,6 +147,7 @@ export class SlotComponent {
       const displayMinutes = minutes.toString().padStart(2, '0');
       return `${displayHours}:${displayMinutes} ${ampm}`;
     };
+
     return `${formatHour(start)} - ${formatHour(end)}`;
   }
 }
