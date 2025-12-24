@@ -2,6 +2,7 @@ import { Component, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnyEvent } from '../../../core/models/event';
 import { EventRenderData } from '../../../core/rendering/event-renderer';
+import { ZigzagDirective, ZigzagSide } from '../../directives/zigzag.directive';
 
 export interface GroupSlot {
   renderData: EventRenderData;
@@ -11,7 +12,7 @@ export interface GroupSlot {
 @Component({
   selector: 'mglon-slot',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ZigzagDirective],
   host: {
     '[attr.rounded]': 'rounded()',
     '[attr.data-is-start]': 'isStart()',
@@ -22,6 +23,8 @@ export interface GroupSlot {
   template: `
     <div 
       class="slot"
+      [mglonZigzag]="zigzagSides()"
+      zigzagSize="5px"
       [class.is-hovered]="isHovered()"
       [class.is-selected]="isSelected()"
       [class.has-continuation-left]="!isStart()"
@@ -63,6 +66,18 @@ export class SlotComponent {
 
   isContinuation = computed(() => !this.isStart());
   isComplete = computed(() => this.isStart() && this.isEnd());
+
+  // Zigzag Sides Calculation
+  zigzagSides = computed(() => {
+    const sides: ZigzagSide[] = [];
+    if (!this.isStart()) {
+      sides.push('left');
+    }
+    if (!this.isEnd()) {
+      sides.push('right');
+    }
+    return sides;
+  });
 
   // Outputs
   slotHover = output<boolean>();

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlotComponent, GroupSlot } from './slot';
+import { ZigzagDirective } from '../../directives/zigzag.directive';
 import { Event } from '../../../core/models/event';
 
 describe('SlotComponent', () => {
@@ -294,6 +295,59 @@ describe('SlotComponent', () => {
       expect(el.getAttribute('data-is-end')).toBe('true');
       expect(el.getAttribute('data-is-complete')).toBe('true');
       expect(el.getAttribute('data-is-continuation')).toBe('false');
+    });
+  });
+  describe('Zigzag Directive Integration', () => {
+    it('should apply mglon-zigzag-left for end slot (continuation left)', () => {
+      const endSlot = { ...mockSlot };
+      endSlot.renderData.isStart = false;
+      endSlot.renderData.isEnd = true;
+
+      fixture.componentRef.setInput('slot', endSlot);
+      fixture.detectChanges();
+
+      const el = fixture.nativeElement.querySelector('.slot');
+      expect(el.classList).toContain('mglon-zigzag-left');
+      expect(el.classList).not.toContain('mglon-zigzag-right');
+    });
+
+    it('should apply mglon-zigzag-right for start slot (continuation right)', () => {
+      const startSlot = { ...mockSlot };
+      startSlot.renderData.isStart = true;
+      startSlot.renderData.isEnd = false;
+
+      fixture.componentRef.setInput('slot', startSlot);
+      fixture.detectChanges();
+
+      const el = fixture.nativeElement.querySelector('.slot');
+      expect(el.classList).toContain('mglon-zigzag-right');
+      expect(el.classList).not.toContain('mglon-zigzag-left');
+    });
+
+    it('should apply both zigzag classes for middle slot', () => {
+      const midSlot = { ...mockSlot };
+      midSlot.renderData.isStart = false;
+      midSlot.renderData.isEnd = false;
+
+      fixture.componentRef.setInput('slot', midSlot);
+      fixture.detectChanges();
+
+      const el = fixture.nativeElement.querySelector('.slot');
+      expect(el.classList).toContain('mglon-zigzag-left');
+      expect(el.classList).toContain('mglon-zigzag-right');
+    });
+
+    it('should not apply zigzag for complete slot', () => {
+      const completeSlot = { ...mockSlot };
+      completeSlot.renderData.isStart = true;
+      completeSlot.renderData.isEnd = true;
+
+      fixture.componentRef.setInput('slot', completeSlot);
+      fixture.detectChanges();
+
+      const el = fixture.nativeElement.querySelector('.slot');
+      expect(el.classList).not.toContain('mglon-zigzag-left');
+      expect(el.classList).not.toContain('mglon-zigzag-right');
     });
   });
 });
