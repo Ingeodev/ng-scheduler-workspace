@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CalendarStore } from '../../../core/store/calendar.store';
 import { SchedulerConfig, ViewMode } from '../../../core/models/config-schedule';
 import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
-import { ResourceModel } from '../../../core/models/resource';
+import { ResourceModel } from '../../../core/models/resource.model';
 import {
   HeaderUIConfig,
   SidebarUIConfig,
@@ -111,7 +111,7 @@ export class Schedule {
 
     // Emit resource show/hide events when resources change
     effect(() => {
-      const resources = this.store.resources();
+      const resources = this.store.resourcesArray();
 
       resources.forEach(resource => {
         // Check previous state vs current state

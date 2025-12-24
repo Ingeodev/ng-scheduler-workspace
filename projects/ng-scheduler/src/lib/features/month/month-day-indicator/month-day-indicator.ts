@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { CalendarDay } from "../../../shared/helpers";
 
 @Component({
@@ -9,4 +9,6 @@ import { CalendarDay } from "../../../shared/helpers";
 })
 export class MonthDayIndicator {
   readonly day = input.required<CalendarDay>();
+
+  isToday = computed(() => this.day().date.toDateString() === new Date().toDateString());
 }

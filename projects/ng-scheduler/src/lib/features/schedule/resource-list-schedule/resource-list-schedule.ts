@@ -1,7 +1,7 @@
 import { Component, input, output, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarStore } from '../../../core/store/calendar.store';
-import { ResourceModel } from '../../../core/models/resource';
+import { ResourceModel } from '../../../core/models/resource.model';
 import { ResourceItemSchedule } from '../resource-item-schedule/resource-item-schedule';
 
 @Component({

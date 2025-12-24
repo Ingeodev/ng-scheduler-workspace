@@ -1,4 +1,4 @@
-import { ResourceModel } from './resource';
+import { ResourceModel } from './resource.model';
 
 export type ViewMode = 'day' | 'week' | 'month' | 'resource' | 'list';
 

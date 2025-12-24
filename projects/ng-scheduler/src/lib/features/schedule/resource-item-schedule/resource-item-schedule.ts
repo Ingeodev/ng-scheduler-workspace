@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { ResourceModel } from '../../../core/models/resource';
+import { ResourceModel } from '../../../core/models/resource.model';
 import { Avatar } from '../../../shared/components/avatar/avatar';
 
 @Component({

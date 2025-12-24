@@ -176,3 +176,46 @@ export function getWeekTimeSlots(date: Date): TimeSlot[][] {
     return slots;
   });
 }
+import { ViewMode } from '../../core/models/config-schedule';
+
+/**
+ * Calculates the visible date range for a given date and view mode.
+ * 
+ * @param date - The reference date
+ * @param viewMode - The current view mode
+ * @returns Object with start and end dates
+ */
+export function getViewRange(date: Date, viewMode: ViewMode): { start: Date; end: Date } {
+  const today = new Date(date);
+  today.setHours(0, 0, 0, 0);
+
+  switch (viewMode) {
+    case 'month': {
+      const monthStart = startOfMonth(today);
+      const monthEnd = endOfMonth(today);
+      const start = startOfWeek(monthStart, { weekStartsOn: 0 });
+      const end = endOfWeek(monthEnd, { weekStartsOn: 0 });
+      return { start, end };
+    }
+    case 'week': {
+      const start = startOfWeek(today, { weekStartsOn: 0 });
+      const end = endOfWeek(today, { weekStartsOn: 0 });
+      return { start, end };
+    }
+    case 'day':
+    case 'resource': {
+      const start = new Date(today);
+      const end = new Date(today);
+      end.setHours(23, 59, 59, 999);
+      return { start, end };
+    }
+    case 'list': {
+      // For now, list view shows the whole month
+      const start = startOfMonth(today);
+      const end = endOfMonth(today);
+      return { start, end };
+    }
+    default:
+      return { start: today, end: today };
+  }
+}

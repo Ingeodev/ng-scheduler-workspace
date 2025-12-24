@@ -5,7 +5,9 @@ import {
   SchedulerConfig,
   GridUIConfig,
   HeaderUIConfig,
-  SidebarUIConfig
+  SidebarUIConfig,
+  ResourceEvents,
+  Event,
 } from 'ng-scheduler';
 
 import { ApiTableComponent, ApiProperty } from '../../shared/api-table/api-table';
@@ -18,6 +20,8 @@ import { ExampleViewerComponent } from '../../shared/example-viewer/example-view
   imports: [
     CommonModule,
     Schedule,
+    Event,
+    ResourceEvents,
     ApiTableComponent,
     CodeBlockComponent,
     ExampleViewerComponent

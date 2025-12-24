@@ -6,7 +6,14 @@
   font-weight: var(--month-cell-day-number-weight);
   line-height: 1;
 
-  p {
+  span {
     color: var(--mglon-month-day-indicator-text-color, var(--mglon-schedule-text-secondary));
+    padding: var(--mglon-month-day-indicator-padding, var(--mglon-schedule-padding-xs));
+    border-radius: var(--mglon-month-day-indicator-border-radius, var(--mglon-schedule-radius-full));
+  }
+
+  .today {
+    background-color: var(--mglon-month-day-indicator-today-background-color, var(--mglon-schedule-error));
+    color: var(--mglon-month-day-indicator-today-text-color, var(--mglon-schedule-on-error));
   }
 }
