@@ -5,7 +5,7 @@ import { SchedulerConfig, ViewMode } from '../models/config-schedule';
 import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUIConfig } from '../models/ui-config';
 import { ResourceModel } from '../models/resource.model';
 import { AnyEvent } from '../models/event.model';
-import { getViewRange } from '../../shared/helpers/calendar.helpers';
+import { getViewRange, isEventInRange } from '../../shared/helpers/calendar.helpers';
 
 interface CalendarState {
   currentDate: Date;
@@ -54,8 +54,8 @@ export const CalendarStore = signalStore(
     }),
 
     // Resource Computeds
-    resourcesArray: computed(() => Array.from(resources().values())),
-    resourcesCount: computed(() => resources().size),
+    allResources: computed(() => Array.from(resources().values())),
+    resourceCount: computed(() => resources().size),
     activeResources: computed(() =>
       Array.from(resources().values()).filter(r => r.isActive !== false)
     ),
@@ -64,8 +64,12 @@ export const CalendarStore = signalStore(
     ),
 
     // Event Computeds
-    eventsArray: computed(() => Array.from(events().values())),
-    eventsCount: computed(() => events().size)
+    allEvents: computed(() => Array.from(events().values())),
+    eventCount: computed(() => events().size),
+    currentViewEvents: computed(() => {
+      const range = getViewRange(currentDate(), viewMode());
+      return Array.from(events().values()).filter(event => isEventInRange(event, range));
+    })
   })),
   withMethods((store) => ({
     // --- Navigation & View Methods ---
@@ -83,7 +87,7 @@ export const CalendarStore = signalStore(
       }));
 
       if (config.resources) {
-        this.setResources(config.resources);
+        this.registerResources(config.resources);
       }
     },
     next() {
@@ -125,12 +129,14 @@ export const CalendarStore = signalStore(
     },
 
     // --- Resource Methods ---
-    setResources(resources: ResourceModel[]) {
-      const resourcesMap = new Map<string, ResourceModel>();
-      resources.forEach(r => resourcesMap.set(r.id, r));
-      patchState(store, { resources: resourcesMap });
+    registerResources(resources: ResourceModel[]) {
+      patchState(store, (state) => {
+        const newMap = new Map(state.resources);
+        resources.forEach(r => newMap.set(r.id, r));
+        return { resources: newMap };
+      });
     },
-    addResource(resource: ResourceModel) {
+    registerResource(resource: ResourceModel) {
       patchState(store, (state) => {
         const newMap = new Map(state.resources);
         newMap.set(resource.id, resource);
@@ -146,16 +152,26 @@ export const CalendarStore = signalStore(
         return { resources: newMap };
       });
     },
+    unregisterResource(id: string) {
+      patchState(store, (state) => {
+        const newMap = new Map(state.resources);
+        newMap.delete(id);
+        return { resources: newMap };
+      });
+    },
+    getResource(id: string): ResourceModel | undefined {
+      return store.resources().get(id);
+    },
     toggleResource(id: string) {
       const resource = store.resources().get(id);
       if (resource) {
         this.updateResource(id, { isActive: resource.isActive === false });
       }
     },
-    activateResource(id: string) {
+    showResource(id: string) {
       this.updateResource(id, { isActive: true });
     },
-    deactivateResource(id: string) {
+    hideResource(id: string) {
       this.updateResource(id, { isActive: false });
     },
 
@@ -165,7 +181,7 @@ export const CalendarStore = signalStore(
       events.forEach(e => eventsMap.set(e.id, e));
       patchState(store, { events: eventsMap });
     },
-    addEvent(event: AnyEvent) {
+    registerEvent(event: AnyEvent) {
       patchState(store, (state) => {
         const newMap = new Map(state.events);
         newMap.set(event.id, event);
@@ -181,11 +197,24 @@ export const CalendarStore = signalStore(
         return { events: newMap };
       });
     },
-    removeEvent(id: string) {
+    unregisterEvent(id: string) {
       patchState(store, (state) => {
         const newMap = new Map(state.events);
         newMap.delete(id);
         return { events: newMap };
+      });
+    },
+    getEvent(id: string): AnyEvent | undefined {
+      return store.events().get(id);
+    },
+    getEventsByResource(resourceId: string): AnyEvent[] {
+      return Array.from(store.events().values()).filter(event => event.resourceId === resourceId);
+    },
+
+    clear(): void {
+      patchState(store, {
+        events: new Map(),
+        resources: new Map(),
       });
     },
 

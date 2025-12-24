@@ -20,3 +20,17 @@ export const DEFAULT_CONFIG: SchedulerConfig = {
   editable: true,
   showSidebar: true
 };
+
+export const DEFAULT_RESOURCE_INPUTS = {
+  tags: [] as string[],
+  isReadOnly: false,
+  isBlocked: false,
+  isActive: true,
+};
+
+export const DEFAULT_EVENT_INPUTS = {
+  color: '#3788d8',
+  allDay: false,
+  description: '',
+  data: null as any,
+};

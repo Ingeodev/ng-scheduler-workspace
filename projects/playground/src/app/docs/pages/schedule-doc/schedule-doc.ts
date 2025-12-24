@@ -35,11 +35,11 @@ export class ScheduleDocComponent {
     views: ['month', 'week', 'day', 'resource'],
     initialDate: new Date(),
     editable: true,
-    resources: [
-      { id: 'resource-1', name: 'Conference Room A', color: '#4285f4' },
-      { id: 'resource-2', name: 'Conference Room B', color: '#ea4335' }
-    ]
   };
+
+  eventStart = new Date();
+  eventEnd = new Date(new Date().setHours(new Date().getHours() + 1));
+
 
 
   // UI Configuration Examples

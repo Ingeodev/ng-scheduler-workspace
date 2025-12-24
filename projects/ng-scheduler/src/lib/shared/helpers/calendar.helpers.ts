@@ -4,7 +4,8 @@ import {
   startOfWeek,
   endOfWeek,
   eachDayOfInterval,
-  isSameMonth
+  isSameMonth,
+  areIntervalsOverlapping
 } from 'date-fns';
 
 /**
@@ -218,4 +219,36 @@ export function getViewRange(date: Date, viewMode: ViewMode): { start: Date; end
     default:
       return { start: today, end: today };
   }
+}
+
+import { AnyEvent, isAllDayEvent, isEvent, isRecurrentEvent } from '../../core/models/event.model';
+
+/**
+ * Checks if an event is within or overlaps with a given date range.
+ * 
+ * @param event - The event to check
+ * @param range - The date range { start, end }
+ * @returns True if the event overlaps with the range
+ */
+export function isEventInRange(event: AnyEvent, range: { start: Date; end: Date }): boolean {
+  if (isEvent(event) || isRecurrentEvent(event)) {
+    return areIntervalsOverlapping(
+      { start: event.start, end: event.end },
+      { start: range.start, end: range.end }
+    );
+  }
+
+  if (isAllDayEvent(event)) {
+    const eventStart = new Date(event.date);
+    eventStart.setHours(0, 0, 0, 0);
+    const eventEnd = event.endDate ? new Date(event.endDate) : new Date(event.date);
+    eventEnd.setHours(23, 59, 59, 999);
+
+    return areIntervalsOverlapping(
+      { start: eventStart, end: eventEnd },
+      { start: range.start, end: range.end }
+    );
+  }
+
+  return false;
 }

@@ -18,9 +18,9 @@
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-            <mglon-resource-events id="1" name="Resource 1">
-              <mglon-event></mglon-event>
-            </mglon-resource-events>
+            <mglon-resource id="1" name="Resource 1">
+              <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"></mglon-event>
+            </mglon-resource>
           </mglon-schedule>
         </div>
       </div>

@@ -1,10 +1,40 @@
-import { Component, AfterContentInit, inject, ElementRef, Input, input } from '@angular/core';
+import { Component, AfterContentInit, inject, ElementRef, Input, input, effect, Resource } from '@angular/core';
 import { ResourceModel } from '../../core/models/resource.model';
+import { DEFAULT_RESOURCE_INPUTS } from '../../core/config/default-schedule-config';
+import { CalendarStore } from '../../core/store/calendar.store';
 
+import { InjectionToken } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+/**
+ * Injection token for providing resource ID to child components
+ */
+export const RESOURCE_ID_TOKEN = new InjectionToken<string>('RESOURCE_ID');
+
+/**
+ * ResourceComponent - Declarative component representing a calendar resource
+ * 
+ * Usage:
+ * <mglon-resource 
+ *   id="room-1" 
+ *   name="Conference Room A"
+ *   [color]="'#0860c4'">
+ *   <mglon-event>...</mglon-event>
+ * </mglon-resource>
+ */
 @Component({
-  selector: 'mglon-resource-events',
-  imports: [],
+  selector: 'mglon-resource',
+  standalone: true,
+  imports: [CommonModule],
   template: `<ng-content></ng-content>`,
+  styles: [`:host { display: contents; }`],
+  providers: [
+    {
+      provide: RESOURCE_ID_TOKEN,
+      useFactory: (component: ResourceEvents) => component.id(),
+      deps: [ResourceEvents]
+    }
+  ]
 })
 export class ResourceEvents implements AfterContentInit {
 
@@ -24,21 +54,23 @@ export class ResourceEvents implements AfterContentInit {
   readonly description = input<string>();
 
   /** Tags for filtering */
-  readonly tags = input<string[]>([]);
+  readonly tags = input<string[]>(DEFAULT_RESOURCE_INPUTS.tags);
 
   /** If true, events for this resource cannot be edited */
-  readonly isReadOnly = input<boolean>(false);
+  readonly isReadOnly = input<boolean>(DEFAULT_RESOURCE_INPUTS.isReadOnly);
 
   /** If true, this resource does not accept new events */
-  readonly isBlocked = input<boolean>(false);
+  readonly isBlocked = input<boolean>(DEFAULT_RESOURCE_INPUTS.isBlocked);
 
   /** If true, resource is active and visible. Default: true */
-  readonly isActive = input<boolean>(true);
+  readonly isActive = input<boolean>(DEFAULT_RESOURCE_INPUTS.isActive);
 
   /** Flexible user-defined data */
   readonly metadata = input<any>();
 
   private elRef = inject(ElementRef);
+
+  private store = inject(CalendarStore)
 
   ngAfterContentInit() {
     this._removeInvalidNodes();
@@ -54,5 +86,57 @@ export class ResourceEvents implements AfterContentInit {
         node.remove();
       }
     });
+  }
+
+  constructor() {
+    // Sync isActive input changes to EventStore
+    effect(() => {
+      const shouldBeActive = this.isActive();
+      const resourceId = this.id();
+
+      if (resourceId) {
+        if (shouldBeActive) {
+          this.store.showResource(resourceId);
+        } else {
+          this.store.hideResource(resourceId);
+        }
+      }
+    }, { allowSignalWrites: true });
+  }
+
+  ngOnInit(): void {
+    this.registerResource();
+  }
+
+  /**
+   * Lifecycle: Unregister resource on destroy
+   */
+  ngOnDestroy(): void {
+    // Only unregister if the component was fully initialized
+    try {
+      const resourceId = this.id();
+      if (resourceId) {
+        this.store.unregisterResource(resourceId);
+      }
+    } catch (e) {
+      // Ignore errors during cleanup (e.g., inputs not yet initialized in tests)
+    }
+  }
+
+  private registerResource(): void {
+    const resource: ResourceModel = {
+      id: this.id(),
+      name: this.name(),
+      color: this.color(),
+      avatar: this.avatar(),
+      description: this.description(),
+      tags: this.tags(),
+      isReadOnly: this.isReadOnly(),
+      isBlocked: this.isBlocked(),
+      isActive: this.isActive(),
+      metadata: this.metadata()
+    };
+
+    this.store.registerResource(resource);
   }
 }

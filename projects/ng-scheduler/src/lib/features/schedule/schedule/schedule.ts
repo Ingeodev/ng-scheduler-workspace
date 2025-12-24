@@ -111,7 +111,7 @@ export class Schedule {
 
     // Emit resource show/hide events when resources change
     effect(() => {
-      const resources = this.store.resourcesArray();
+      const resources = this.store.allResources();
 
       resources.forEach(resource => {
         // Check previous state vs current state
