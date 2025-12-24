@@ -1,49 +1,26 @@
 import { Component, input, output, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnyEvent } from '../../../core/models/event';
-import { EventRenderData } from '../../../core/rendering/event-renderer';
 import { EventSlotRadius } from '../../../core/models/ui-config';
 import { CalendarStore } from '../../../core/store/calendar.store';
-
-export interface GroupSlot {
-  renderData: EventRenderData;
-  style: Record<string, any>;
-}
+import { SlotComponent, GroupSlot } from '../slot/slot';
 
 @Component({
   selector: 'mglon-group-slot',
   standalone: true,
-  imports: [CommonModule],
-  host: {
-    '[attr.rounded]': '_rounded()'
-  },
+  imports: [CommonModule, SlotComponent],
   template: `
     @for (slot of slots(); track $index) {
-      <div 
-        class="group-slot"
-        [class.is-hovered]="isHovered()"
-        [class.is-selected]="isSelected()"
-        [class.has-continuation-left]="!slot.renderData.isStart"
-        [class.has-continuation-right]="!slot.renderData.isEnd"
-        [style]="slot.style"
-        (mouseenter)="onMouseEnter()"
-        (mouseleave)="onMouseLeave()"
-        (click)="onClick($event)">
-        
-        <!-- Event content -->
-        <div class="group-slot__content">
-          <span class="group-slot__title">{{ event().title }}</span>
-          @if (showTime()) {
-          <span class="group-slot__time">
-            {{ formatTime(event()) }}
-          </span>
-          }
-        </div>
-        
-        <!-- Continuation indicators -->
-        <!-- Note: We can simplify this if the border-radius trick works well, 
-             but keeping structure similar to original for safety -->
-      </div>
+      <mglon-slot
+        [slot]="slot"
+        [event]="event()"
+        [isHovered]="isHovered()"
+        [isSelected]="isSelected()"
+        [showTime]="showTime()"
+        [rounded]="_rounded()"
+        (slotHover)="onSlotHover($event)"
+        (slotClick)="onSlotClick()">
+      </mglon-slot>
     }
   `,
   styleUrl: './group-slot.scss'
@@ -75,31 +52,11 @@ export class GroupSlotComponent {
   slotHover = output<boolean>(); // true=enter, false=leave
   slotClick = output<void>();
 
-  onMouseEnter() {
-    this.slotHover.emit(true);
+  onSlotHover(state: boolean) {
+    this.slotHover.emit(state);
   }
 
-  onMouseLeave() {
-    this.slotHover.emit(false);
-  }
-
-  onClick(e: MouseEvent) {
-    e.stopPropagation();
+  onSlotClick() {
     this.slotClick.emit();
-  }
-
-  formatTime(event: AnyEvent): string {
-    if (event.type !== 'event') return '';
-    const start = event.start;
-    const end = event.end;
-    const formatHour = (date: Date) => {
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12;
-      const displayMinutes = minutes.toString().padStart(2, '0');
-      return `${displayHours}:${displayMinutes} ${ampm}`;
-    };
-    return `${formatHour(start)} - ${formatHour(end)}`;
   }
 }

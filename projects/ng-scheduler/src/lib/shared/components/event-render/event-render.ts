@@ -2,7 +2,8 @@ import { Component, input, output, computed, signal, inject } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { AnyEvent } from '../../../core/models/event';
 import { EventRendererFactory } from '../../../core/rendering/event-renderer.factory';
-import { GroupSlotComponent, GroupSlot } from '../group-slot/group-slot';
+import { GroupSlotComponent } from '../group-slot/group-slot';
+import { GroupSlot } from '../slot/slot';
 import { generateEventColorScheme, getEventColor } from '../../helpers/color.helpers';
 import { EventStore } from '../../../core/store/event.store';
 import { MONTH_VIEW_LAYOUT } from '../../../core/config/month-view.config';
