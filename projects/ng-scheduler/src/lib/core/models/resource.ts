@@ -32,3 +32,7 @@ export interface Resource {
   /** Flexible user-defined data */
   metadata?: any;
 }
+
+/** Alias for Resource to maintain consistency in Store */
+export type ResourceModel = Resource;
+

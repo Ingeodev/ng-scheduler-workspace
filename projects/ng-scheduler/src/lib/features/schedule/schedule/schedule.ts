@@ -1,11 +1,9 @@
 import { Component, effect, input, inject, ViewEncapsulation, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarStore } from '../../../core/store/calendar.store';
-import { EventStore } from '../../../core/store/event.store';
 import { SchedulerConfig, ViewMode } from '../../../core/models/config-schedule';
 import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
-import { AnyEvent } from '../../../core/models/event';
-import { ResourceModel } from '../../../core/models/event-model';
+import { ResourceModel } from '../../../core/models/resource';
 import {
   HeaderUIConfig,
   SidebarUIConfig,
@@ -13,11 +11,11 @@ import {
   UIConfig
 } from '../../../core/models/ui-config';
 import { ResourceView } from '../../resource/resource-view/resource-view';
-import { IconComponent } from '../../../shared/components/icon/icon';
 import { HeaderSchedule } from '../header-schedule/header-schedule';
 import { MonthView } from '../../month/month-view/month-view';
 import { WeekView } from '../../week/week-view/week-view';
 import { SidebarSchedule } from '../sidebar-schedule/sidebar-schedule';
+
 
 @Component({
   selector: 'mglon-schedule',
@@ -65,20 +63,14 @@ export class Schedule {
   /** Emitted when displayed date range changes */
   readonly dateRangeChange = output<{ start: Date; end: Date }>();
 
-  /** Emitted when events have been rendered */
-  readonly eventsRendered = output<AnyEvent[]>();
-
   /** Emitted when a resource is shown/activated */
   readonly resourceShow = output<string>();
 
   /** Emitted when a resource is hidden/deactivated */
   readonly resourceHide = output<string>();
 
-  /** Emitted when an event is clicked in any view */
-  readonly eventClick = output<AnyEvent>();
-
   readonly store = inject(CalendarStore);
-  private readonly eventStore = inject(EventStore);
+
 
   constructor() {
     // Register global handlers
@@ -115,21 +107,7 @@ export class Schedule {
       this.viewChange.emit(view);
     });
 
-    // Sync resources from EventStore (declarative) to CalendarStore
-    effect(() => {
-      const declarativeResources = this.eventStore.allResources();
 
-      // Convert Resource to ResourceModel with isActive property
-      const resourceModels: ResourceModel[] = declarativeResources.map(resource => ({
-        ...resource,
-        isActive: resource.isActive ?? true // Default to active if not specified
-      }));
-
-      // Only update if resources have changed
-      if (resourceModels.length > 0) {
-        this.store.setResources(resourceModels);
-      }
-    });
 
     // Emit resource show/hide events when resources change
     effect(() => {

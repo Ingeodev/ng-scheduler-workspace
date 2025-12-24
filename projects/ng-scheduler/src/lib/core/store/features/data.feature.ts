@@ -1,14 +1,12 @@
 import { computed } from '@angular/core';
 import { patchState, signalStoreFeature, withComputed, withMethods, withState } from '@ngrx/signals';
-import { EventModel, ResourceModel } from '../../models/event-model';
+import { ResourceModel } from '../../models/resource';
 
 export interface DataState {
-  events: EventModel[];
   resources: ResourceModel[];
 }
 
 const initialDataState: DataState = {
-  events: [],
   resources: []
 };
 
@@ -16,22 +14,6 @@ export function withDataFeature() {
   return signalStoreFeature(
     withState(initialDataState),
     withMethods((store) => ({
-      setEvents(events: EventModel[]) {
-        patchState(store, { events });
-      },
-      addEvent(event: EventModel) {
-        patchState(store, (state) => ({ events: [...state.events, event] }));
-      },
-      removeEvent(id: string) {
-        patchState(store, (state) => ({
-          events: state.events.filter(e => e.id !== id)
-        }));
-      },
-      updateEvent(id: string, changes: Partial<EventModel>) {
-        patchState(store, (state) => ({
-          events: state.events.map(e => e.id === id ? { ...e, ...changes } : e)
-        }));
-      },
       setResources(resources: ResourceModel[]) {
         patchState(store, { resources });
       },
@@ -60,13 +42,11 @@ export function withDataFeature() {
         }));
       }
     })),
-    withComputed(({ events, resources }) => ({
-      // Aquí podremos agregar selectores derivados, como "eventos por recurso"
-      // o validaciones de integridad referencial
-      eventsCount: computed(() => events().length),
+    withComputed(({ resources }) => ({
       resourcesCount: computed(() => resources().length),
       activeResources: computed(() => resources().filter(r => r.isActive !== false)),
       inactiveResources: computed(() => resources().filter(r => r.isActive === false)),
     }))
   );
 }
+

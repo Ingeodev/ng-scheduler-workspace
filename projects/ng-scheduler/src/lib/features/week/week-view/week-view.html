@@ -2,9 +2,5 @@
   <mglon-week-header [currentDate]="store.currentDate()"></mglon-week-header>
   <mglon-week-grid [currentDate]="store.currentDate()" (selectionStart)="selectionStart.emit($event)"
     (selectionChange)="selectionChange.emit($event)" (selectionEnd)="selectionEnd.emit($event)">
-    @for (item of eventsToRender(); track item.event.id) {
-    <mglon-event-render [event]="item.event" [layoutSegments]="item.segments" [showTime]="true" viewMode="week">
-    </mglon-event-render>
-    }
   </mglon-week-grid>
 </div>

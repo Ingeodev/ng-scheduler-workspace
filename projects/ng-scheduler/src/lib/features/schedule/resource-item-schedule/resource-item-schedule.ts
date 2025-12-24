@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { ResourceModel } from '../../../core/models/event-model';
+import { ResourceModel } from '../../../core/models/resource';
 import { Avatar } from '../../../shared/components/avatar/avatar';
 
 @Component({

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceItemSchedule } from './resource-item-schedule';
-import { ResourceModel } from '../../../core/models/event-model';
+import { ResourceModel } from '../../../core/models/resource';
 
 describe('ResourceItemSchedule', () => {
   let component: ResourceItemSchedule;

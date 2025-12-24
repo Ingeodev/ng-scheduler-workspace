@@ -140,47 +140,11 @@ export type IndicatorRadius = 'none' | 'sm' | 'md' | 'full';
 export type IndicatorAppearance = 'ghost' | 'outline' | 'solid';
 
 /**
- * Configuration for event slot rendering in grid
- */
-export interface EventSlotConfig {
-  /**
-   * Border radius for event slots
-   * @default 'sm'
-   */
-  rounded: EventSlotRadius;
-}
-
-/**
- * Configuration for overflow indicator in grid
- */
-export interface OverflowIndicatorConfig {
-  /**
-   * Visual appearance style
-   * @default 'outline'
-   */
-  appearance: IndicatorAppearance;
-
-  /**
-   * Border radius
-   * @default 'sm'
-   */
-  rounded: IndicatorRadius;
-}
-
-/**
  * Complete configuration for grid area
  */
 export interface GridUIConfig {
-  /**
-   * Event slot visual configuration
-   */
-  eventSlots: EventSlotConfig;
-
-  /**
-   * Overflow indicator visual configuration
-   */
-  overflowIndicator: OverflowIndicatorConfig;
 }
+
 
 // =============================================================================
 // ROOT CONFIGURATION
@@ -231,13 +195,6 @@ export const DEFAULT_UI_CONFIG: UIConfig = {
       density: 'comfortable'
     }
   },
-  grid: {
-    eventSlots: {
-      rounded: 'sm'
-    },
-    overflowIndicator: {
-      appearance: 'outline',
-      rounded: 'sm'
-    }
-  }
+  grid: {}
+
 } as const;

@@ -3,14 +3,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { WeekHeader } from '../week-header/week-header';
 import { WeekGrid } from '../week-grid/week-grid';
 import { CalendarStore } from '../../../core/store/calendar.store';
-import { EventStore } from '../../../core/store/event.store';
-import { GridSyncService } from '../../../core/services/grid-sync.service';
-import { EventRendererFactory } from '../../../core/rendering/event-renderer.factory';
-import { WeekViewRenderer } from '../../../core/rendering/week-view.renderer';
-import { EventRenderComponent, LayoutSegment } from '../../../shared/components/event-render/event-render';
-import { AnyEvent } from '../../../core/models/event';
 import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
-import { getWeekDays } from '../../../shared/helpers';
 
 /**
  * Week view container component.
@@ -18,7 +11,7 @@ import { getWeekDays } from '../../../shared/helpers';
 @Component({
   selector: 'mglon-week-view',
   standalone: true,
-  imports: [WeekHeader, WeekGrid, EventRenderComponent],
+  imports: [WeekHeader, WeekGrid],
   templateUrl: './week-view.html',
   styleUrl: './week-view.scss',
   animations: [
@@ -32,8 +25,6 @@ import { getWeekDays } from '../../../shared/helpers';
 })
 export class WeekView {
   readonly store = inject(CalendarStore);
-  readonly eventStore = inject(EventStore);
-  readonly gridSync = inject(GridSyncService);
 
   // ============================================
   // OUTPUT EVENTS
@@ -51,84 +42,15 @@ export class WeekView {
   // Get week grid element reference
   readonly gridElement = viewChild(WeekGrid, { read: ElementRef });
 
-  // Event renderer for this view
-  private readonly renderer = EventRendererFactory.getRenderer('week') as WeekViewRenderer;
-
   readonly animationState = computed(() => {
     const date = this.store.currentDate();
     return this.getWeekNumber(date);
   });
 
-  /**
-   * Computed: All events to render in current week view
-   */
-  readonly eventsToRender = computed(() => {
-    const events = this.eventStore.allEvents();
-    const currentDate = this.store.currentDate();
-    const gridBounds = this.gridSync.gridBounds();
-
-    // Get active resources to filter events
-    const activeResources = this.store.activeResources();
-    const activeResourceIds = new Set(activeResources.map(r => r.id));
-
-    // Guard: Only render if grid has been measured
-    if (gridBounds.cellWidth === 0) {
-      return [];
-    }
-
-    // Calculate week range
-    const weekDays = getWeekDays(currentDate);
-    const weekStart = weekDays[0].date;
-    const weekEnd = new Date(weekDays[6].date);
-    weekEnd.setHours(23, 59, 59, 999);
-
-    const eventsInWeek = events.filter(event => {
-      // Filter by active resources FIRST
-      if (event.resourceId && !activeResourceIds.has(event.resourceId)) {
-        return false; // Skip events from inactive resources
-      }
-
-      if (event.type === 'event') {
-        const eventStart = event.start;
-        const eventEnd = event.end;
-        return eventStart <= weekEnd && eventEnd >= weekStart;
-      }
-      return false;
-    });
-
-    // Pass column width (cellWidth from sync service)
-    const cellDimensions = {
-      width: gridBounds.cellWidth,
-      height: 0 // Not used for height in week view, handled by constant
-    };
-
-    return eventsInWeek.map(event => {
-      // Create a single layout segment for the week view
-      const segment = {
-        slotIndex: 0, // WeekView doesn't use vertical slots like MonthView
-        viewBoundaries: { start: weekStart, end: weekEnd },
-        cellDimensions,
-        dateContext: currentDate
-      };
-
-      return {
-        event,
-        segments: [segment] // Single segment for week view
-      };
-    });
-  });
-
   constructor() {
     afterNextRender(() => {
-      const gridComponent = this.gridElement();
-      if (gridComponent) {
-        const grid = gridComponent.nativeElement as HTMLElement;
-        this.gridSync.observeGrid(grid, (rect) => ({
-          // Subtract: time column (60px) + 6 borders between 7 columns (6px)
-          width: (rect.width - 60 - 6) / 7,
-          height: rect.height
-        }));
-      }
+      // Logic for grid sizing can remain if needed for the grid itself, 
+      // but let's see if we can simplify it.
     });
   }
 
@@ -138,3 +60,4 @@ export class WeekView {
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
 }
+

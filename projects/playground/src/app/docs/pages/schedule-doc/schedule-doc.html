@@ -15,46 +15,14 @@
     <app-example-viewer [code]="basicExampleCode">
       <div preview style="width: 100%;">
         <div style="width: 100%; height: 600px;">
-          <!-- GLOBAL handler: scheduleEventClickHandler -->
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-
-            <!-- RESOURCE handler: resourceEventClickHandler -->
-            <mglon-resource id="resource-1" name="Conference Room A" color="#4285f4"
-              avatar="https://i.pravatar.cc/150?img=1" [isActive]="true">
-
-              <!-- EVENT handler: eventClickHandler (highest priority) -->
-              <mglon-event id="evt-1" title="Team Standup" [start]="event1Start" [end]="event1End" color="#e91e63"
-                (eventClick)="eventClickHandler($event)">
-              </mglon-event>
-
-              <!-- No event handler - uses RESOURCE handler -->
-              <mglon-event id="evt-4" title="Planning Session" [start]="event4Start" [end]="event4End"
-                (eventClick)="eventClickHandler($event)">
-              </mglon-event>
-
-              <mglon-event id="evt-5" title="Code Review" [start]="event5Start" [end]="event5End"
-                (eventClick)="eventClickHandler($event)">
-              </mglon-event>
-
-              <mglon-event id="evt-2" title="Client Meeting" [start]="event2Start" [end]="event2End"
-                (eventClick)="eventClickHandler($event)">
-              </mglon-event>
-            </mglon-resource>
-
-            <!-- No resource handler - events will use GLOBAL handler -->
-            <mglon-resource id="resource-2" name="Conference Room B" color="#ea4335"
-              avatar="https://i.pravatar.cc/150?img=2" [isActive]="true">
-
-              <mglon-event id="evt-3" title="Design Review" [start]="event3Start" [end]="event3End"
-                (eventClick)="eventClickHandler($event)">
-              </mglon-event>
-            </mglon-resource>
           </mglon-schedule>
         </div>
       </div>
     </app-example-viewer>
+
   </section>
 
   <!-- API Reference -->

@@ -1,4 +1,4 @@
-import { ResourceModel } from './event-model';
+import { ResourceModel } from './resource';
 
 export type ViewMode = 'day' | 'week' | 'month' | 'resource' | 'list';
 

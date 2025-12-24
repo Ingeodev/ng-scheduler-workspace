@@ -9,24 +9,7 @@
     <!-- Grid container with reference -->
     <div class="mglon-month-view__grid-container" #gridRef>
       <mglon-month-grid [currentDate]="calendarStore.currentDate()"></mglon-month-grid>
-
-      <!-- Events overlay -->
-      <div class="mglon-month-view__events-layer">
-        @for (item of eventsToRender().events; track item.event.id) {
-        <mglon-event-render [event]="item.event" [layoutSegments]="item.segments" [showTime]="false"
-          [rounded]="eventSlotRounded()" (eventClicked)="onEventClick($event)">
-        </mglon-event-render>
-        }
-
-        <!-- Overflow indicators -->
-        @for (indicator of overflowIndicators(); track $index) {
-        <mglon-event-overflow-indicator [count]="indicator.count" [showAll]="indicator.showAll"
-          [rounded]="overflowRounded()" [appearance]="overflowAppearance()"
-          (indicatorClick)="onIndicatorClick($event, indicator.hiddenEvents)" [style.--indicator-x]="indicator.left"
-          [style.--indicator-y.px]="indicator.top" [style.--indicator-width]="indicator.width">
-        </mglon-event-overflow-indicator>
-        }
-      </div>
     </div>
+
   </div>
 </div>

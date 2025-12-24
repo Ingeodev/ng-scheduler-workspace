@@ -120,16 +120,7 @@ export const CalendarStore = signalStore(
                 : state.uiConfig.sidebar.resourceItems
             }
             : state.uiConfig.sidebar,
-          grid: config.grid
-            ? {
-              eventSlots: config.grid.eventSlots
-                ? { ...state.uiConfig.grid.eventSlots, ...config.grid.eventSlots }
-                : state.uiConfig.grid.eventSlots,
-              overflowIndicator: config.grid.overflowIndicator
-                ? { ...state.uiConfig.grid.overflowIndicator, ...config.grid.overflowIndicator }
-                : state.uiConfig.grid.overflowIndicator
-            }
-            : state.uiConfig.grid
+          grid: state.uiConfig.grid
         }
       }));
     }
