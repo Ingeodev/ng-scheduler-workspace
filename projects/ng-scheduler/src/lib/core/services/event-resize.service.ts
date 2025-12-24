@@ -1,4 +1,4 @@
-import { Injectable, inject, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, inject, NgZone, OnDestroy, RendererFactory2, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { AnyEvent } from '../models/event';
 import { GridSyncService } from './grid-sync.service';
@@ -14,10 +14,19 @@ export class EventResizeService implements OnDestroy {
   private eventStore = inject(EventStore);
   private document = inject(DOCUMENT);
   private zone = inject(NgZone);
+  private rendererFactory = inject(RendererFactory2);
+  private renderer: Renderer2;
 
   private isResizing = false;
   private currentEvent: AnyEvent | null = null;
   private currentSide: 'left' | 'right' | 'top' | 'bottom' | null = null;
+
+  private destroyMouseMoveListener?: () => void;
+  private destroyMouseUpListener?: () => void;
+
+  constructor() {
+    this.renderer = this.rendererFactory.createRenderer(null, null);
+  }
 
   startResize(event: AnyEvent, side: 'left' | 'right' | 'top' | 'bottom') {
     if (this.isResizing) return;
@@ -25,13 +34,39 @@ export class EventResizeService implements OnDestroy {
     this.currentEvent = event;
     this.currentSide = side;
     console.log('Resize Start', side);
+
+    this.addGlobalListeners();
+  }
+
+  private addGlobalListeners() {
+    this.destroyMouseMoveListener = this.renderer.listen(
+      this.document,
+      'mousemove',
+      (event: MouseEvent) => this.handleMove(event)
+    );
+
+    this.destroyMouseUpListener = this.renderer.listen(
+      this.document,
+      'mouseup',
+      () => this.stopResize()
+    );
+  }
+
+  private removeGlobalListeners() {
+    if (this.destroyMouseMoveListener) {
+      this.destroyMouseMoveListener();
+      this.destroyMouseMoveListener = undefined;
+    }
+    if (this.destroyMouseUpListener) {
+      this.destroyMouseUpListener();
+      this.destroyMouseUpListener = undefined;
+    }
   }
 
   handleMove(e: MouseEvent) {
     if (!this.isResizing || !this.currentEvent || !this.currentSide) return;
 
     // Calculate new date based on mouse position
-    // We need to know where the mouse    // Calculate new date based on mouse position
     const gridElement = this.document.querySelector('.week-view__grid') as HTMLElement ||
       this.document.querySelector('.mglon-month-view__grid-container') as HTMLElement ||
       this.document.querySelector('.month-view__grid') as HTMLElement;
@@ -68,6 +103,7 @@ export class EventResizeService implements OnDestroy {
     this.isResizing = false;
     this.currentEvent = null;
     this.currentSide = null;
+    this.removeGlobalListeners();
   }
 
   private updateEvent(event: AnyEvent, side: string, newDate: Date) {
@@ -79,13 +115,13 @@ export class EventResizeService implements OnDestroy {
     if (side === 'left' || side === 'top') {
       // Modifying Start
       // Ensure start < end
-      if (newDate < updatedEvent.end) {
+      if (newDate <= updatedEvent.end) {
         updatedEvent.start = newDate;
       }
     } else if (side === 'right' || side === 'bottom') {
       // Modifying End
       // Ensure end > start
-      if (newDate > updatedEvent.start) {
+      if (newDate >= updatedEvent.start) {
         updatedEvent.end = newDate;
       }
     }

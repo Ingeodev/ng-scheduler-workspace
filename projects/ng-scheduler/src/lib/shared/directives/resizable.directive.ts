@@ -30,23 +30,10 @@ export class ResizableDirective implements OnDestroy {
    */
   readonly resizeStart = output<ResizeEvent>();
 
-  /**
-   * Emitted during resize interaction (mousemove).
-   */
-  readonly resizing = output<MouseEvent>();
-
-  /**
-   * Emitted when resize interaction ends (mouseup).
-   */
-  readonly resizeEnd = output<MouseEvent>();
-
   private elementRef = inject(ElementRef);
   private renderer = inject(Renderer2);
-  private document = inject(DOCUMENT);
 
   private destroyMouseDownListener?: () => void;
-  private destroyMouseMoveListener?: () => void;
-  private destroyMouseUpListener?: () => void;
 
   constructor() {
     effect(() => {
@@ -96,18 +83,6 @@ export class ResizableDirective implements OnDestroy {
       this.destroyMouseDownListener();
       this.destroyMouseDownListener = undefined;
     }
-    this.removeGlobalListeners();
-  }
-
-  private removeGlobalListeners() {
-    if (this.destroyMouseMoveListener) {
-      this.destroyMouseMoveListener();
-      this.destroyMouseMoveListener = undefined;
-    }
-    if (this.destroyMouseUpListener) {
-      this.destroyMouseUpListener();
-      this.destroyMouseUpListener = undefined;
-    }
   }
 
   private handleMouseDown(event: MouseEvent) {
@@ -137,24 +112,6 @@ export class ResizableDirective implements OnDestroy {
       event.preventDefault();
       event.stopPropagation();
       this.resizeStart.emit({ side: clickedSide, event });
-
-      // Start global listeners
-      this.destroyMouseMoveListener = this.renderer.listen(
-        this.document,
-        'mousemove',
-        (moveEvent: MouseEvent) => {
-          this.resizing.emit(moveEvent);
-        }
-      );
-
-      this.destroyMouseUpListener = this.renderer.listen(
-        this.document,
-        'mouseup',
-        (upEvent: MouseEvent) => {
-          this.resizeEnd.emit(upEvent);
-          this.removeGlobalListeners();
-        }
-      );
     }
   }
 }

@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 
 @Component({
   template: `
-    <div [mglonResizable]="sides" [resizeHandleSize]="handleSize" (resized)="onResized($event)" style="width: 100px; height: 100px; position: relative"></div>
+    <div [mglonResizable]="sides" [resizeHandleSize]="handleSize" (resizeStart)="onResized($event)" style="width: 100px; height: 100px; position: relative"></div>
   `,
   imports: [ResizableDirective],
   standalone: true

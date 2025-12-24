@@ -30,8 +30,6 @@ export interface GroupSlot {
       [mglonResizable]="resizeSides()"
       resizeHandleSize="6"
       (resizeStart)="onResizeStart($event)"
-      (resizing)="onResizing($event)"
-      (resizeEnd)="onResizeEnd($event)"
       [class.is-hovered]="isHovered()"
       [class.is-selected]="isSelected()"
       [class.has-continuation-left]="!isStart()"
@@ -123,15 +121,6 @@ export class SlotComponent {
   onResizeStart(event: ResizeEvent) {
     console.log('Resize started:', event);
     this.resizeService.startResize(this.event(), event.side);
-  }
-
-  onResizing(event: MouseEvent) {
-    this.resizeService.handleMove(event);
-  }
-
-  onResizeEnd(event: MouseEvent) {
-    this.resizeService.stopResize();
-    // this.slotResizeEnd.emit(event); // Revisit if parent needs this
   }
 
   formatTime(event: AnyEvent): string {
