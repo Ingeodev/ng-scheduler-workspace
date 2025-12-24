@@ -1,10 +1,10 @@
 <div class="mglon-month-week">
-  <div #weekEventsContainer class="mglon-month-week__events" [style.margin-top]="`${top}px`">
 
-  </div>
   <div class="mglon-month-week__days">
     @for (day of week().days; track day.date.getTime()) {
     <mglon-month-cell [day]="day" [attr.data-date]="day.date.toISOString()"></mglon-month-cell>
     }
   </div>
+
+  <div #weekEventsContainer class="mglon-month-week__events" [style.margin-top]="`${top}px`"></div>
 </div>

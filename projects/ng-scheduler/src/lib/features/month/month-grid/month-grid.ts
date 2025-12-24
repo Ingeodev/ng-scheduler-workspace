@@ -1,6 +1,5 @@
 import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core';
 import { getMonthCalendarGrid, CalendarWeek } from '../../../shared/helpers';
-import { MonthCell } from '../month-cell/month-cell';
 import { MonthWeek } from '../month-week/month-week';
 import { Selection } from '../../../core/background-selection/selection/selection';
 import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable';
@@ -27,7 +26,7 @@ import { Selectable, SelectableDirective, SelectionResult } from '../../../core/
  */
 @Component({
   selector: 'mglon-month-grid',
-  imports: [MonthCell, Selection, SelectableDirective, MonthWeek],
+  imports: [Selection, SelectableDirective, MonthWeek],
   templateUrl: './month-grid.html',
   styleUrl: './month-grid.scss',
 })
@@ -132,41 +131,8 @@ export class MonthGrid implements Selectable {
     const dateStr = cellElement.getAttribute('data-date');
     if (!dateStr) return null;
 
-    // Parse the ISO date string and find the matching CalendarDay
-    const targetDate = new Date(dateStr);
-
-    // Search through weeks to find the matching day
-    for (const week of this.weeks()) {
-      const day = week.days.find(d => d.date.getTime() === targetDate.getTime());
-      if (day) {
-        return day.date;
-      }
-    }
-
-    return null;
+    return new Date(dateStr);
   }
 
-  /**
-   * Handles the start of a selection operation
-   * @param result - Selection result containing start and end dates
-   */
-  onSelectionStart(result: SelectionResult): void {
-    console.log('Selection started:', result);
-  }
 
-  /**
-   * Handles changes to an ongoing selection
-   * @param result - Selection result with updated end date
-   */
-  onSelectionChange(result: SelectionResult): void {
-    console.log('Selection changed:', result);
-  }
-
-  /**
-   * Handles the completion of a selection operation
-   * @param result - Final selection result with start and end dates
-   */
-  onSelectionEnd(result: SelectionResult): void {
-    console.log('Selection ended:', result);
-  }
 }

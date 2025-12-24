@@ -1,5 +1,4 @@
-<div class="mglon-month-grid" [mglonSelectable]="this" (selectionStart)="onSelectionStart($event)"
-  (selectionChange)="onSelectionChange($event)" (selectionEnd)="onSelectionEnd($event)">
+<div class="mglon-month-grid" [mglonSelectable]="this">
 
   @for (week of weeks(); track $index) {
   <mglon-month-week [week]="week"></mglon-month-week>
