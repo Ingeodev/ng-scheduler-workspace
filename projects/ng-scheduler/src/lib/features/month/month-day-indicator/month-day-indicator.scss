@@ -1,0 +1,12 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.mglon-month-day-indicator__container {
+  font-size: var(--month-cell-day-number-size);
+  font-weight: var(--month-cell-day-number-weight);
+  line-height: 1;
+
+  p {
+    color: var(--mglon-month-day-indicator-text-color, var(--mglon-schedule-text-secondary));
+  }
+}

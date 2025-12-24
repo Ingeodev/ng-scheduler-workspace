@@ -1,0 +1,23 @@
+.mglon-month-week {
+  position: relative;
+
+  &__days {
+    display: var(--mglon-schedule-month-week-display);
+    grid-template-columns: var(--mglon-schedule-month-week-columns);
+    min-height: var(--mglon-schedule-month-week-min-height);
+    border-bottom: var(--mglon-schedule-month-week-border-bottom-width) solid var(--mglon-schedule-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__events {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+}

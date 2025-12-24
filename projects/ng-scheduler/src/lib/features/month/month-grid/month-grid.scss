@@ -19,18 +19,5 @@
   user-select: none; // Prevent text selection during drag
   cursor: crosshair; // Indicate selection is possible
 
-  &__week {
-    display: grid;
-    border-bottom: 1px solid var(--mglon-schedule-border); // Keeping strict border for grid structure
-    grid-template-columns: repeat(7, 1fr);
 
-    // Minimum height to fit: day number (24px) + 2 event slots (2 * 28px = 56px)
-    // Total: 24 + 56 = 80px
-    // This ensures overflow indicators always fit without being cut off
-    min-height: 80px;
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
 }

@@ -14,6 +14,7 @@
   --month-cell-text-secondary: var(--mglon-month-cell-text-secondary, var(--mglon-schedule-text-secondary));
   --month-cell-day-number-size: var(--mglon-month-cell-day-number-size, var(--mglon-schedule-font-size-sm));
   --month-cell-day-number-weight: var(--mglon-month-cell-day-number-weight, 500);
+  --month-cell-transition-duration: var(--mglon-month-cell-transition-duration, var(--mglon-schedule-transition-duration));
 }
 
 .mglon-month-cell {
@@ -23,6 +24,7 @@
   overflow: hidden;
   height: 100%;
   box-sizing: border-box;
+  transition-duration: var(--month-cell-transition-duration);
 
   &:last-child {
     border-right: none;
@@ -47,11 +49,5 @@
     .mglon-month-cell__day-number {
       color: var(--month-cell-text-primary);
     }
-  }
-
-  &__day-number {
-    font-size: var(--month-cell-day-number-size);
-    font-weight: var(--month-cell-day-number-weight);
-    line-height: 1;
   }
 }

@@ -1,5 +1,7 @@
 import { SchedulerConfig } from '../models/config-schedule';
 
+export const CELL_HEADER_HEIGHT = 24;
+
 export const DEFAULT_CONFIG: SchedulerConfig = {
   initialDate: new Date(),
   initialView: 'month',

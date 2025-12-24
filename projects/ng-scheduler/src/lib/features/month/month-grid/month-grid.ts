@@ -1,6 +1,7 @@
 import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core';
 import { getMonthCalendarGrid, CalendarWeek } from '../../../shared/helpers';
 import { MonthCell } from '../month-cell/month-cell';
+import { MonthWeek } from '../month-week/month-week';
 import { Selection } from '../../../core/background-selection/selection/selection';
 import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable';
 
@@ -26,7 +27,7 @@ import { Selectable, SelectableDirective, SelectionResult } from '../../../core/
  */
 @Component({
   selector: 'mglon-month-grid',
-  imports: [MonthCell, Selection, SelectableDirective],
+  imports: [MonthCell, Selection, SelectableDirective, MonthWeek],
   templateUrl: './month-grid.html',
   styleUrl: './month-grid.scss',
 })

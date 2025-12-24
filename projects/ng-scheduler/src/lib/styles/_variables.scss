@@ -39,6 +39,7 @@
 
   --mglon-schedule-text-primary: var(--mglon-schedule-neutral-900);
   --mglon-schedule-text-secondary: var(--mglon-schedule-neutral-500);
+  --mglon-schedule-text-tertiary: var(--mglon-schedule-neutral-400);
 
   --mglon-schedule-hover: var(--mglon-schedule-neutral-100);
   --mglon-schedule-selection: var(--mglon-schedule-primary-50);
@@ -111,4 +112,10 @@
   // Animations & Transitions
   --mglon-schedule-transition-duration: 200ms;
   --mglon-schedule-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Month Week
+  --mglon-schedule-month-week-display: grid;
+  --mglon-schedule-month-week-columns: repeat(7, 1fr);
+  --mglon-schedule-month-week-min-height: 80px;
+  --mglon-schedule-month-week-border-bottom-width: 1px;
 }
