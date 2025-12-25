@@ -1,5 +1,10 @@
-<div class="mglon-month-header">
-  @for (day of daysOfWeek; track $index) {
-  <div>{{ day }}</div>
-  }
+<div class="mglon-month-header-container">
+  <!-- Spacer to align with toggle column -->
+  <div class="mglon-month-header__spacer"></div>
+
+  <div class="mglon-month-header">
+    @for (day of daysOfWeek; track $index) {
+    <div>{{ day }}</div>
+    }
+  </div>
 </div>

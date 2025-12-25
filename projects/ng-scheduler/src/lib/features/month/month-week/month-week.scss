@@ -6,7 +6,7 @@
     display: var(--mglon-schedule-month-week-display);
     grid-template-columns: var(--mglon-schedule-month-week-columns);
     min-height: var(--mglon-schedule-month-week-min-height);
-    height: 100%; // Take full height from parent
+    height: 100%;
     border-bottom: var(--mglon-schedule-month-week-border-bottom-width) solid var(--mglon-schedule-border);
 
     &:last-child {
@@ -27,5 +27,11 @@
 
 :host {
   display: block;
-  height: 100%;
+}
+
+// Expanded state applied to host
+:host(.mglon-month-week--expanded) {
+  .mglon-month-week__events {
+    overflow: visible;
+  }
 }

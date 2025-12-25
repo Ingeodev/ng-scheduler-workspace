@@ -44,6 +44,11 @@
   // ============================================
   // Size Variants
   // ============================================
+  &[size="xs"] {
+    --icon-btn-size: var(--mglon-icon-button-xs-size, 24px);
+    --icon-btn-icon-size: var(--mglon-icon-button-xs-icon-size, 14px);
+  }
+
   &[size="sm"] {
     --icon-btn-size: var(--mglon-icon-button-sm-size, 32px);
     --icon-btn-icon-size: var(--mglon-icon-button-sm-icon-size, 18px);

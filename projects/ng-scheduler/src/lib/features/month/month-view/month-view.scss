@@ -15,6 +15,7 @@
     height: 100%; // Take full height from parent
     overflow-x: auto; // Single scroll for both header and grid
     overflow-y: auto; // Enable vertical scroll when grid exceeds container
+    scrollbar-gutter: stable; // Reserve space for scrollbar to prevent content shift
     min-width: 0;
   }
 

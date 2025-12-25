@@ -37,20 +37,39 @@ export class ScheduleDocComponent {
     editable: true,
   };
 
-  eventStart = new Date();
-  eventEnd = new Date(new Date().setHours(new Date().getHours() + 1));
+  eventStart = new Date()
+  eventEnd = new Date(new Date().setHours(new Date().getHours() + 1))
 
   // Multi-week event: Dec 26 to Jan 5
-  event2Start = new Date(2025, 11, 26); // Dec 26, 2025
-  event2End = new Date(2026, 0, 5);     // Jan 5, 2026
+  event2Start = new Date(2025, 11, 26) // Dec 26, 2025
+  event2End = new Date(2026, 0, 5)     // Jan 5, 2026
 
   // Single day event
-  event3Start = new Date(2025, 11, 24, 10, 0);
-  event3End = new Date(2025, 11, 24, 12, 0);
+  event3Start = new Date(2025, 11, 24, 10, 0)
+  event3End = new Date(2025, 11, 24, 12, 0)
 
   // Multi-day event within same week
-  event4Start = new Date(2025, 11, 27, 9, 0);
-  event4End = new Date(2025, 11, 29, 17, 0);
+  event4Start = new Date(2025, 11, 27, 9, 0)
+  event4End = new Date(2025, 11, 29, 17, 0)
+
+  // ============================================
+  // Additional events for overflow testing
+  // Multiple events on Dec 25 (Christmas Day)
+  // ============================================
+  event5Start = new Date(2025, 11, 25, 8, 0)
+  event5End = new Date(2025, 11, 23, 9, 0)
+
+  event6Start = new Date(2025, 11, 25, 10, 0)
+  event6End = new Date(2025, 11, 25, 11, 0)
+
+  event7Start = new Date(2025, 11, 25, 12, 0)
+  event7End = new Date(2025, 11, 25, 13, 0)
+
+  event8Start = new Date(2025, 11, 25, 14, 0)
+  event8End = new Date(2025, 11, 25, 15, 0)
+
+  event9Start = new Date(2025, 11, 25, 16, 0)
+  event9End = new Date(2025, 11, 25, 17, 0)
 
 
 

@@ -35,7 +35,13 @@ interface CalendarState {
    * Height of a week row container in pixels.
    * Used to calculate how many event slots can fit in a week row.
    */
-  weekRowHeight: number;
+  weekRowHeight: number
+
+  /**
+   * Index of the currently expanded week (0-5), or null if no week is expanded.
+   * Only one week can be expanded at a time.
+   */
+  expandedWeekIndex: number | null
 }
 
 const initialCalendarState: CalendarState = {
@@ -47,7 +53,8 @@ const initialCalendarState: CalendarState = {
   events: new Map<string, AnyEvent>(),
   resources: new Map<string, ResourceModel>(),
   weekRowHeight: 0,
-};
+  expandedWeekIndex: null
+}
 
 export const CalendarStore = signalStore(
   { providedIn: 'root' },
@@ -280,7 +287,19 @@ export const CalendarStore = signalStore(
      * Called once from the first week's ResizeObserver.
      */
     setWeekRowHeight(height: number) {
-      patchState(store, { weekRowHeight: height });
+      patchState(store, { weekRowHeight: height })
+    },
+
+    /**
+     * Toggles expansion of a week. Only one week can be expanded at a time.
+     * If the same week is toggled twice, it collapses.
+     * @param weekIndex - The index of the week to toggle (0-5)
+     */
+    toggleWeekExpansion(weekIndex: number) {
+      const current = store.expandedWeekIndex()
+      patchState(store, {
+        expandedWeekIndex: current === weekIndex ? null : weekIndex
+      })
     }
   }))
 );

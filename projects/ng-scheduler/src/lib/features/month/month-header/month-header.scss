@@ -1,6 +1,9 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
+// Must match toggle column width in month-grid.scss
+$toggle-column-width: 32px;
+
 :host {
   display: block;
   width: 100%;
@@ -15,15 +18,26 @@
   --month-header-z-index: var(--mglon-month-header-z-index, var(--mglon-schedule-z-sticky));
 }
 
-.mglon-month-header {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0;
+.mglon-month-header-container {
+  display: flex;
   width: 100%;
   position: sticky;
   top: 0;
   z-index: var(--month-header-z-index);
   background-color: var(--month-header-bg);
+}
+
+.mglon-month-header__spacer {
+  width: $toggle-column-width;
+  min-width: $toggle-column-width;
+  background-color: var(--month-header-bg);
+}
+
+.mglon-month-header {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
   border-bottom: var(--month-header-border);
 
   >div {
@@ -32,7 +46,6 @@
     font-weight: var(--month-header-font-weight);
     font-size: var(--month-header-font-size);
     color: var(--month-header-text-color);
-    //border-right: 1px solid var(--mglon-schedule-border);
 
     &:last-child {
       border-right: none;

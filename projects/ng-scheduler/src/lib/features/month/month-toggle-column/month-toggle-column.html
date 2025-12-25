@@ -1,0 +1,8 @@
+@for (weekIndex of weekIndices(); track weekIndex) {
+<div class="mglon-month-toggle-column__wrapper">
+  <button mglon-icon-button size="xs" [rounded]="'full'" class="mglon-month-toggle-column__btn"
+    [class.mglon-month-toggle-column__btn--expanded]="isExpanded(weekIndex)" (click)="onToggle(weekIndex)">
+    <mglon-icon name="chevron-right"></mglon-icon>
+  </button>
+</div>
+}

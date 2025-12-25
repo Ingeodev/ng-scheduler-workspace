@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 export type ButtonAppereance = 'solid' | 'outline' | 'ghost' | 'link';
 export type ButtonColor = 'primary' | 'secondary' | 'error';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 export type ButtonRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
 @Component({

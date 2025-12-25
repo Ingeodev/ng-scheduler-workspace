@@ -1,4 +1,4 @@
-<div class="mglon-month-week">
+<div class="mglon-month-week" [class.mglon-month-week--expanded]="expanded()">
 
   <div class="mglon-month-week__days" [style.min-height.px]="minHeight()">
     @for (day of week().days; track day.date.getTime()) {
@@ -6,7 +6,7 @@
     }
   </div>
 
-  <div #weekEventsContainer class="mglon-month-week__events" [style.margin-top]="`${top}px`">
+  <div #weekEventsContainer class="mglon-month-week__events" [style.top.px]="top">
     <mglon-month-week-events-container [slots]="slots()"></mglon-month-week-events-container>
   </div>
 </div>
