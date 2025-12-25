@@ -13,7 +13,8 @@
   }
 
   .today {
-    background-color: var(--mglon-month-day-indicator-today-background-color, var(--mglon-schedule-error));
-    color: var(--mglon-month-day-indicator-today-text-color, var(--mglon-schedule-on-error));
+    color: var(--mglon-month-day-indicator-today-background-color, var(--mglon-schedule-error));
+    font-weight: 600;
+    //color: var(--mglon-month-day-indicator-today-text-color, var(--mglon-schedule-on-error));
   }
 }
