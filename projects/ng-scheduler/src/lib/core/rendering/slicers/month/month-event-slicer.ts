@@ -5,7 +5,7 @@ import { SlotModel } from '../../../models/slot.model'
 import { SlotConfig, DEFAULT_SLOT_CONFIG } from './slot-config'
 import { getEventDateRange } from './event-date-range'
 import { determineSlotType } from './slot-type'
-import { calculateHorizontalPosition, findAvailableRow } from './slot-positioning'
+import { calculateHorizontalPosition, findAvailableRow, PlacedEventRange } from './slot-positioning'
 
 const DEFAULT_EVENT_COLOR = '#4285f4'
 
@@ -31,7 +31,7 @@ export function sliceEventsByWeek(
   config: SlotConfig = DEFAULT_SLOT_CONFIG
 ): SlotModel[] {
   const slots: SlotModel[] = []
-  const rowAssignments: Map<number, Date[]> = new Map()
+  const rowAssignments: Map<number, PlacedEventRange[]> = new Map()
 
   for (const event of events) {
     const eventRange = getEventDateRange(event)
