@@ -18,7 +18,7 @@
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-            <mglon-resource id="1" name="Resource example">
+            <mglon-resource id="1" name="Resource example" color="#0860c4">
               <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd" color="#f7e5b2"
                 (eventClick)="handleEventInteraction('click', $event)"
                 (eventDblClick)="handleEventInteraction('dblclick', $event)"
@@ -37,6 +37,8 @@
                 color="#ef4444"></mglon-event>
               <mglon-event id="e4" title="Year End Review" [startDate]="event4Start" [endDate]="event4End"
                 color="#8b5cf6"></mglon-event>
+            </mglon-resource>
+            <mglon-resource id="2" name="Resource example 2" color="#f7e5b2">
               <!-- Overflow test events on Dec 25 -->
               <mglon-event id="e5" title="Morning Standup" [startDate]="event5Start" [endDate]="event5End"
                 color="#f7e5b2"></mglon-event>
@@ -46,8 +48,7 @@
                 color="#84cc16"></mglon-event>
               <mglon-event id="e8" title="Sprint Planning" [startDate]="event8Start" [endDate]="event8End"
                 color="#ec4899"></mglon-event>
-              <mglon-event id="e9" title="Code Review" [startDate]="event9Start" [endDate]="event9End"
-                color="#6366f1"></mglon-event>
+              <mglon-event id="e9" title="Code Review" [startDate]="event9Start" [endDate]="event9End"></mglon-event>
             </mglon-resource>
           </mglon-schedule>
         </div>

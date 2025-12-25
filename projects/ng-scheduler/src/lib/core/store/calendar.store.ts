@@ -132,7 +132,18 @@ export const CalendarStore = signalStore(
     eventCount: computed(() => events().size),
     currentViewEvents: computed(() => {
       const range = getViewRange(currentDate(), viewMode());
-      return Array.from(events().values()).filter(event => isEventInRange(event, range));
+      const resMap = resources();
+      return Array.from(events().values()).filter(event => {
+        const inRange = isEventInRange(event, range);
+        if (!inRange) return false;
+
+        if (event.resourceId) {
+          const res = resMap.get(event.resourceId);
+          return res?.isActive !== false;
+        }
+
+        return true;
+      });
     }),
 
     /**
