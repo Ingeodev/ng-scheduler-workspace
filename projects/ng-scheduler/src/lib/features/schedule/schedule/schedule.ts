@@ -1,17 +1,21 @@
 import { Component, effect, input, inject, ViewEncapsulation, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarStore } from '../../../core/store/calendar.store';
-import { EventStore } from '../../../core/store/event.store';
 import { SchedulerConfig, ViewMode } from '../../../core/models/config-schedule';
 import { SelectionResult } from '../../../core/background-selection/selectable/selectable.directive';
-import { AnyEvent } from '../../../core/models/event';
-import { ResourceModel } from '../../../core/models/event-model';
+import { ResourceModel } from '../../../core/models/resource.model';
+import {
+  HeaderUIConfig,
+  SidebarUIConfig,
+  GridUIConfig,
+  UIConfig
+} from '../../../core/models/ui-config';
 import { ResourceView } from '../../resource/resource-view/resource-view';
-import { IconComponent } from '../../../shared/components/icon/icon';
 import { HeaderSchedule } from '../header-schedule/header-schedule';
 import { MonthView } from '../../month/month-view/month-view';
 import { WeekView } from '../../week/week-view/week-view';
 import { SidebarSchedule } from '../sidebar-schedule/sidebar-schedule';
+
 
 @Component({
   selector: 'mglon-schedule',
@@ -24,6 +28,20 @@ import { SidebarSchedule } from '../sidebar-schedule/sidebar-schedule';
 })
 export class Schedule {
   readonly config = input<Partial<SchedulerConfig>>({});
+
+  // ============================================
+  // UI CONFIGURATION INPUTS (Area-Based)
+  // ============================================
+
+  /** Optional UI configuration for header area (button-group, navigation, today button) */
+  readonly headerUI = input<Partial<HeaderUIConfig>>();
+
+  /** Optional UI configuration for sidebar area (resource items) */
+  readonly sidebarUI = input<Partial<SidebarUIConfig>>();
+
+  /** Optional UI configuration for grid area (event slots, overflow indicators) */
+  readonly gridUI = input<Partial<GridUIConfig>>();
+
   readonly add = output<void>();
 
   // ============================================
@@ -45,9 +63,6 @@ export class Schedule {
   /** Emitted when displayed date range changes */
   readonly dateRangeChange = output<{ start: Date; end: Date }>();
 
-  /** Emitted when events have been rendered */
-  readonly eventsRendered = output<AnyEvent[]>();
-
   /** Emitted when a resource is shown/activated */
   readonly resourceShow = output<string>();
 
@@ -55,13 +70,34 @@ export class Schedule {
   readonly resourceHide = output<string>();
 
   readonly store = inject(CalendarStore);
-  private readonly eventStore = inject(EventStore);
+
 
   constructor() {
+    // Register global handlers
+    // this.eventStore.setGlobalHandlers({
+    //   eventClick: this.eventClick
+    // });
+
     effect(() => {
       const conf = this.config();
       if (conf) {
         this.store.updateConfig(conf);
+      }
+    });
+
+    // Handle UI configuration updates (area-based)
+    effect(() => {
+      const headerConfig = this.headerUI();
+      const sidebarConfig = this.sidebarUI();
+      const gridConfig = this.gridUI();
+
+      // Only update if at least one config is provided
+      if (headerConfig || sidebarConfig || gridConfig) {
+        this.store.setUIConfig({
+          header: headerConfig,
+          sidebar: sidebarConfig,
+          grid: gridConfig
+        });
       }
     });
 
@@ -71,25 +107,11 @@ export class Schedule {
       this.viewChange.emit(view);
     });
 
-    // Sync resources from EventStore (declarative) to CalendarStore
-    effect(() => {
-      const declarativeResources = this.eventStore.allResources();
 
-      // Convert Resource to ResourceModel with isActive property
-      const resourceModels: ResourceModel[] = declarativeResources.map(resource => ({
-        ...resource,
-        isActive: resource.isActive ?? true // Default to active if not specified
-      }));
-
-      // Only update if resources have changed
-      if (resourceModels.length > 0) {
-        this.store.setResources(resourceModels);
-      }
-    });
 
     // Emit resource show/hide events when resources change
     effect(() => {
-      const resources = this.store.resources();
+      const resources = this.store.allResources();
 
       resources.forEach(resource => {
         // Check previous state vs current state

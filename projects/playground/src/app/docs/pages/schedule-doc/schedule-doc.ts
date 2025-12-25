@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import {
   Schedule,
   SchedulerConfig,
-  ResourceComponent,
-  EventComponent,
-  AllDayEventComponent,
-  RecurrentEventComponent
+  GridUIConfig,
+  HeaderUIConfig,
+  SidebarUIConfig,
+  ResourceEvents,
+  Event,
 } from 'ng-scheduler';
+
 import { ApiTableComponent, ApiProperty } from '../../shared/api-table/api-table';
 import { CodeBlockComponent } from '../../shared/code-block/code-block';
 import { ExampleViewerComponent } from '../../shared/example-viewer/example-viewer';
@@ -18,90 +20,161 @@ import { ExampleViewerComponent } from '../../shared/example-viewer/example-view
   imports: [
     CommonModule,
     Schedule,
-    ResourceComponent, // Added ResourceComponent
-    EventComponent,
+    Event,
+    ResourceEvents,
     ApiTableComponent,
     CodeBlockComponent,
     ExampleViewerComponent
   ],
   templateUrl: './schedule-doc.html'
 })
+
 export class ScheduleDocComponent {
   config: SchedulerConfig = {
     initialView: 'month',
     views: ['month', 'week', 'day', 'resource'],
     initialDate: new Date(),
-    editable: true
+    editable: true,
   };
 
-  // Sample event dates
-  event1Start = new Date(2024, 11, 20, 10, 0); // Dec 20, 2024 10:00 AM
-  event1End = new Date(2024, 11, 20, 11, 0);   // Dec 20, 2024 11:00 AM
+  eventStart = new Date()
+  eventEnd = new Date(new Date().setHours(new Date().getHours() + 1))
 
-  event2Start = new Date(2024, 11, 21, 14, 0); // Dec 21, 2024 2:00 PM
-  event2End = new Date(2024, 11, 21, 15, 38);  // Dec 21, 2024 3:30 PM
+  // Multi-week event: Dec 26 to Jan 5
+  event2Start = new Date(2025, 11, 26) // Dec 26, 2025
+  event2End = new Date(2026, 0, 5)     // Jan 5, 2026
 
-  event3Start = new Date(2024, 11, 22, 9, 0);  // Dec 22, 2024 9:00 AM
-  event3End = new Date(2024, 11, 22, 10, 30);  // Dec 22, 2024 10:30 AM
+  // Single day event
+  event3Start = new Date(2025, 11, 24, 10, 0)
+  event3End = new Date(2025, 11, 24, 12, 0)
+
+  // Multi-day event within same week
+  event4Start = new Date(2025, 11, 27, 9, 0)
+  event4End = new Date(2025, 11, 29, 17, 0)
+
+  // ============================================
+  // Additional events for overflow testing
+  // Multiple events on Dec 25 (Christmas Day)
+  // ============================================
+  event5Start = new Date(2025, 11, 25, 8, 0)
+  event5End = new Date(2025, 11, 23, 9, 0)
+
+  event6Start = new Date(2025, 11, 25, 10, 0)
+  event6End = new Date(2025, 11, 25, 11, 0)
+
+  event7Start = new Date(2025, 11, 25, 12, 0)
+  event7End = new Date(2025, 11, 25, 13, 0)
+
+  event8Start = new Date(2025, 11, 25, 14, 0)
+  event8End = new Date(2025, 11, 25, 15, 0)
+
+  event9Start = new Date(2025, 11, 25, 16, 0)
+  event9End = new Date(2025, 11, 25, 17, 0)
+
+
+
+  // UI Configuration Examples
+  gridUIConfig: Partial<GridUIConfig> = {
+    eventSlots: {
+      rounded: 'sm'  // Options: 'none' | 'sm' | 'full'
+    }
+  };
+
+  headerUIConfig: Partial<HeaderUIConfig> = {
+    buttonGroup: {
+      appearance: 'solid',
+      rounded: 'full',        // Options: 'none' | 'sm' | 'md' | 'lg' | 'full'
+      density: 'comfortable' // Options: 'compact' | 'comfortable'
+    },
+    iconButtons: {
+      rounded: 'none'
+    },
+    todayButton: {
+      rounded: 'full',
+      appearance: 'ghost'   // Options: 'solid' | 'outline' | 'ghost'
+    }
+  };
+
+  sidebarUIConfig: Partial<SidebarUIConfig> = {
+    resourceItems: {
+      rounded: 'none',
+      density: 'comfortable'
+    }
+  };
+
+
 
   basicExampleCode = `
 import { Component } from '@angular/core';
-import {
-  Schedule,
-  SchedulerConfig,
-  ResourceComponent,
-  EventComponent
-} from 'ng-scheduler';
+import { Schedule, SchedulerConfig } from 'ng-scheduler';
 
 @Component({
   template: \`
     <div style="height: 600px;">
-      <mglon-schedule [config]="config">
-        <!-- Resources contain events -->
-        <mglon-resource
-          id="resource-1"
-          name="Conference Room A"
-          color="#0860c4">
-
-          <mglon-event
-            id="evt-1"
-            title="Team Standup"
-            [start]="new Date(2024, 11, 20, 10, 0)"
-            [end]="new Date(2024, 11, 20, 11, 0)">
-          </mglon-event>
-
-          <mglon-event
-            id="evt-2"
-            title="Client Meeting"
-            [start]="new Date(2024, 11, 21, 14, 0)"
-            [end]="new Date(2024, 11, 21, 15, 30)">
-          </mglon-event>
-        </mglon-resource>
-
-        <mglon-resource
-          id="resource-2"
-          name="Conference Room B"
-          color="#e91e63">
-
-          <mglon-event
-            id="evt-3"
-            title="Design Review"
-            [start]="new Date(2024, 11, 22, 9, 0)"
-            [end]="new Date(2024, 11, 22, 10, 30)">
-          </mglon-event>
-        </mglon-resource>
-      </mglon-schedule>
+      <mglon-schedule [config]="config"></mglon-schedule>
     </div>
   \`,
-  imports: [Schedule, ResourceComponent, EventComponent]
+  imports: [Schedule]
 })
 export class MyComponent {
   config: SchedulerConfig = {
     initialView: 'month',
     views: ['month', 'week', 'day', 'resource'],
-    initialDate: new Date()
+    initialDate: new Date(),
+    resources: [
+      { id: 'resource-1', name: 'Conference Room A', color: '#0860c4' },
+      { id: 'resource-2', name: 'Conference Room B', color: '#e91e63' }
+    ]
   };
 }
+  `;
+
+
+  uiConfigCode = `
+import { GridUIConfig, HeaderUIConfig, SidebarUIConfig } from 'ng-scheduler';
+
+// Configure grid area (event slots and overflow indicators)
+gridUI: Partial<GridUIConfig> = {
+  eventSlots: {
+    rounded: 'sm'  // 'none' | 'sm' | 'full'
+  },
+  overflowIndicator: {
+    appearance: 'outline',  // 'ghost' | 'outline' | 'solid'
+    rounded: 'sm'           // 'none' | 'sm' | 'md' | 'full'
+  }
+};
+
+// Configure header area (button group, navigation, today button)
+headerUI: Partial<HeaderUIConfig> = {
+  buttonGroup: {
+    rounded: 'md',          // 'none' | 'sm' | 'md' | 'lg' | 'full'
+    density: 'comfortable'  // 'compact' | 'comfortable'
+  },
+  iconButtons: {
+    rounded: 'md'
+  },
+  todayButton: {
+    rounded: 'md',
+    appearance: 'ghost'     // 'solid' | 'outline' | 'ghost'
+  }
+};
+
+// Configure sidebar area (resource items)
+sidebarUI: Partial<SidebarUIConfig> = {
+  resourceItems: {
+    rounded: 'sm',
+    density: 'comfortable'
+  }
+};
+
+// Use in template
+<mglon-schedule 
+  [config]="config"
+  [gridUI]="gridUI"
+  [headerUI]="headerUI" 
+  [sidebarUI]="sidebarUI">
+  <!-- ... -->
+</mglon-schedule>
   `;
 
   stylingCode = `
@@ -109,7 +182,10 @@ export class MyComponent {
 :root {
   --mglon-schedule-primary: #3f51b5;
   --mglon-schedule-surface: #ffffff;
-  --mglon-schedule-border-radius-md: 8px;
+  --mglon-schedule-radius-sm: 4px;
+  --mglon-schedule-radius-md: 8px;
+  --mglon-schedule-radius-lg: 12px;
+  --mglon-schedule-radius-full: 9999px;
   
   // Font
   --mglon-schedule-font-family: 'Inter', sans-serif;
@@ -124,26 +200,13 @@ export class MyComponent {
       typeLink: '/docs/api/scheduler-config',
       defaultValue: 'DEFAULT_CONFIG'
     },
-    {
-      name: 'events',
-      description: 'List of events to display on the calendar.',
-      type: 'EventModel[]',
-      typeLink: '/docs/api/event-model',
-      defaultValue: '[]'
-    },
   ];
 
   outputs: ApiProperty[] = [
     {
-      name: 'eventClick',
-      description: 'Emitted when an event is clicked.',
-      type: 'EventModel',
-      typeLink: '/docs/api/event-model'
-    },
-    {
-      name: 'dateChange',
+      name: 'dateRangeChange',
       description: 'Emitted when the visible date range changes (navigating).',
-      type: 'Date'
+      type: '{ start: Date; end: Date }'
     },
     {
       name: 'viewChange',
@@ -151,15 +214,25 @@ export class MyComponent {
       type: 'ViewMode',
       typeLink: '/docs/api/view-mode'
     },
+    {
+      name: 'resourceShow',
+      description: 'Emitted when a resource is activated/shown.',
+      type: 'string'
+    },
+    {
+      name: 'resourceHide',
+      description: 'Emitted when a resource is deactivated/hidden.',
+      type: 'string'
+    }
   ];
+
 
   onResourceShow(resourceId: string): void {
     console.log('Resource shown:', resourceId);
-    alert(`Resource shown: ${resourceId}`);
   }
 
   onResourceHide(resourceId: string): void {
     console.log('Resource hidden:', resourceId);
-    alert(`Resource hidden: ${resourceId}`);
   }
 }
+

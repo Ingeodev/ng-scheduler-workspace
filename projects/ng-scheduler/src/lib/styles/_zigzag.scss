@@ -1,0 +1,108 @@
+// Shared styles for Zigzag effect
+// Controlled by .mglon-zigzag-{side} classes and --mglon-zigzag-size variable
+
+// Single canonical mask logic based on user snippet
+// This mask (unrotated) creates teeth pointing Left < (into content)?
+// Or acts as a "Right" strip?
+// User used it for LEFT with 180deg.
+// If 180deg points Right >. Then 0deg points Left <.
+@mixin zigzag-base-mask {
+  --zigzag-mask:
+    linear-gradient(225deg, #000 50%, transparent 0),
+    linear-gradient(315deg, #000 50%, transparent 0);
+
+  -webkit-mask: var(--zigzag-mask);
+  mask: var(--zigzag-mask);
+  -webkit-mask-size: var(--mglon-zigzag-mask-size) var(--mglon-zigzag-mask-size);
+  mask-size: var(--mglon-zigzag-mask-size) var(--mglon-zigzag-mask-size);
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
+}
+
+// Common pseudo-element styles
+@mixin zigzag-pseudo {
+  content: "";
+  position: absolute;
+  width: var(--mglon-zigzag-size, 5px);
+  height: var(--mglon-zigzag-size, 5px); // overridden by specific sides
+  background-color: var(--mglon-zigzag-color, white);
+  z-index: 1;
+
+  // Calculate mask size based on zigzag size
+  // The ratio used in the example was 5px width / 8px height -> 1.6
+  --mglon-zigzag-mask-size: calc(var(--mglon-zigzag-size, 5px) * 1.6);
+
+  @include zigzag-base-mask;
+}
+
+// Right Zigzag (>)
+.mglon-zigzag-right {
+  position: relative;
+
+  &::after {
+    @include zigzag-pseudo;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--mglon-zigzag-size, 5px);
+    height: auto; // Full height
+
+    // Natural orientation (0deg) points Left (<) into content?
+    // User complaint "right doesn't look correct".
+    // If Left uses 180, maybe Right needs 0.
+    transform: rotate(0deg);
+  }
+}
+
+// Left Zigzag (<)
+.mglon-zigzag-left {
+  position: relative;
+
+  &::before {
+    @include zigzag-pseudo;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--mglon-zigzag-size, 5px);
+    height: auto;
+
+    // Rotated 180deg points Right (>) into content
+    transform: rotate(180deg);
+  }
+}
+
+// Top Zigzag (^)
+.mglon-zigzag-top {
+  position: relative;
+
+  &::before {
+    @include zigzag-pseudo;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+    height: var(--mglon-zigzag-size, 5px);
+
+    // To point Down (v) into content
+    // Left (<) rotated -90deg = Down (v)
+    transform: rotate(-90deg);
+  }
+}
+
+// Bottom Zigzag (v)
+.mglon-zigzag-bottom {
+  position: relative;
+
+  &::after {
+    @include zigzag-pseudo;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: var(--mglon-zigzag-size, 5px);
+
+    // To point Up (^) into content
+    // Left (<) rotated 90deg = Up (^)
+    transform: rotate(90deg);
+  }
+}

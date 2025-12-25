@@ -3,13 +3,14 @@
   <!-- Row 2: Navigation + Title -->
   <div class="mglon-header__nav">
     <div class="mglon-header__nav__actions">
-      <button mglon-icon-button (click)="prev.emit()">
+      <button mglon-icon-button [rounded]="iconButtonRounded()" (click)="prev.emit()">
         <mglon-icon name="chevron-left"></mglon-icon>
       </button>
-      <button mglon-button appereance="ghost" (click)="today.emit()">
+      <button mglon-button [appereance]="todayButtonAppearance()" [rounded]="todayButtonRounded()"
+        (click)="today.emit()">
         Today
       </button>
-      <button mglon-icon-button (click)="next.emit()">
+      <button mglon-icon-button [rounded]="iconButtonRounded()" (click)="next.emit()">
         <mglon-icon name="chevron-right"></mglon-icon>
       </button>
     </div>
@@ -20,7 +21,8 @@
   <div class="mglon-header__actions">
     @if (isSmallScreen()) {
     <!-- Icon buttons for small screens -->
-    <mglon-button-group type="icon" [disabled]="false" appereance="solid">
+    <mglon-button-group type="icon" [disabled]="false" [appereance]="buttonGroupAppearance()"
+      [rounded]="buttonGroupRounded()" [density]="buttonGroupDensity()">
       @for (view of views(); track view) {
       <button mglon-icon-button appereance="ghost" [active]="activeView() === view" (click)="viewChange.emit(view)">
         <mglon-icon [name]="viewIcons[view]" size="20px"></mglon-icon>
@@ -29,7 +31,8 @@
     </mglon-button-group>
     } @else {
     <!-- Text buttons for larger screens -->
-    <mglon-button-group type="text" [disabled]="false" appereance="solid">
+    <mglon-button-group type="text" [disabled]="false" [appereance]="buttonGroupAppearance()"
+      [rounded]="buttonGroupRounded()" [density]="buttonGroupDensity()">
       @for (view of views(); track view) {
       <button mglon-button appereance="ghost" [active]="activeView() === view" (click)="viewChange.emit(view)">
         {{ view }}
@@ -39,7 +42,7 @@
     }
 
     @if (editable()) {
-    <button mglon-icon-button (click)="add.emit()">
+    <button mglon-icon-button [rounded]="iconButtonRounded()" (click)="add.emit()">
       <mglon-icon name="add"></mglon-icon>
     </button>
     }

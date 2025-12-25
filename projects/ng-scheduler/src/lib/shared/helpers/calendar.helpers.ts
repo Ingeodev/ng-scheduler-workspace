@@ -4,12 +4,18 @@ import {
   startOfWeek,
   endOfWeek,
   eachDayOfInterval,
-  isSameMonth
+  isSameMonth,
+  areIntervalsOverlapping
 } from 'date-fns';
+import { ViewMode } from '../../core/models/config-schedule';
+import { AnyEvent, isAllDayEvent, isEvent, isRecurrentEvent } from '../../core/models/event.model';
+import { DateRange } from '../../core/models/date-range.model';
 
-/**
- * Represents a single day in the calendar grid
- */
+// ============================================================================
+// MONTH VIEW - Interfaces & Functions
+// ============================================================================
+
+/** Represents a single day cell in the month grid */
 export interface CalendarDay {
   date: Date;
   day: number;
@@ -18,41 +24,27 @@ export interface CalendarDay {
   isNextMonth: boolean;
 }
 
-/**
- * Represents a week (row) in the calendar grid
- */
+/** Represents a week row in the month grid */
 export interface CalendarWeek {
   days: CalendarDay[];
 }
 
 /**
- * Generates a calendar grid for a given month with padding days from adjacent months.
- * The grid always starts on Sunday and includes complete weeks.
- * 
- * @param date - Any date within the month to generate the calendar for
- * @returns An array of weeks, where each week contains 7 days
- * 
+ * Generates a complete month calendar grid with padding days from adjacent months.
+ * Always starts on Sunday and includes complete weeks (5-6 weeks total).
+ *
  * @example
- * ```typescript
- * const calendar = getMonthCalendarGrid(new Date(2024, 0, 15)); // January 2024
- * // Returns 5 weeks with days from Dec 31, 2023 to Feb 3, 2024
- * ```
+ * getMonthCalendarGrid(new Date(2024, 0, 15)) // January 2024
+ * // Returns 5 weeks: Dec 31, 2023 → Feb 3, 2024
  */
 export function getMonthCalendarGrid(date: Date): CalendarWeek[] {
-  // Get the first and last day of the month
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
-
-  // Get the start of the week containing the first day of the month (Sunday)
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
-
-  // Get the end of the week containing the last day of the month (Saturday)
   const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
-  // Get all days in the calendar range
   const allDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
-  // Map days to CalendarDay objects
   const calendarDays: CalendarDay[] = allDays.map(day => ({
     date: day,
     day: day.getDate(),
@@ -61,62 +53,54 @@ export function getMonthCalendarGrid(date: Date): CalendarWeek[] {
     isNextMonth: day > monthEnd,
   }));
 
-  // Group days into weeks (7 days per week)
   const weeks: CalendarWeek[] = [];
   for (let i = 0; i < calendarDays.length; i += 7) {
-    weeks.push({
-      days: calendarDays.slice(i, i + 7)
-    });
+    weeks.push({ days: calendarDays.slice(i, i + 7) });
   }
 
   return weeks;
 }
 
-/**
- * Represents a single day in the week view
- */
+// ============================================================================
+// WEEK VIEW - Interfaces & Functions
+// ============================================================================
+
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+
+/** Represents a single day in the week view header */
 export interface WeekDay {
-  date: Date;           // Date at 00:00:00
-  dayOfWeek: number;    // 0-6 (Sunday-Saturday)
-  dayName: string;      // 'Sun', 'Mon', etc.
-  dayNumber: number;    // 1-31
-  isToday: boolean;     // If this day is today
+  date: Date;
+  dayOfWeek: number;   // 0-6 (Sunday-Saturday)
+  dayName: string;     // 'Sun', 'Mon', etc.
+  dayNumber: number;   // 1-31
+  isToday: boolean;
 }
 
-/**
- * Represents a 30-minute time slot in the week view
- */
+/** Represents a 30-minute time slot in the week/day grid */
 export interface TimeSlot {
-  date: Date;           // Full date with time (hour:minute:00)
-  hour: number;         // 0-23
-  minute: number;       // 0 or 30
-  dayOfWeek: number;    // 0-6 (Sunday-Saturday)
-  isToday: boolean;     // If this slot is today
-  timeLabel: string;    // e.g., "09:00", "09:30"
+  date: Date;
+  hour: number;        // 0-23
+  minute: number;      // 0 or 30
+  dayOfWeek: number;   // 0-6 (Sunday-Saturday)
+  isToday: boolean;
+  timeLabel: string;   // "09:00", "09:30"
 }
 
 /**
- * Generates an array of 7 days for the week containing the given date.
+ * Generates the 7 days of the week containing the given date.
  * Week starts on Sunday.
- * 
- * @param date - Any date within the target week
- * @returns Array of 7 WeekDay objects (Sunday to Saturday)
- * 
+ *
  * @example
- * ```typescript
- * const weekDays = getWeekDays(new Date(2024, 0, 15)); // January 15, 2024 (Monday)
- * // Returns 7 days from Sunday Jan 14 to Saturday Jan 20
- * ```
+ * getWeekDays(new Date(2024, 0, 15)) // Monday, Jan 15
+ * // Returns: Sun Jan 14 → Sat Jan 20
  */
 export function getWeekDays(date: Date): WeekDay[] {
-  const weekStart = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
-  const weekEnd = endOfWeek(date, { weekStartsOn: 0 });     // Saturday
-
+  const weekStart = startOfWeek(date, { weekStartsOn: 0 });
+  const weekEnd = endOfWeek(date, { weekStartsOn: 0 });
   const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return days.map(day => {
     const dayDate = new Date(day);
@@ -125,7 +109,7 @@ export function getWeekDays(date: Date): WeekDay[] {
     return {
       date: dayDate,
       dayOfWeek: day.getDay(),
-      dayName: dayNames[day.getDay()],
+      dayName: DAY_NAMES[day.getDay()],
       dayNumber: day.getDate(),
       isToday: dayDate.getTime() === today.getTime()
     };
@@ -133,17 +117,10 @@ export function getWeekDays(date: Date): WeekDay[] {
 }
 
 /**
- * Generates a 2D array of time slots for a week.
- * Each day has 48 slots (24 hours × 2 slots per hour = 30-minute intervals).
- * 
- * @param date - Any date within the target week
- * @returns 2D array [7 days][48 time slots per day]
- * 
- * @example
- * ```typescript
- * const slots = getWeekTimeSlots(new Date(2024, 0, 15));
- * // Returns array of 7 days, each with 48 time slots from 00:00 to 23:30
- * ```
+ * Generates a 2D matrix of time slots for a week.
+ * Each day contains 48 slots (24h × 2 = 30-minute intervals).
+ *
+ * @returns TimeSlot[7 days][48 slots per day]
  */
 export function getWeekTimeSlots(date: Date): TimeSlot[][] {
   const weekDays = getWeekDays(date);
@@ -153,21 +130,17 @@ export function getWeekTimeSlots(date: Date): TimeSlot[][] {
   return weekDays.map(weekDay => {
     const slots: TimeSlot[] = [];
 
-    // Generate 48 slots (24 hours × 2)
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         const slotDate = new Date(weekDay.date);
         slotDate.setHours(hour, minute, 0, 0);
-
-        const dayDate = new Date(slotDate);
-        dayDate.setHours(0, 0, 0, 0);
 
         slots.push({
           date: slotDate,
           hour,
           minute,
           dayOfWeek: weekDay.dayOfWeek,
-          isToday: dayDate.getTime() === today.getTime(),
+          isToday: weekDay.isToday,
           timeLabel: `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
         });
       }
@@ -175,4 +148,84 @@ export function getWeekTimeSlots(date: Date): TimeSlot[][] {
 
     return slots;
   });
+}
+
+// ============================================================================
+// VIEW RANGE - Functions for calculating visible date ranges
+// ============================================================================
+
+/**
+ * Calculates the visible date range based on view mode.
+ * Used to filter which events should be displayed.
+ */
+export function getViewRange(date: Date, viewMode: ViewMode): DateRange {
+  const normalizedDate = new Date(date);
+  normalizedDate.setHours(0, 0, 0, 0);
+
+  switch (viewMode) {
+    case 'month': {
+      const monthStart = startOfMonth(normalizedDate);
+      const monthEnd = endOfMonth(normalizedDate);
+      return {
+        start: startOfWeek(monthStart, { weekStartsOn: 0 }),
+        end: endOfWeek(monthEnd, { weekStartsOn: 0 })
+      };
+    }
+
+    case 'week': {
+      return {
+        start: startOfWeek(normalizedDate, { weekStartsOn: 0 }),
+        end: endOfWeek(normalizedDate, { weekStartsOn: 0 })
+      };
+    }
+
+    case 'day':
+    case 'resource': {
+      const endOfDay = new Date(normalizedDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      return { start: normalizedDate, end: endOfDay };
+    }
+
+    case 'list': {
+      return {
+        start: startOfMonth(normalizedDate),
+        end: endOfMonth(normalizedDate)
+      };
+    }
+
+    default:
+      return { start: normalizedDate, end: normalizedDate };
+  }
+}
+
+// ============================================================================
+// EVENT FILTERING - Functions to check event visibility
+// ============================================================================
+
+/**
+ * Checks if an event overlaps with a given date range.
+ * Handles standard events, all-day events, and recurrent events.
+ */
+export function isEventInRange(event: AnyEvent, range: DateRange): boolean {
+  if (isEvent(event) || isRecurrentEvent(event)) {
+    return areIntervalsOverlapping(
+      { start: event.start, end: event.end },
+      { start: range.start, end: range.end }
+    );
+  }
+
+  if (isAllDayEvent(event)) {
+    const eventStart = new Date(event.date);
+    eventStart.setHours(0, 0, 0, 0);
+
+    const eventEnd = event.endDate ? new Date(event.endDate) : new Date(event.date);
+    eventEnd.setHours(23, 59, 59, 999);
+
+    return areIntervalsOverlapping(
+      { start: eventStart, end: eventEnd },
+      { start: range.start, end: range.end }
+    );
+  }
+
+  return false;
 }

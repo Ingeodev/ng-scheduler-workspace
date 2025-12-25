@@ -1,0 +1,59 @@
+// Shared styles for Resizable handles
+// Controlled by .mglon-resizable-{side} classes and --mglon-resize-handle-size variable
+
+@mixin resizable-handle {
+  content: "";
+  position: absolute;
+  background-color: transparent; // Invisible handle by default
+  z-index: 10; // High z-index to be above content and zigzags?
+  // User said: "corners... where there is no zigzag". So they are mutually exclusive.
+}
+
+// Left Handle
+.mglon-resizable-left {
+  &::before {
+    @include resizable-handle;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--mglon-resize-handle-size, 6px);
+    cursor: col-resize; // Horizontal resize
+    // We assume mutually exclusive with zigzag-left which also uses ::before
+  }
+}
+
+// Right Handle
+.mglon-resizable-right {
+  &::after {
+    @include resizable-handle;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--mglon-resize-handle-size, 6px);
+    cursor: col-resize;
+  }
+}
+
+// Top Handle
+.mglon-resizable-top {
+  &::before {
+    @include resizable-handle;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--mglon-resize-handle-size, 6px);
+    cursor: row-resize; // Vertical resize
+  }
+}
+
+// Bottom Handle
+.mglon-resizable-bottom {
+  &::after {
+    @include resizable-handle;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--mglon-resize-handle-size, 6px);
+    cursor: row-resize;
+  }
+}

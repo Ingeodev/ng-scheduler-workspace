@@ -3,6 +3,6 @@
     <h3 class="sidebar-title">Resources</h3>
   </header>
   <div class="sidebar-content">
-    <mglon-resource-list-schedule [resources]="store.resources()" (toggleResource)="onToggleResource($event)" />
+    <mglon-resource-list-schedule [resources]="store.allResources()" (toggleResource)="onToggleResource($event)" />
   </div>
 </aside>

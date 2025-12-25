@@ -1,4 +1,4 @@
-import { ResourceModel } from './event-model';
+import { ResourceModel } from './resource.model';
 
 export type ViewMode = 'day' | 'week' | 'month' | 'resource' | 'list';
 
@@ -42,7 +42,14 @@ export interface SchedulerConfig {
   theme?: string;
 
   /** Altura del calendario (ej: 'auto', '100%', '600px'). Defecto: '100%' */
-  height?: string;
+  height?: string
+
+  /** 
+   * Número mínimo de filas de eventos visibles en la vista de mes.
+   * Controla la altura mínima de cada semana.
+   * Defecto: 3
+   */
+  visibleEventRows?: number
 
   // --- 6. Interaccion y Visualizacion ---
   /** Array con los tipos de visualizacion que desea usar.

@@ -1,12 +1,24 @@
-<div class="mglon-month-grid" [mglonSelectable]="this" (selectionStart)="onSelectionStart($event)"
-  (selectionChange)="onSelectionChange($event)" (selectionEnd)="onSelectionEnd($event)">
-
+<div class="mglon-month-grid" [mglonSelectable]="this" [style.grid-template-rows]="gridTemplateRows()">
   @for (week of weeks(); track $index) {
-  <div class="mglon-month-grid__week">
-    @for (day of week.days; track day.date.getTime()) {
-    <mglon-month-cell [day]="day" [attr.data-date]="day.date.toISOString()"></mglon-month-cell>
+  <!-- Toggle button cell (only show button if week has overflow) -->
+  <div class="mglon-month-grid__toggle">
+    @if (hasOverflow($index)) {
+    <button mglon-icon-button size="xs" [rounded]="'full'" class="mglon-month-grid__toggle-btn"
+      [class.mglon-month-grid__toggle-btn--expanded]="isWeekExpanded($index)" (click)="onToggleWeek($index)">
+      <mglon-icon name="chevron-right"></mglon-icon>
+    </button>
     }
   </div>
+
+  <!-- Week content -->
+  @if ($first) {
+  <mglon-month-week [week]="week" [weekIndex]="$index" [expanded]="isWeekExpanded($index)"
+    (mglonResizeObserver)="onWeekResize($event)">
+  </mglon-month-week>
+  } @else {
+  <mglon-month-week [week]="week" [weekIndex]="$index" [expanded]="isWeekExpanded($index)">
+  </mglon-month-week>
+  }
   }
 
   <!-- Selection overlay -->

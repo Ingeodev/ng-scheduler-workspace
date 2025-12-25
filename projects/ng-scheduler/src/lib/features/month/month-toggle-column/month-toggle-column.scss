@@ -1,0 +1,45 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Toggle column width
+$toggle-column-width: 32px;
+
+:host {
+  display: grid;
+  position: sticky;
+  left: 0;
+  z-index: var(--mglon-schedule-z-sticky, 10);
+  background-color: var(--mglon-schedule-surface, #fff);
+  width: $toggle-column-width;
+  min-width: $toggle-column-width;
+  // grid-template-rows is set via host binding
+}
+
+.mglon-month-toggle-column__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.mglon-month-toggle-column__btn {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: var(--mglon-schedule-padding-xs, 4px);
+  color: var(--mglon-schedule-text-secondary);
+  transition: color var(--mglon-schedule-transition-duration, 200ms) var(--mglon-schedule-transition-easing, ease);
+
+  // Icon rotation transition
+  mglon-icon {
+    transition: transform var(--mglon-schedule-transition-duration, 200ms) var(--mglon-schedule-transition-easing, ease);
+  }
+
+  &:hover {
+    color: var(--mglon-schedule-text-primary);
+  }
+
+  // Expanded state: rotate chevron 90deg
+  &--expanded mglon-icon {
+    transform: rotate(90deg);
+  }
+}

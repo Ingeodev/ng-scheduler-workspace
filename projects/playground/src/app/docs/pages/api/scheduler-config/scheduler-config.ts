@@ -26,7 +26,9 @@ export class SchedulerConfigDocComponent {
     { name: 'backgroundSelection', type: 'boolean', defaultValue: 'true', description: 'Enable or disable background selection feature.' },
     { name: 'showNowIndicator', type: 'boolean', defaultValue: 'true', description: 'Show the current time indicator.' },
     { name: 'editable', type: 'boolean', defaultValue: 'true', description: 'Enable or disable editing options (like the add button in header).' },
+    { name: 'resources', type: 'ResourceModel[]', defaultValue: '[]', description: 'Array of resources to display in the sidebar and resource view.' },
   ];
+
 
   usageExample = `
 const config: SchedulerConfig = {

@@ -15,36 +15,35 @@
     <app-example-viewer [code]="basicExampleCode">
       <div preview style="width: 100%;">
         <div style="width: 100%; height: 600px;">
-          <mglon-schedule [config]="config" (resourceShow)="onResourceShow($event)"
+          <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
+            [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-            <mglon-resource id="resource-1" name="Conference Room A" color="#4285f4"
-              avatar="https://i.pravatar.cc/150?img=1" [isActive]="true">
-
-              <mglon-event id="evt-1" title="Team Standup" [start]="event1Start" [end]="event1End" color="#C1C1C1">
-              </mglon-event>
-
-              <mglon-event id="evt-2" title="Client Meeting" [start]="event2Start" [end]="event2End">
-              </mglon-event>
-            </mglon-resource>
-
-            <mglon-resource id="resource-2" name="Conference Room B" color="#ea4335"
-              avatar="https://i.pravatar.cc/150?img=2" [isActive]="true">
-
-              <mglon-event id="evt-3" title="Design Review" [start]="event3Start" [end]="event3End">
-              </mglon-event>
-            </mglon-resource>
-
-            <mglon-resource id="resource-3" name="John Doe" color="#34a853" avatar="https://i.pravatar.cc/150?img=3"
-              [isActive]="false">
-            </mglon-resource>
-
-            <mglon-resource id="resource-4" name="Jane Smith" color="#fbbc04" avatar="https://i.pravatar.cc/150?img=4"
-              [isActive]="true">
+            <mglon-resource id="1" name="Resource example">
+              <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"
+                color="#f7e5b2"></mglon-event>
+              <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"
+                color="#10b981"></mglon-event>
+              <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"
+                color="#ef4444"></mglon-event>
+              <mglon-event id="e4" title="Year End Review" [startDate]="event4Start" [endDate]="event4End"
+                color="#8b5cf6"></mglon-event>
+              <!-- Overflow test events on Dec 25 -->
+              <mglon-event id="e5" title="Morning Standup" [startDate]="event5Start" [endDate]="event5End"
+                color="#f7e5b2"></mglon-event>
+              <mglon-event id="e6" title="Design Review" [startDate]="event6Start" [endDate]="event6End"
+                color="#06b6d4"></mglon-event>
+              <mglon-event id="e7" title="Lunch Break" [startDate]="event7Start" [endDate]="event7End"
+                color="#84cc16"></mglon-event>
+              <mglon-event id="e8" title="Sprint Planning" [startDate]="event8Start" [endDate]="event8End"
+                color="#ec4899"></mglon-event>
+              <mglon-event id="e9" title="Code Review" [startDate]="event9Start" [endDate]="event9End"
+                color="#6366f1"></mglon-event>
             </mglon-resource>
           </mglon-schedule>
         </div>
       </div>
     </app-example-viewer>
+
   </section>
 
   <!-- API Reference -->
@@ -56,6 +55,17 @@
 
     <h3 class="text-lg font-semibold text-gray-800 mt-8 mb-2">Outputs</h3>
     <app-api-table [properties]="outputs"></app-api-table>
+  </section>
+
+  <!-- UI Configuration -->
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">UI Configuration</h2>
+    <p class="text-gray-600 mb-4">
+      Configure the visual appearance of different UI areas: header, sidebar, and grid.
+      Settings are organized by functional area for better discoverability.
+    </p>
+
+    <app-code-block [code]="uiConfigCode" language="typescript"></app-code-block>
   </section>
 
   <!-- Styling -->

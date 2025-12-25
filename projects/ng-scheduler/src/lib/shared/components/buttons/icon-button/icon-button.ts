@@ -1,6 +1,6 @@
 import { Component, input, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonSize, ButtonColor } from '../button/button';
+import { ButtonSize, ButtonColor, ButtonRadius } from '../button/button';
 
 export type IconButtonAppereance = 'solid' | 'outline' | 'ghost';
 
@@ -14,6 +14,7 @@ export type IconButtonAppereance = 'solid' | 'outline' | 'ghost';
     '[attr.appereance]': 'appereance()',
     '[attr.color]': 'color()',
     '[attr.size]': 'size()',
+    '[attr.rounded]': 'rounded()',
     '[attr.active]': 'active() || null',
     '[attr.disabled]': 'disabled() || null'
   }
@@ -22,6 +23,7 @@ export class IconButtonComponent {
   readonly appereance = input<IconButtonAppereance>('ghost');
   readonly color = input<ButtonColor>('primary');
   readonly size = input<ButtonSize>('md');
+  readonly rounded = input<ButtonRadius>('md');
   readonly active = input<boolean>(false);
   readonly disabled = input<boolean>(false);
 

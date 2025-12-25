@@ -1,0 +1,90 @@
+@use '../../../styles/zigzag' as *;
+
+// Slot horizontal gap (applied via calc on width)
+$slot-gap: 4px;
+
+:host {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  // Use CSS variable for radius, respecting uiConfig
+  border-radius: var(--slot-radius, var(--mglon-schedule-radius-sm));
+  background-color: var(--slot-bg, #4285f4);
+  color: var(--slot-text, #fff);
+  font-size: 12px;
+  line-height: 1;
+  overflow: hidden;
+  cursor: grab;
+  transition: background-color 0.15s ease;
+  touch-action: none; // Prevent scroll during drag on touch devices
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:hover {
+    background-color: var(--slot-hover);
+  }
+
+  box-shadow: var(--mglon-schedule-shadow-sm);
+  pointer-events: all;
+}
+
+// Full slots: add right margin to prevent touching consecutive events
+:host(.mglon-month-slot--full) {
+  // Reduce width slightly to create gap at the end
+  width: calc(var(--slot-width, 100%) - #{$slot-gap}) !important;
+}
+
+// First slots: continue to next week - remove right radius
+:host(.mglon-month-slot--first) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+// Last slots: add right margin like full slots - remove left radius
+:host(.mglon-month-slot--last) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  width: calc(var(--slot-width, 100%) - #{$slot-gap}) !important;
+}
+
+// Middle slots: no radius on either side
+:host(.mglon-month-slot--middle) {
+  border-radius: 0;
+}
+
+.mglon-month-slot__inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.mglon-month-slot__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ============================================
+// Drag states
+// ============================================
+
+// Idle state (not dragging)
+:host(.mglon-month-slot--idle) {
+  cursor: grab;
+  pointer-events: all;
+}
+
+// Dragging state
+:host(.mglon-month-slot--dragging) {
+  opacity: 0.6;
+  cursor: grabbing;
+  box-shadow: var(--mglon-schedule-shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.15));
+  transform: scale(1.02);
+  z-index: 100 !important;
+  pointer-events: none;
+}

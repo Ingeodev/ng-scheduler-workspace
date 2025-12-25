@@ -1,8 +1,15 @@
-import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core';
-import { getMonthCalendarGrid, CalendarWeek } from '../../../shared/helpers';
-import { MonthCell } from '../month-cell/month-cell';
-import { Selection } from '../../../core/background-selection/selection/selection';
-import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable';
+import { Component, input, computed, viewChild, ElementRef, inject } from '@angular/core'
+import { getMonthCalendarGrid, CalendarWeek, isEventInRange } from '../../../shared/helpers'
+import { MonthWeek } from '../month-week/month-week'
+import { Selection } from '../../../core/background-selection/selection/selection'
+import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable'
+import { ResizeObserverDirective, ResizeEvent } from '../../../shared/directives/resize-observer.directive'
+import { CalendarStore } from '../../../core/store/calendar.store'
+import { IconButtonComponent } from '../../../shared/components/buttons/icon-button/icon-button'
+import { IconComponent } from '../../../shared/components/icon/icon'
+import { sliceEventsByWeek } from '../../../core/rendering/slicers/month'
+import { CELL_HEADER_HEIGHT, SLOT_HEIGHT, SLOT_GAP } from '../../../core/config/default-schedule-config'
+import { startOfDay, endOfDay } from 'date-fns'
 
 /**
  * Month calendar grid component that displays a full month view with weeks and days.
@@ -11,10 +18,10 @@ import { Selectable, SelectableDirective, SelectionResult } from '../../../core/
  * Uses the SelectableDirective to handle all selection logic.
  * 
  * Features:
- * - Displays 6 weeks (always consistent height)
+ * - Displays 4-6 weeks dynamically
  * - Shows padding days from previous/next months
  * - Supports mouse-based date range selection
- * - Emits selection events with date ranges
+ * - Expandable week rows via toggle buttons
  * 
  * @example
  * ```html
@@ -26,12 +33,13 @@ import { Selectable, SelectableDirective, SelectionResult } from '../../../core/
  */
 @Component({
   selector: 'mglon-month-grid',
-  imports: [MonthCell, Selection, SelectableDirective],
+  imports: [Selection, SelectableDirective, MonthWeek, ResizeObserverDirective, IconButtonComponent, IconComponent],
   templateUrl: './month-grid.html',
   styleUrl: './month-grid.scss',
 })
 export class MonthGrid implements Selectable {
-  private readonly elementRef = inject(ElementRef);
+  private readonly elementRef = inject(ElementRef)
+  private readonly store = inject(CalendarStore)
 
   /**
    * Reference to the SelectableDirective instance.
@@ -52,8 +60,67 @@ export class MonthGrid implements Selectable {
    * Returns an array of weeks, each containing 7 days.
    */
   readonly weeks = computed<CalendarWeek[]>(() => {
-    return getMonthCalendarGrid(this.currentDate());
-  });
+    console.log('weeks cambiaron')
+    return getMonthCalendarGrid(this.currentDate())
+  })
+
+  /**
+   * Dynamic grid-template-rows based on actual number of weeks.
+   * Uses minmax(0, auto) to allow expanded weeks to grow beyond equal distribution.
+   */
+  readonly gridTemplateRows = computed(() =>
+    `repeat(${this.weeks().length}, minmax(0, auto))`
+  )
+
+  /**
+   * Calculates which weeks have content that exceeds minimum height.
+   * Returns a Map of weekIndex -> hasOverflow boolean.
+   */
+  readonly weekOverflowMap = computed(() => {
+    const weeks = this.weeks()
+    const events = this.store.currentViewEvents()
+    const minHeight = this.store.minWeekRowHeight()
+    const result = new Map<number, boolean>()
+
+    weeks.forEach((week, index) => {
+      const weekDays = week.days
+      if (weekDays.length === 0) {
+        result.set(index, false)
+        return
+      }
+
+      const weekRange = {
+        start: startOfDay(weekDays[0].date),
+        end: endOfDay(weekDays[weekDays.length - 1].date)
+      }
+
+      const weekEvents = events.filter(e => isEventInRange(e, weekRange))
+
+      if (weekEvents.length === 0) {
+        result.set(index, false)
+        return
+      }
+
+      const slots = sliceEventsByWeek(weekEvents, weekRange)
+      const rowHeight = SLOT_HEIGHT + SLOT_GAP
+      const maxRow = Math.max(...slots.map(slot => Math.floor(slot.position.top / rowHeight)))
+      const rows = maxRow + 1
+      const expandedHeight = CELL_HEADER_HEIGHT + (rows * SLOT_HEIGHT) + ((rows - 1) * SLOT_GAP) + SLOT_GAP
+
+      result.set(index, expandedHeight > minHeight)
+    })
+
+    return result
+  })
+
+  /**
+   * Checks if a week has overflowing content.
+   * @param weekIndex - Index of the week to check
+   * @returns true if the week has more events than can fit
+   */
+  hasOverflow(weekIndex: number): boolean {
+    return this.weekOverflowMap().get(weekIndex) ?? false
+  }
 
   /**
    * Implements Selectable.getDateFromPoint()
@@ -131,41 +198,32 @@ export class MonthGrid implements Selectable {
     const dateStr = cellElement.getAttribute('data-date');
     if (!dateStr) return null;
 
-    // Parse the ISO date string and find the matching CalendarDay
-    const targetDate = new Date(dateStr);
-
-    // Search through weeks to find the matching day
-    for (const week of this.weeks()) {
-      const day = week.days.find(d => d.date.getTime() === targetDate.getTime());
-      if (day) {
-        return day.date;
-      }
-    }
-
-    return null;
+    return new Date(dateStr);
   }
 
   /**
-   * Handles the start of a selection operation
-   * @param result - Selection result containing start and end dates
+   * Handles resize events from the first week container.
+   * Stores the height in CalendarStore to be shared with all weeks.
    */
-  onSelectionStart(result: SelectionResult): void {
-    console.log('Selection started:', result);
+  onWeekResize(event: ResizeEvent): void {
+    console.log('week resize', event)
+    this.store.setWeekRowHeight(event.height)
   }
 
   /**
-   * Handles changes to an ongoing selection
-   * @param result - Selection result with updated end date
+   * Toggles the expansion state of a week.
+   * @param weekIndex - Index of the week to toggle (0-based)
    */
-  onSelectionChange(result: SelectionResult): void {
-    console.log('Selection changed:', result);
+  onToggleWeek(weekIndex: number): void {
+    this.store.toggleWeekExpansion(weekIndex)
   }
 
   /**
-   * Handles the completion of a selection operation
-   * @param result - Final selection result with start and end dates
+   * Checks if a week is currently expanded.
+   * @param weekIndex - Index of the week to check
+   * @returns true if the week is expanded
    */
-  onSelectionEnd(result: SelectionResult): void {
-    console.log('Selection ended:', result);
+  isWeekExpanded(weekIndex: number): boolean {
+    return this.store.expandedWeekIndex() === weekIndex
   }
 }

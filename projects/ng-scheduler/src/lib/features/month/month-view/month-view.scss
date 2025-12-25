@@ -14,11 +14,16 @@
     grid-template-rows: auto 1fr;
     height: 100%; // Take full height from parent
     overflow-x: auto; // Single scroll for both header and grid
-    overflow-y: hidden;
+    overflow-y: auto; // Enable vertical scroll when grid exceeds container
+    scrollbar-gutter: stable; // Reserve space for scrollbar to prevent content shift
     min-width: 0;
   }
 
   &__header-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: var(--mglon-schedule-z-sticky, 10);
+    background-color: var(--mglon-schedule-surface, #fff);
 
     // No overflow here - parent handles it
     >mglon-month-header {

@@ -1,0 +1,20 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.mglon-month-day-indicator__container {
+  font-size: var(--month-cell-day-number-size);
+  font-weight: var(--month-cell-day-number-weight);
+  line-height: 1;
+
+  span {
+    color: var(--mglon-month-day-indicator-text-color, var(--mglon-schedule-text-secondary));
+    padding: var(--mglon-month-day-indicator-padding, var(--mglon-schedule-padding-xs));
+    border-radius: var(--mglon-month-day-indicator-border-radius, var(--mglon-schedule-radius-full));
+  }
+
+  .today {
+    color: var(--mglon-month-day-indicator-today-background-color, var(--mglon-schedule-error));
+    font-weight: 600;
+    //color: var(--mglon-month-day-indicator-today-text-color, var(--mglon-schedule-on-error));
+  }
+}
