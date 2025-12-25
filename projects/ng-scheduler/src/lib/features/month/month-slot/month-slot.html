@@ -1,4 +1,3 @@
-<div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" draggable="true"
-  (mousedown)="$event.stopPropagation()" (dragstart)="onDragStart($event)" (dragend)="onDragEnd()">
+<div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" (pointerdown)="onPointerDown($event)">
   <span class="mglon-month-slot__title">{{ title() }}</span>
 </div>

@@ -2,6 +2,7 @@ import { Directive, ElementRef, inject, PLATFORM_ID, output, signal, HostListene
 import { isPlatformBrowser } from '@angular/common';
 import { Selectable } from './selectable.abstract';
 import { SelectionCorner } from '../selection/selection';
+import { CalendarStore } from '../../store/calendar.store';
 
 /**
  * Result of a selection operation containing start and end dates/resources
@@ -42,6 +43,7 @@ interface RelativeCoordinates {
 export class SelectableDirective {
   private readonly elementRef = inject(ElementRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly store = inject(CalendarStore);
 
   /**
    * The component that implements Selectable interface.
@@ -88,8 +90,9 @@ export class SelectableDirective {
    */
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent): void {
-    if (!this.canSelect()) return;
+    if (!this.canSelect() || this.store.interactionMode() !== 'none') return;
 
+    this.store.setInteractionMode('selecting');
     const coords = this.getRelativeCoordinates(event);
     this.startSelection(coords, event.clientX, event.clientY);
   }
@@ -112,6 +115,7 @@ export class SelectableDirective {
   onMouseUp(event: MouseEvent): void {
     if (!this.isSelecting() || !this.canSelect()) return;
 
+    this.store.setInteractionMode('none');
     this.endSelection();
   }
 

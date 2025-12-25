@@ -52,6 +52,11 @@ interface CalendarState {
     grabDate: Date | null;
     hoverDate: Date | null;
   };
+
+  /**
+   * Current active interaction to prevent conflicts (mutex)
+   */
+  interactionMode: 'none' | 'dragging' | 'selecting' | 'resizing';
 }
 
 const initialCalendarState: CalendarState = {
@@ -68,7 +73,8 @@ const initialCalendarState: CalendarState = {
     eventId: null,
     grabDate: null,
     hoverDate: null
-  }
+  },
+  interactionMode: 'none'
 }
 
 export const CalendarStore = signalStore(
@@ -391,6 +397,11 @@ export const CalendarStore = signalStore(
           grabDate: hoverDate
         }
       }))
+    },
+
+    // --- Interaction Mutex ---
+    setInteractionMode(mode: 'none' | 'dragging' | 'selecting' | 'resizing') {
+      patchState(store, { interactionMode: mode })
     }
   }))
 );

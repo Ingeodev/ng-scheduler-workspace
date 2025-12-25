@@ -104,26 +104,113 @@ export class MonthSlot {
     }
   })
 
-  onDragStart(event: DragEvent) {
-    // Calculate which specific day within the slot was grabbed
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
-    const clickX = event.clientX - rect.left
-    const slotWidth = rect.width
+  private dragDelayTimer?: any;
+  private startPointerPos = { x: 0, y: 0 };
+  private readonly DRAG_DELAY = 150; // ms
+  private readonly DRAG_THRESHOLD = 5; // px
 
-    const daysSpan = differenceInCalendarDays(this.slot().end, this.slot().start) + 1
-    const dayOffset = Math.max(0, Math.min(Math.floor((clickX / slotWidth) * daysSpan), daysSpan - 1))
-    const grabDate = addDays(this.slot().start, dayOffset)
+  onPointerDown(event: PointerEvent) {
+    // Only handle primary button and if no other interaction is active
+    if (event.button !== 0 || this.store.interactionMode() !== 'none') return;
 
-    this.store.setDragStart(this.slot().idEvent, grabDate)
+    // Stop propagation immediately to prevent background selection from seeing this event
+    event.stopPropagation();
 
-    if (event.dataTransfer) {
-      // We still need to set something to enable native dragging
-      event.dataTransfer.setData('text/plain', this.slot().idEvent)
-      event.dataTransfer.effectAllowed = 'move'
+    this.startPointerPos = { x: event.clientX, y: event.clientY };
+
+    // Lock the mutex immediately to block other potential listeners (like Selection)
+    this.store.setInteractionMode('dragging');
+
+    this.dragDelayTimer = setTimeout(() => {
+      this.initiateDrag(event);
+    }, this.DRAG_DELAY);
+
+    // Bind movement and release to handle cancellation
+    const onMove = (e: PointerEvent) => this.onGlobalMove(e);
+    const onUp = (e: PointerEvent) => {
+      this.onGlobalUp(e);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  }
+
+  private initiateDrag(event: PointerEvent) {
+    const target = event.currentTarget as HTMLElement || event.target as HTMLElement;
+    if (target.setPointerCapture) {
+      target.setPointerCapture(event.pointerId);
+    }
+
+    // Calculate grabDate (exact day clicked)
+    const rect = target.getBoundingClientRect();
+    const clickX = this.startPointerPos.x - rect.left;
+    const slotWidth = rect.width;
+
+    const daysSpan = differenceInCalendarDays(this.slot().end, this.slot().start) + 1;
+    const dayOffset = Math.max(0, Math.min(Math.floor((clickX / slotWidth) * daysSpan), daysSpan - 1));
+    const grabDate = addDays(this.slot().start, dayOffset);
+
+    this.store.setDragStart(this.slot().idEvent, grabDate);
+    this.store.setInteractionMode('dragging');
+  }
+
+  private onGlobalMove(event: PointerEvent) {
+    if (this.store.dragState().eventId) { // Check if we are actually dragging (timer finished)
+      this.onPointerMove(event);
+    } else if (this.dragDelayTimer) {
+      // Check if we moved too much before the delay finished
+      const dist = Math.sqrt(
+        Math.pow(event.clientX - this.startPointerPos.x, 2) +
+        Math.pow(event.clientY - this.startPointerPos.y, 2)
+      );
+
+      if (dist > this.DRAG_THRESHOLD) {
+        this.store.setInteractionMode('none'); // Release mutex if it was a scroll/swipe
+        this.cancelDragDelay();
+      }
     }
   }
 
-  onDragEnd() {
-    this.store.clearDragState()
+  private onGlobalUp(event: PointerEvent) {
+    this.cancelDragDelay();
+    if (this.store.dragState().eventId) {
+      this.onPointerUp(event);
+    } else {
+      // It was just a click or a cancelled drag, release mutex
+      this.store.setInteractionMode('none');
+    }
+  }
+
+  private cancelDragDelay() {
+    if (this.dragDelayTimer) {
+      clearTimeout(this.dragDelayTimer);
+      this.dragDelayTimer = undefined;
+    }
+  }
+
+  private onPointerMove(event: PointerEvent) {
+    if (!this.isDragging()) return;
+
+    // Detect which cell we are over using coordinates
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    const cell = element?.closest('.mglon-month-cell') as HTMLElement | null;
+
+    if (cell) {
+      const timestamp = cell.getAttribute('data-mglon-date');
+      if (timestamp) {
+        const hoverDate = new Date(parseInt(timestamp, 10));
+        this.store.setDragHover(hoverDate);
+        this.store.updateDraggedEventPosition();
+      }
+    }
+  }
+
+  private onPointerUp(event: PointerEvent) {
+    this.store.setInteractionMode('none');
+    this.store.clearDragState();
   }
 }

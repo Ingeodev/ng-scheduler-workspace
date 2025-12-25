@@ -14,8 +14,13 @@ $slot-gap: 4px;
   font-size: 12px;
   line-height: 1;
   overflow: hidden;
-  cursor: pointer;
+  cursor: grab;
   transition: background-color 0.15s ease;
+  touch-action: none; // Prevent scroll during drag on touch devices
+
+  &:active {
+    cursor: grabbing;
+  }
 
   &:hover {
     background-color: var(--slot-hover);
