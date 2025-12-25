@@ -131,18 +131,55 @@ export interface SidebarUIConfig {
 // =============================================================================
 
 /** Event slot specific radius options */
-export type EventSlotRadius = 'none' | 'sm' | 'full';
+export type EventSlotRadius = 'none' | 'sm' | 'full'
 
 /** Overflow indicator specific radius options */
-export type IndicatorRadius = 'none' | 'sm' | 'md' | 'full';
+export type IndicatorRadius = 'none' | 'sm' | 'md' | 'full'
 
 /** Overflow indicator appearance options */
-export type IndicatorAppearance = 'ghost' | 'outline' | 'solid';
+export type IndicatorAppearance = 'ghost' | 'outline' | 'solid'
+
+/**
+ * Configuration for event slots in grids
+ */
+export interface EventSlotConfig {
+  /**
+   * Border radius for event slots
+   * @default 'sm'
+   */
+  rounded: EventSlotRadius
+}
+
+/**
+ * Configuration for overflow indicator (+N more)
+ */
+export interface OverflowIndicatorConfig {
+  /**
+   * Border radius for indicator
+   * @default 'sm'
+   */
+  rounded: IndicatorRadius
+
+  /**
+   * Visual appearance style
+   * @default 'ghost'
+   */
+  appearance: IndicatorAppearance
+}
 
 /**
  * Complete configuration for grid area
  */
 export interface GridUIConfig {
+  /**
+   * Event slot styling
+   */
+  eventSlots: EventSlotConfig
+
+  /**
+   * Overflow indicator (+N more) styling
+   */
+  overflowIndicator: OverflowIndicatorConfig
 }
 
 
@@ -195,6 +232,13 @@ export const DEFAULT_UI_CONFIG: UIConfig = {
       density: 'comfortable'
     }
   },
-  grid: {}
-
-} as const;
+  grid: {
+    eventSlots: {
+      rounded: 'sm'
+    },
+    overflowIndicator: {
+      rounded: 'sm',
+      appearance: 'ghost'
+    }
+  }
+} as const
