@@ -30,8 +30,14 @@
     border-right: none;
   }
 
-  &:hover {
+  &:hover,
+  &--drag-over {
     background-color: var(--month-cell-hover-bg);
+  }
+
+  &--drag-over {
+    box-shadow: inset 0 0 0 2px var(--mglon-schedule-primary);
+    z-index: 1; // Ensure border is visible
   }
 
   // Days from other months (padding days)

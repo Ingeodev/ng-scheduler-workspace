@@ -1,4 +1,6 @@
 <div class="mglon-month-cell" [class.mglon-month-cell--other-month]="!day().isCurrentMonth"
-  [class.mglon-month-cell--current-month]="day().isCurrentMonth">
+  [class.mglon-month-cell--current-month]="day().isCurrentMonth" [class.mglon-month-cell--drag-over]="isDragOver()"
+  (dragenter)="onDragEnter($event)" (dragleave)="onDragLeave($event)" (dragover)="onDragOver($event)"
+  (drop)="onDrop($event)">
   <mglon-month-day-indicator [day]="day()"></mglon-month-day-indicator>
 </div>

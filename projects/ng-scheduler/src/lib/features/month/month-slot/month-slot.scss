@@ -63,3 +63,23 @@ $slot-gap: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+// ============================================
+// Drag states
+// ============================================
+
+// Idle state (not dragging)
+:host(.mglon-month-slot--idle) {
+  cursor: grab;
+  pointer-events: all;
+}
+
+// Dragging state
+:host(.mglon-month-slot--dragging) {
+  opacity: 0.6;
+  cursor: grabbing;
+  box-shadow: var(--mglon-schedule-shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.15));
+  transform: scale(1.02);
+  z-index: 100 !important;
+  pointer-events: none;
+}

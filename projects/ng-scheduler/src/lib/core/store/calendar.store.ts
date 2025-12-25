@@ -12,6 +12,7 @@ import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUICon
 import { ResourceModel } from '../models/resource.model'
 import { AnyEvent } from '../models/event.model'
 import { getViewRange, isEventInRange } from '../../shared/helpers/calendar.helpers'
+import { addDays, differenceInCalendarDays } from 'date-fns'
 
 interface CalendarState {
   currentDate: Date;
@@ -41,7 +42,16 @@ interface CalendarState {
    * Index of the currently expanded week (0-5), or null if no week is expanded.
    * Only one week can be expanded at a time.
    */
-  expandedWeekIndex: number | null
+  expandedWeekIndex: number | null;
+
+  /**
+   * Current drag and drop state
+   */
+  dragState: {
+    eventId: string | null;
+    grabDate: Date | null;
+    hoverDate: Date | null;
+  };
 }
 
 const initialCalendarState: CalendarState = {
@@ -53,7 +63,12 @@ const initialCalendarState: CalendarState = {
   events: new Map<string, AnyEvent>(),
   resources: new Map<string, ResourceModel>(),
   weekRowHeight: 0,
-  expandedWeekIndex: null
+  expandedWeekIndex: null,
+  dragState: {
+    eventId: null,
+    grabDate: null,
+    hoverDate: null
+  }
 }
 
 export const CalendarStore = signalStore(
@@ -309,6 +324,73 @@ export const CalendarStore = signalStore(
       patchState(store, {
         expandedWeekIndex: current === weekIndex ? null : weekIndex
       })
+    },
+
+    // --- Drag & Drop Methods ---
+    setDragStart(eventId: string, grabDate: Date) {
+      patchState(store, {
+        dragState: {
+          eventId,
+          grabDate,
+          hoverDate: null
+        }
+      })
+    },
+    setDragHover(date: Date) {
+      patchState(store, (state) => ({
+        dragState: {
+          ...state.dragState,
+          hoverDate: date
+        }
+      }))
+    },
+    clearDragState() {
+      patchState(store, {
+        dragState: {
+          eventId: null,
+          grabDate: null,
+          hoverDate: null
+        }
+      })
+    },
+
+    /**
+     * Updates the position of the currently dragged event based on the hover date.
+     * Calculates the offset between the original grab date and the new hover date.
+     */
+    updateDraggedEventPosition() {
+      const { eventId, grabDate, hoverDate } = store.dragState()
+      if (!eventId || !grabDate || !hoverDate) return
+
+      const event = store.events().get(eventId)
+      if (!event) return
+
+      const offset = differenceInCalendarDays(hoverDate, grabDate)
+      if (offset === 0) return
+
+      if (event.type === 'all-day') {
+        const partial: any = {
+          date: addDays(event.date, offset)
+        }
+        if (event.endDate) {
+          partial.endDate = addDays(event.endDate, offset)
+        }
+        this.updateEvent(eventId, partial)
+      } else {
+        const partial: any = {
+          start: addDays(event.start, offset),
+          end: addDays(event.end, offset)
+        }
+        this.updateEvent(eventId, partial)
+      }
+
+      // Update the grab date to the new hover date to maintain the relative "grabbed" point
+      patchState(store, (state) => ({
+        dragState: {
+          ...state.dragState,
+          grabDate: hoverDate
+        }
+      }))
     }
   }))
 );

@@ -1,9 +1,10 @@
-import { Component, computed, inject, input } from '@angular/core'
+import { Component, computed, inject, input, signal } from '@angular/core'
 import { SlotModel } from '../../../core/models/slot.model'
 import { CalendarStore } from '../../../core/store/calendar.store'
 import { getHoverColor, getTextColor } from '../../../shared/helpers'
 import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
 import { EventSlotRadius } from '../../../core/models/ui-config'
+import { addDays, differenceInCalendarDays } from 'date-fns'
 
 /** Maps EventSlotRadius to CSS variable names */
 const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
@@ -34,12 +35,17 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
     '[class.mglon-month-slot--last]': 'slot().type === "last"',
     '[class.mglon-month-slot--middle]': 'slot().type === "middle"',
     '[class.mglon-month-slot--full]': 'slot().type === "full"',
+    '[class.mglon-month-slot--dragging]': 'isDragging()',
+    '[class.mglon-month-slot--idle]': '!isDragging()',
   }
 })
 export class MonthSlot {
   private readonly store = inject(CalendarStore)
 
   readonly slot = input.required<SlotModel>()
+
+  /** Whether this specific event is being dragged */
+  readonly isDragging = computed(() => this.store.dragState().eventId === this.slot().idEvent)
 
   /**
    * Gets the event data from the store using the slot's event ID.
@@ -97,4 +103,27 @@ export class MonthSlot {
         return []
     }
   })
+
+  onDragStart(event: DragEvent) {
+    // Calculate which specific day within the slot was grabbed
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+    const clickX = event.clientX - rect.left
+    const slotWidth = rect.width
+
+    const daysSpan = differenceInCalendarDays(this.slot().end, this.slot().start) + 1
+    const dayOffset = Math.max(0, Math.min(Math.floor((clickX / slotWidth) * daysSpan), daysSpan - 1))
+    const grabDate = addDays(this.slot().start, dayOffset)
+
+    this.store.setDragStart(this.slot().idEvent, grabDate)
+
+    if (event.dataTransfer) {
+      // We still need to set something to enable native dragging
+      event.dataTransfer.setData('text/plain', this.slot().idEvent)
+      event.dataTransfer.effectAllowed = 'move'
+    }
+  }
+
+  onDragEnd() {
+    this.store.clearDragState()
+  }
 }
