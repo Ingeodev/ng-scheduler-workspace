@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 4px;
+  border-radius: 4px;
+  background-color: var(--slot-bg, #4285f4);
+  color: var(--slot-color, #fff);
+  font-size: 12px;
+  line-height: 1;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// Slot type modifiers for visual cues on multi-week events
+:host(.mglon-month-slot--first) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+:host(.mglon-month-slot--last) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+:host(.mglon-month-slot--middle) {
+  border-radius: 0;
+}
+
+.mglon-month-slot__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -6,5 +6,7 @@
     }
   </div>
 
-  <div #weekEventsContainer class="mglon-month-week__events" [style.margin-top]="`${top}px`"></div>
+  <div #weekEventsContainer class="mglon-month-week__events" [style.margin-top]="`${top}px`">
+    <mglon-month-week-events-container [slots]="slots()"></mglon-month-week-events-container>
+  </div>
 </div>

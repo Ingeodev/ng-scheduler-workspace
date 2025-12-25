@@ -40,6 +40,18 @@ export class ScheduleDocComponent {
   eventStart = new Date();
   eventEnd = new Date(new Date().setHours(new Date().getHours() + 1));
 
+  // Multi-week event: Dec 26 to Jan 5
+  event2Start = new Date(2025, 11, 26); // Dec 26, 2025
+  event2End = new Date(2026, 0, 5);     // Jan 5, 2025
+
+  // Single day event
+  event3Start = new Date(2025, 11, 24, 10, 0);
+  event3End = new Date(2025, 11, 24, 12, 0);
+
+  // Multi-day event within same week
+  event4Start = new Date(2025, 11, 27, 9, 0);
+  event4End = new Date(2025, 11, 29, 17, 0);
+
 
 
   // UI Configuration Examples
