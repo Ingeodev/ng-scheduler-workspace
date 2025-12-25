@@ -1,4 +1,4 @@
-<div class="mglon-month-grid" [mglonSelectable]="this">
+<div class="mglon-month-grid" [mglonSelectable]="this" [style.grid-template-rows]="gridTemplateRows()">
 
   @for (week of weeks(); track $index) {
   @if ($first) {

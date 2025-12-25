@@ -25,6 +25,9 @@ export class MonthWeek extends EventRendererAdapter {
 
   readonly top = CELL_HEADER_HEIGHT;
 
+  /** Minimum height for the week row from store config */
+  readonly minHeight = this.store.minWeekRowHeight;
+
   /**
    * Computes the week's date range from first to last day.
    */

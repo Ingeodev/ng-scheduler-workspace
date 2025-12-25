@@ -1,7 +1,7 @@
 // Public API
 export { sliceEventsByWeek } from './month-event-slicer'
 export type { SlotConfig } from './slot-config'
-export { DEFAULT_SLOT_CONFIG } from './slot-config'
+export { DEFAULT_SLOT_CONFIG, calculateMinSlotContainerHeight } from './slot-config'
 export type { SlotVisibilityResult } from './slot-visibility'
 export { partitionSlotsByVisibility } from './slot-visibility'
 

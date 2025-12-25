@@ -56,8 +56,16 @@ export class MonthGrid implements Selectable {
    */
   readonly weeks = computed<CalendarWeek[]>(() => {
     console.log('weeks cambiaron')
-    return getMonthCalendarGrid(this.currentDate());
-  });
+    return getMonthCalendarGrid(this.currentDate())
+  })
+
+  /**
+   * Dynamic grid-template-rows based on actual number of weeks.
+   * Months have 4-6 weeks depending on the starting day and month length.
+   */
+  readonly gridTemplateRows = computed(() =>
+    `repeat(${this.weeks().length}, 1fr)`
+  )
 
   /**
    * Implements Selectable.getDateFromPoint()

@@ -1,6 +1,6 @@
 <div class="mglon-month-week">
 
-  <div class="mglon-month-week__days">
+  <div class="mglon-month-week__days" [style.min-height.px]="minHeight()">
     @for (day of week().days; track day.date.getTime()) {
     <mglon-month-cell [day]="day" [attr.data-date]="day.date.toISOString()"></mglon-month-cell>
     }

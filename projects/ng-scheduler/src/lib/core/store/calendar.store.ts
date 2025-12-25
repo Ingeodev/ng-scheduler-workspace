@@ -1,11 +1,17 @@
-import { computed } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { DEFAULT_CONFIG } from '../config/default-schedule-config';
-import { SchedulerConfig, ViewMode } from '../models/config-schedule';
-import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUIConfig } from '../models/ui-config';
-import { ResourceModel } from '../models/resource.model';
-import { AnyEvent } from '../models/event.model';
-import { getViewRange, isEventInRange } from '../../shared/helpers/calendar.helpers';
+import { computed } from '@angular/core'
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals'
+import {
+  DEFAULT_CONFIG,
+  CELL_HEADER_HEIGHT,
+  SLOT_HEIGHT,
+  SLOT_GAP,
+  DEFAULT_VISIBLE_EVENT_ROWS
+} from '../config/default-schedule-config'
+import { SchedulerConfig, ViewMode } from '../models/config-schedule'
+import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUIConfig } from '../models/ui-config'
+import { ResourceModel } from '../models/resource.model'
+import { AnyEvent } from '../models/event.model'
+import { getViewRange, isEventInRange } from '../../shared/helpers/calendar.helpers'
 
 interface CalendarState {
   currentDate: Date;
@@ -76,6 +82,18 @@ export const CalendarStore = signalStore(
     currentViewEvents: computed(() => {
       const range = getViewRange(currentDate(), viewMode());
       return Array.from(events().values()).filter(event => isEventInRange(event, range));
+    }),
+
+    /**
+     * Minimum height for a week row in month view.
+     * Calculated from: CELL_HEADER_HEIGHT + (n * SLOT_HEIGHT) + ((n-1) * SLOT_GAP)
+     * where n = visibleEventRows from config.
+     */
+    minWeekRowHeight: computed(() => {
+      const rows = config().visibleEventRows ?? DEFAULT_VISIBLE_EVENT_ROWS
+      const slotsHeight = rows * SLOT_HEIGHT
+      const gapsHeight = (rows - 1) * SLOT_GAP
+      return CELL_HEADER_HEIGHT + slotsHeight + gapsHeight
     })
   })),
   withMethods((store) => ({
