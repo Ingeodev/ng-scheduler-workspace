@@ -1,11 +1,12 @@
-import { Component, computed, inject, input } from '@angular/core';
-import { SlotModel } from '../../../core/models/slot.model';
-import { CalendarStore } from '../../../core/store/calendar.store';
-import { getHoverColor, getTextColor } from '../../../shared/helpers';
+import { Component, computed, inject, input } from '@angular/core'
+import { SlotModel } from '../../../core/models/slot.model'
+import { CalendarStore } from '../../../core/store/calendar.store'
+import { getHoverColor, getTextColor } from '../../../shared/helpers'
+import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
 
 @Component({
   selector: 'mglon-month-slot',
-  imports: [],
+  imports: [ZigzagDirective],
   templateUrl: './month-slot.html',
   styleUrl: './month-slot.scss',
   host: {
@@ -55,7 +56,28 @@ export class MonthSlot {
    * Text color with optimal contrast against the background.
    */
   readonly textColor = computed(() => {
-    return getTextColor(this.slot().color);
-  });
+    return getTextColor(this.slot().color)
+  })
+
+  /**
+   * Determines which sides get zigzag effect based on slot type.
+   * - 'first': right side (continues to next week)
+   * - 'last': left side (comes from previous week)
+   * - 'middle': both sides (spans entire week)
+   * - 'full': no zigzag (complete within week)
+   */
+  readonly zigzagSides = computed<ZigzagSide[]>(() => {
+    const type = this.slot().type
+    switch (type) {
+      case 'first':
+        return ['right']
+      case 'last':
+        return ['left']
+      case 'middle':
+        return ['left', 'right']
+      default:
+        return []
+    }
+  })
 }
 

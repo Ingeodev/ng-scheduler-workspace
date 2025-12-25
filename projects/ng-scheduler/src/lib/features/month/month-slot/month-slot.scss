@@ -1,8 +1,9 @@
+@use '../../../styles/zigzag' as *;
+
 :host {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  padding: 0 4px;
   border-radius: 4px;
   background-color: var(--slot-bg, #4285f4);
   color: var(--slot-text, #fff);
@@ -33,6 +34,15 @@
 
 :host(.mglon-month-slot--middle) {
   border-radius: 0;
+}
+
+.mglon-month-slot__inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 
 .mglon-month-slot__title {
