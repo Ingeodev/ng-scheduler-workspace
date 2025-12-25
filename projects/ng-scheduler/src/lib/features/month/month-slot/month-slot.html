@@ -1,4 +1,4 @@
 <div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" [mglonResizable]="resizableSides()"
-  (pointerdown)="onPointerDown($event)">
+  (resizeStart)="onResizeStart($event)" (pointerdown)="onPointerDown($event)">
   <span class="mglon-month-slot__title">{{ title() }}</span>
 </div>

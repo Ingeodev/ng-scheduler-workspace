@@ -3,7 +3,7 @@ import { SlotModel } from '../../../core/models/slot.model'
 import { CalendarStore } from '../../../core/store/calendar.store'
 import { getHoverColor, getTextColor } from '../../../shared/helpers'
 import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
-import { ResizableDirective, ResizeSide } from '../../../shared/directives/resizable.directive'
+import { ResizableDirective, ResizeSide, ResizeEvent } from '../../../shared/directives/resizable.directive'
 import { EventSlotRadius } from '../../../core/models/ui-config'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
@@ -257,5 +257,40 @@ export class MonthSlot {
   private onPointerUp(event: PointerEvent) {
     this.store.setInteractionMode('none');
     this.store.clearDragState();
+  }
+
+  onResizeStart(event: ResizeEvent) {
+    this.store.setResizeStart(this.slot().idEvent, event.side);
+
+    // Bind movement and release for real-time resize feedback
+    // Similar to drag-and-drop, we use global listeners
+    const onMove = (e: PointerEvent) => this.onGlobalResizeMove(e);
+    const onUp = () => {
+      this.store.clearResizeState();
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  }
+
+  private onGlobalResizeMove(event: PointerEvent) {
+    if (this.store.interactionMode() !== 'resizing') return;
+
+    // Detect which cell we are over using coordinates
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    const cell = element?.closest('.mglon-month-cell') as HTMLElement | null;
+
+    if (cell) {
+      const timestamp = cell.getAttribute('data-mglon-date');
+      if (timestamp) {
+        const hoverDate = new Date(parseInt(timestamp, 10));
+        this.store.setResizeHover(hoverDate);
+        this.store.updateResizedEvent();
+      }
+    }
   }
 }

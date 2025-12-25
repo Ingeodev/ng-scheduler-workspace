@@ -9,10 +9,11 @@ import {
 } from '../config/default-schedule-config'
 import { SchedulerConfig, ViewMode } from '../models/config-schedule'
 import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUIConfig } from '../models/ui-config'
+import { ResizeSide } from '../../shared/directives/resizable.directive'
 import { ResourceModel } from '../models/resource.model'
 import { AnyEvent } from '../models/event.model'
 import { getViewRange, isEventInRange } from '../../shared/helpers/calendar.helpers'
-import { addDays, differenceInCalendarDays } from 'date-fns'
+import { addDays, differenceInCalendarDays, startOfDay } from 'date-fns'
 
 interface CalendarState {
   currentDate: Date;
@@ -54,6 +55,15 @@ interface CalendarState {
   };
 
   /**
+   * Current resize state
+   */
+  resizeState: {
+    eventId: string | null;
+    side: ResizeSide | null;
+    hoverDate: Date | null;
+  };
+
+  /**
    * Current active interaction to prevent conflicts (mutex)
    */
   interactionMode: 'none' | 'dragging' | 'selecting' | 'resizing';
@@ -74,8 +84,13 @@ const initialCalendarState: CalendarState = {
     grabDate: null,
     hoverDate: null
   },
+  resizeState: {
+    eventId: null,
+    side: null,
+    hoverDate: null
+  },
   interactionMode: 'none'
-}
+};
 
 export const CalendarStore = signalStore(
   { providedIn: 'root' },
@@ -397,6 +412,72 @@ export const CalendarStore = signalStore(
           grabDate: hoverDate
         }
       }))
+    },
+
+    // --- Resizing Methods ---
+    setResizeStart(eventId: string, side: ResizeSide) {
+      patchState(store, {
+        resizeState: {
+          eventId,
+          side,
+          hoverDate: null
+        }
+      })
+    },
+    setResizeHover(date: Date) {
+      patchState(store, (state) => ({
+        resizeState: {
+          ...state.resizeState,
+          hoverDate: date
+        }
+      }))
+    },
+    clearResizeState() {
+      patchState(store, {
+        resizeState: {
+          eventId: null,
+          side: null,
+          hoverDate: null
+        }
+      })
+    },
+
+    /**
+     * Updates the start or end date of the currently resized event based on the hover date.
+     */
+    updateResizedEvent() {
+      const { eventId, side, hoverDate } = store.resizeState()
+      if (!eventId || !side || !hoverDate) return
+
+      const event = store.events().get(eventId)
+      if (!event) return
+
+      const normalizedHover = startOfDay(hoverDate)
+
+      if (event.type === 'all-day') {
+        const partial: any = {}
+        const eventDate = startOfDay(event.date)
+        const currentEnd = event.endDate ? startOfDay(event.endDate) : eventDate
+
+        if (side === 'left') {
+          // Cannot exceed the current end date
+          partial.date = normalizedHover > currentEnd ? currentEnd : normalizedHover
+        } else if (side === 'right') {
+          // Cannot be before the current start date
+          partial.endDate = normalizedHover < eventDate ? eventDate : normalizedHover
+        }
+        this.updateEvent(eventId, partial)
+      } else {
+        const partial: any = {}
+        if (side === 'left') {
+          // Cannot exceed end time
+          partial.start = hoverDate > event.end ? event.end : hoverDate
+        } else if (side === 'right') {
+          // Cannot be before start time
+          partial.end = hoverDate < event.start ? event.start : hoverDate
+        }
+        this.updateEvent(eventId, partial)
+      }
     },
 
     // --- Interaction Mutex ---

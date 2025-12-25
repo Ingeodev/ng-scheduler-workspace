@@ -16,10 +16,14 @@ export class MonthCell {
   // Input for the day data
   readonly day = input.required<CalendarDay>();
 
-  /** Whether a slot is currently being dragged over this cell */
+  /** Whether a slot is currently being dragged or resized over this cell */
   readonly isDragOver = computed(() => {
-    const hoverDate = this.store.dragState().hoverDate;
+    const dragState = this.store.dragState();
+    const resizeState = this.store.resizeState();
+
+    const hoverDate = dragState.hoverDate || resizeState.hoverDate;
     if (!hoverDate) return false;
+
     return hoverDate.getTime() === this.day().date.getTime();
   });
 }
