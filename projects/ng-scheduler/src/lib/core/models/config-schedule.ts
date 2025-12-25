@@ -68,6 +68,10 @@ export interface SchedulerConfig {
    * Defecto: true */
   editable?: boolean;
 
+  /** Propiedad para activar o desactivar el redimensionado de eventos.
+   * Defecto: true */
+  resizableEvents?: boolean;
+
   /** Mostrar u ocultar el sidebar lateral.
    * Defecto: true */
   showSidebar?: boolean;

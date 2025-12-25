@@ -1,5 +1,6 @@
 import { Directive, input, output, effect, ElementRef, Renderer2, inject, HostListener, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { CalendarStore } from '../../core/store/calendar.store';
 
 export type ResizeSide = 'top' | 'right' | 'bottom' | 'left';
 export interface ResizeEvent {
@@ -32,6 +33,7 @@ export class ResizableDirective implements OnDestroy {
 
   private elementRef = inject(ElementRef);
   private renderer = inject(Renderer2);
+  private store = inject(CalendarStore);
 
   private destroyMouseDownListener?: () => void;
 
@@ -109,9 +111,24 @@ export class ResizableDirective implements OnDestroy {
     }
 
     if (clickedSide) {
+      if (this.store.interactionMode() !== 'none' && this.store.interactionMode() !== 'dragging') {
+        // Only allow resizing if nothing else is happening
+        // Note: we might be in 'dragging' mode because of pointerdown already firing on MonthSlot
+        // So we might need to override it.
+        return;
+      }
+
       event.preventDefault();
       event.stopPropagation();
+      this.store.setInteractionMode('resizing');
       this.resizeStart.emit({ side: clickedSide, event });
+
+      // Add global mouseup to reset interaction mode
+      const onUp = () => {
+        this.store.setInteractionMode('none');
+        window.removeEventListener('mouseup', onUp);
+      };
+      window.addEventListener('mouseup', onUp);
     }
   }
 }

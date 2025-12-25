@@ -3,6 +3,7 @@ import { SlotModel } from '../../../core/models/slot.model'
 import { CalendarStore } from '../../../core/store/calendar.store'
 import { getHoverColor, getTextColor } from '../../../shared/helpers'
 import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
+import { ResizableDirective, ResizeSide } from '../../../shared/directives/resizable.directive'
 import { EventSlotRadius } from '../../../core/models/ui-config'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
@@ -15,7 +16,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
 
 @Component({
   selector: 'mglon-month-slot',
-  imports: [ZigzagDirective],
+  imports: [ZigzagDirective, ResizableDirective],
   templateUrl: './month-slot.html',
   styleUrl: './month-slot.scss',
   host: {
@@ -104,6 +105,40 @@ export class MonthSlot {
     }
   })
 
+  /**
+   * Determines which sides are resizable.
+   * Only sides without zigzag are resizable, and only if resizableEvents is enabled.
+   */
+  readonly resizableSides = computed<ResizeSide[]>(() => {
+    // Check global config from store
+    if (!this.store.config().resizableEvents) {
+      return []
+    }
+
+    // Check resource-specific config if available
+    const event = this.event()
+    if (event?.resourceId) {
+      const resource = this.store.getResource(event.resourceId)
+      if (resource && resource.resizableEvents === false) {
+        return []
+      }
+    }
+
+    const type = this.slot().type
+    switch (type) {
+      case 'first':
+        return ['left']
+      case 'last':
+        return ['right']
+      case 'middle':
+        return []
+      case 'full':
+        return ['left', 'right']
+      default:
+        return []
+    }
+  })
+
   private dragDelayTimer?: any;
   private startPointerPos = { x: 0, y: 0 };
   private readonly DRAG_DELAY = 150; // ms
@@ -112,6 +147,16 @@ export class MonthSlot {
   onPointerDown(event: PointerEvent) {
     // Only handle primary button and if no other interaction is active
     if (event.button !== 0 || this.store.interactionMode() !== 'none') return;
+
+    // Check if we clicked a resize handle
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const sides = this.resizableSides();
+    const handleSize = 6; // Matching ResizableDirective default
+
+    if (sides.includes('left') && x <= handleSize) return;
+    if (sides.includes('right') && x >= rect.width - handleSize) return;
 
     // Stop propagation immediately to prevent background selection from seeing this event
     event.stopPropagation();
