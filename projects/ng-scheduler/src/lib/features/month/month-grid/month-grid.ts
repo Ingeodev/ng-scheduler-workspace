@@ -3,6 +3,8 @@ import { getMonthCalendarGrid, CalendarWeek } from '../../../shared/helpers';
 import { MonthWeek } from '../month-week/month-week';
 import { Selection } from '../../../core/background-selection/selection/selection';
 import { Selectable, SelectableDirective, SelectionResult } from '../../../core/background-selection/selectable';
+import { ResizeObserverDirective, ResizeEvent } from '../../../shared/directives/resize-observer.directive';
+import { CalendarStore } from '../../../core/store/calendar.store';
 
 /**
  * Month calendar grid component that displays a full month view with weeks and days.
@@ -26,12 +28,13 @@ import { Selectable, SelectableDirective, SelectionResult } from '../../../core/
  */
 @Component({
   selector: 'mglon-month-grid',
-  imports: [Selection, SelectableDirective, MonthWeek],
+  imports: [Selection, SelectableDirective, MonthWeek, ResizeObserverDirective],
   templateUrl: './month-grid.html',
   styleUrl: './month-grid.scss',
 })
 export class MonthGrid implements Selectable {
   private readonly elementRef = inject(ElementRef);
+  private readonly store = inject(CalendarStore);
 
   /**
    * Reference to the SelectableDirective instance.
@@ -52,6 +55,7 @@ export class MonthGrid implements Selectable {
    * Returns an array of weeks, each containing 7 days.
    */
   readonly weeks = computed<CalendarWeek[]>(() => {
+    console.log('weeks cambiaron')
     return getMonthCalendarGrid(this.currentDate());
   });
 
@@ -134,5 +138,12 @@ export class MonthGrid implements Selectable {
     return new Date(dateStr);
   }
 
-
+  /**
+   * Handles resize events from the first week container.
+   * Stores the height in CalendarStore to be shared with all weeks.
+   */
+  onWeekResize(event: ResizeEvent): void {
+    console.log('week resize', event);
+    this.store.setWeekRowHeight(event.height);
+  }
 }

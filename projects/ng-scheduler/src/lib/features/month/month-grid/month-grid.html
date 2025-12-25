@@ -1,7 +1,11 @@
 <div class="mglon-month-grid" [mglonSelectable]="this">
 
   @for (week of weeks(); track $index) {
+  @if ($first) {
+  <mglon-month-week [week]="week" (mglonResizeObserver)="onWeekResize($event)"></mglon-month-week>
+  } @else {
   <mglon-month-week [week]="week"></mglon-month-week>
+  }
   }
 
   <!-- Selection overlay -->

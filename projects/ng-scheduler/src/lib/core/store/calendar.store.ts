@@ -24,6 +24,12 @@ interface CalendarState {
    * This is used to store and access resources by their ID.
    */
   resources: Map<string, ResourceModel>;
+
+  /**
+   * Height of a week row container in pixels.
+   * Used to calculate how many event slots can fit in a week row.
+   */
+  weekRowHeight: number;
 }
 
 const initialCalendarState: CalendarState = {
@@ -34,6 +40,7 @@ const initialCalendarState: CalendarState = {
 
   events: new Map<string, AnyEvent>(),
   resources: new Map<string, ResourceModel>(),
+  weekRowHeight: 0,
 };
 
 export const CalendarStore = signalStore(
@@ -248,6 +255,14 @@ export const CalendarStore = signalStore(
           grid: state.uiConfig.grid
         }
       }));
+    },
+
+    /**
+     * Sets the height of a week row container.
+     * Called once from the first week's ResizeObserver.
+     */
+    setWeekRowHeight(height: number) {
+      patchState(store, { weekRowHeight: height });
     }
   }))
 );
