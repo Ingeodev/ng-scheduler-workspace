@@ -9,7 +9,7 @@ import { AnyEvent } from '../../../core/models/event.model';
 import { DateRange } from '../../../core/models/date-range.model';
 import { EventRendererAdapter } from '../../../core/adapters/event-renderer.adapter';
 import { SlotModel } from '../../../core/models/slot.model';
-import { sliceEventsByWeek } from '../../../core/rendering/slicers/month-event-slicer';
+import { sliceEventsByWeek } from '../../../core/rendering/slicers/month'
 
 @Component({
   selector: 'mglon-month-week',
