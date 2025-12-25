@@ -8,7 +8,7 @@ import { EventSlotRadius } from '../../../core/models/ui-config'
 /** Maps EventSlotRadius to CSS variable names */
 const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
   'none': '0',
-  'sm': 'var(--mglon-schedule-radius-sm)',
+  'sm': 'var(--mglon-schedule-radius-sm)', // Small fixed value for subtle rounding on slots
   'full': 'var(--mglon-schedule-radius-full)'
 }
 

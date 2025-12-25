@@ -7,6 +7,7 @@ $slot-gap: 4px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  // Use CSS variable for radius, respecting uiConfig
   border-radius: var(--slot-radius, var(--mglon-schedule-radius-sm));
   background-color: var(--slot-bg, #4285f4);
   color: var(--slot-text, #fff);
@@ -30,19 +31,20 @@ $slot-gap: 4px;
   width: calc(var(--slot-width, 100%) - #{$slot-gap}) !important;
 }
 
-// First slots: continue to next week, no right margin needed
+// First slots: continue to next week - remove right radius
 :host(.mglon-month-slot--first) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-// Last slots: add right margin like full slots
+// Last slots: add right margin like full slots - remove left radius
 :host(.mglon-month-slot--last) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   width: calc(var(--slot-width, 100%) - #{$slot-gap}) !important;
 }
 
+// Middle slots: no radius on either side
 :host(.mglon-month-slot--middle) {
   border-radius: 0;
 }

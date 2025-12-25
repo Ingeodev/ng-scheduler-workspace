@@ -76,32 +76,28 @@ export class ScheduleDocComponent {
   // UI Configuration Examples
   gridUIConfig: Partial<GridUIConfig> = {
     eventSlots: {
-      rounded: 'full'  // Options: 'none' | 'sm' | 'full'
-    },
-    overflowIndicator: {
-      appearance: 'outline',  // Options: 'ghost' | 'outline' | 'solid'
-      rounded: 'full'           // Options: 'none' | 'sm' | 'md' | 'full'
+      rounded: 'sm'  // Options: 'none' | 'sm' | 'full'
     }
   };
 
   headerUIConfig: Partial<HeaderUIConfig> = {
     buttonGroup: {
-      appearance: 'outline',
+      appearance: 'solid',
       rounded: 'full',        // Options: 'none' | 'sm' | 'md' | 'lg' | 'full'
-      density: 'compact' // Options: 'compact' | 'comfortable'
+      density: 'comfortable' // Options: 'compact' | 'comfortable'
     },
     iconButtons: {
-      rounded: 'full'
+      rounded: 'none'
     },
     todayButton: {
-      rounded: 'md',
+      rounded: 'full',
       appearance: 'ghost'   // Options: 'solid' | 'outline' | 'ghost'
     }
   };
 
   sidebarUIConfig: Partial<SidebarUIConfig> = {
     resourceItems: {
-      rounded: 'full',
+      rounded: 'none',
       density: 'comfortable'
     }
   };

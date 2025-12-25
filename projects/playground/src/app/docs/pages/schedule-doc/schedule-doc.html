@@ -18,9 +18,9 @@
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-            <mglon-resource id="1" name="Resource 1">
+            <mglon-resource id="1" name="Resource example">
               <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"
-                color="#3b82f6"></mglon-event>
+                color="#f7e5b2"></mglon-event>
               <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"
                 color="#10b981"></mglon-event>
               <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"
@@ -29,7 +29,7 @@
                 color="#8b5cf6"></mglon-event>
               <!-- Overflow test events on Dec 25 -->
               <mglon-event id="e5" title="Morning Standup" [startDate]="event5Start" [endDate]="event5End"
-                color="#f59e0b"></mglon-event>
+                color="#f7e5b2"></mglon-event>
               <mglon-event id="e6" title="Design Review" [startDate]="event6Start" [endDate]="event6End"
                 color="#06b6d4"></mglon-event>
               <mglon-event id="e7" title="Lunch Break" [startDate]="event7Start" [endDate]="event7End"
