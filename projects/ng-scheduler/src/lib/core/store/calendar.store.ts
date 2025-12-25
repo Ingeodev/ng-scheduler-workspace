@@ -67,6 +67,11 @@ interface CalendarState {
    * Current active interaction to prevent conflicts (mutex)
    */
   interactionMode: 'none' | 'dragging' | 'selecting' | 'resizing';
+
+  /**
+   * ID of the event currently being hovered by the mouse
+   */
+  hoveredEventId: string | null;
 }
 
 const initialCalendarState: CalendarState = {
@@ -89,7 +94,8 @@ const initialCalendarState: CalendarState = {
     side: null,
     hoverDate: null
   },
-  interactionMode: 'none'
+  interactionMode: 'none',
+  hoveredEventId: null
 };
 
 export const CalendarStore = signalStore(
@@ -134,9 +140,9 @@ export const CalendarStore = signalStore(
      */
     minWeekRowHeight: computed(() => {
       const rows = config().visibleEventRows ?? DEFAULT_VISIBLE_EVENT_ROWS
-      const slotsHeight = rows * SLOT_HEIGHT
-      const gapsHeight = (rows - 1) * SLOT_GAP
-      return CELL_HEADER_HEIGHT + slotsHeight + gapsHeight
+      // Formula: header + (rows * slot height) + (rows * slot gap)
+      // The last gap serves as bottom padding for the row.
+      return CELL_HEADER_HEIGHT + (rows * SLOT_HEIGHT) + (rows * SLOT_GAP)
     })
   })),
   withMethods((store) => ({
@@ -483,6 +489,11 @@ export const CalendarStore = signalStore(
     // --- Interaction Mutex ---
     setInteractionMode(mode: 'none' | 'dragging' | 'selecting' | 'resizing') {
       patchState(store, { interactionMode: mode })
+    },
+
+    // --- Hover State Methods ---
+    setHoveredEvent(eventId: string | null) {
+      patchState(store, { hoveredEventId: eventId })
     }
   }))
 );

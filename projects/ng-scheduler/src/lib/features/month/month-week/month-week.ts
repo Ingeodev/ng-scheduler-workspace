@@ -95,8 +95,8 @@ export class MonthWeek extends EventRendererAdapter {
    */
   readonly expandedHeight = computed(() => {
     const rows = this.maxRow() + 1 // rows are 0-indexed
-    // Formula: header + (rows * slot height) + ((rows - 1) * gap) + bottom padding
-    return CELL_HEADER_HEIGHT + (rows * SLOT_HEIGHT) + ((rows - 1) * SLOT_GAP) + SLOT_GAP
+    // Formula: header + (rows * slot height) + (rows * gap)
+    return CELL_HEADER_HEIGHT + (rows * SLOT_HEIGHT) + (rows * SLOT_GAP)
   })
 
   /**

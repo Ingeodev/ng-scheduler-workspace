@@ -38,6 +38,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
     '[class.mglon-month-slot--full]': 'slot().type === "full"',
     '[class.mglon-month-slot--dragging]': 'isDragging()',
     '[class.mglon-month-slot--idle]': '!isDragging()',
+    '[class.mglon-month-slot--hovered]': 'isHovered()',
   }
 })
 export class MonthSlot {
@@ -47,6 +48,9 @@ export class MonthSlot {
 
   /** Whether this specific event is being dragged */
   readonly isDragging = computed(() => this.store.dragState().eventId === this.slot().idEvent)
+
+  /** Whether this event is currently hovered globally */
+  readonly isHovered = computed(() => this.store.hoveredEventId() === this.slot().idEvent)
 
   /**
    * Gets the event data from the store using the slot's event ID.
@@ -292,5 +296,13 @@ export class MonthSlot {
         this.store.updateResizedEvent();
       }
     }
+  }
+
+  onMouseEnter() {
+    this.store.setHoveredEvent(this.slot().idEvent);
+  }
+
+  onMouseLeave() {
+    this.store.setHoveredEvent(null);
   }
 }

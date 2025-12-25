@@ -89,3 +89,8 @@ $slot-gap: 4px;
   z-index: 100 !important;
   pointer-events: none;
 }
+
+// Global hover state (all slots of the same event)
+:host(.mglon-month-slot--hovered) {
+  background-color: var(--slot-hover);
+}
