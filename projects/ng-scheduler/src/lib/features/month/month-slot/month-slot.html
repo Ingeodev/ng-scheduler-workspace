@@ -1,5 +1,6 @@
 <div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" [mglonResizable]="resizableSides()"
   (resizeStart)="onResizeStart($event)" (pointerdown)="onPointerDown($event)" (mouseenter)="onMouseEnter()"
-  (mouseleave)="onMouseLeave()">
+  (mouseleave)="onMouseLeave()" (click)="onClick($event)" (dblclick)="onDblClick($event)"
+  (contextmenu)="onContextMenu($event)">
   <span class="mglon-month-slot__title">{{ title() }}</span>
 </div>

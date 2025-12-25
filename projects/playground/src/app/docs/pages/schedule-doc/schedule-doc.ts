@@ -234,5 +234,9 @@ sidebarUI: Partial<SidebarUIConfig> = {
   onResourceHide(resourceId: string): void {
     console.log('Resource hidden:', resourceId);
   }
+
+  handleEventInteraction(type: string, interaction: any): void {
+    console.log(`[Interaction: ${type}]`, interaction);
+  }
 }
 

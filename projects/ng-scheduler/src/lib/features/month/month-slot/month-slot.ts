@@ -3,7 +3,8 @@ import { SlotModel } from '../../../core/models/slot.model'
 import { CalendarStore } from '../../../core/store/calendar.store'
 import { getHoverColor, getTextColor } from '../../../shared/helpers'
 import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
-import { ResizableDirective, ResizeSide, ResizeEvent } from '../../../shared/directives/resizable.directive'
+import { ResizableDirective, ResizeEvent, ResizeSide } from '../../../shared/directives/resizable.directive'
+import { DragInteractionData, ResizeInteractionData } from '../../../core/models/interaction.model'
 import { EventSlotRadius } from '../../../core/models/ui-config'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
@@ -144,9 +145,12 @@ export class MonthSlot {
   })
 
   private dragDelayTimer?: any;
-  private startPointerPos = { x: 0, y: 0 };
   private readonly DRAG_DELAY = 150; // ms
   private readonly DRAG_THRESHOLD = 5; // px
+  private startPointerPos = { x: 0, y: 0 };
+
+  private clickTimer?: any;
+  private ignoreNextClick = false;
 
   onPointerDown(event: PointerEvent) {
     // Only handle primary button and if no other interaction is active
@@ -205,6 +209,16 @@ export class MonthSlot {
 
     this.store.setDragStart(this.slot().idEvent, grabDate);
     this.store.setInteractionMode('dragging');
+
+    // Dispatch dragStart interaction
+    this.store.dispatchInteraction('dragStart', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      data: {
+        grabDate,
+        hoverDate: null
+      } as DragInteractionData
+    });
   }
 
   private onGlobalMove(event: PointerEvent) {
@@ -228,6 +242,8 @@ export class MonthSlot {
     this.cancelDragDelay();
     if (this.store.dragState().eventId) {
       this.onPointerUp(event);
+      // Occlude the next click event that follows pointerup
+      this.ignoreNextClick = true;
     } else {
       // It was just a click or a cancelled drag, release mutex
       this.store.setInteractionMode('none');
@@ -252,13 +268,34 @@ export class MonthSlot {
       const timestamp = cell.getAttribute('data-mglon-date');
       if (timestamp) {
         const hoverDate = new Date(parseInt(timestamp, 10));
-        this.store.setDragHover(hoverDate);
-        this.store.updateDraggedEventPosition();
+        this.store.setDragHover(hoverDate)
+        this.store.updateDraggedEventPosition()
+
+        // Dispatch drag interaction event
+        this.store.dispatchInteraction('drag', this.slot().idEvent, {
+          event: this.event()!,
+          slotId: this.slot().id,
+          data: {
+            grabDate: this.store.dragState().grabDate!,
+            hoverDate: hoverDate
+          } as DragInteractionData
+        })
       }
     }
   }
 
   private onPointerUp(event: PointerEvent) {
+    // Dispatch dragEnd interaction before clearing state
+    const dragState = this.store.dragState();
+    this.store.dispatchInteraction('dragEnd', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      data: {
+        grabDate: dragState.grabDate!,
+        hoverDate: dragState.hoverDate
+      } as DragInteractionData
+    });
+
     this.store.setInteractionMode('none');
     this.store.clearDragState();
   }
@@ -266,11 +303,36 @@ export class MonthSlot {
   onResizeStart(event: ResizeEvent) {
     this.store.setResizeStart(this.slot().idEvent, event.side);
 
+    // Dispatch resizeStart interaction
+    this.store.dispatchInteraction('resizeStart', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      data: {
+        side: event.side,
+        date: this.slot().start // Basic reference date for start
+      } as ResizeInteractionData
+    });
+
     // Bind movement and release for real-time resize feedback
     // Similar to drag-and-drop, we use global listeners
     const onMove = (e: PointerEvent) => this.onGlobalResizeMove(e);
     const onUp = () => {
+      // Occlude the next click event
+      this.ignoreNextClick = true;
+
+      // Dispatch resizeEnd interaction before clearing state
+      const resizeState = this.store.resizeState();
+      this.store.dispatchInteraction('resizeEnd', this.slot().idEvent, {
+        event: this.event()!,
+        slotId: this.slot().id,
+        data: {
+          side: resizeState.side!,
+          date: resizeState.hoverDate || (resizeState.side === 'left' ? this.slot().start : this.slot().end)
+        } as ResizeInteractionData
+      });
+
       this.store.clearResizeState();
+      this.store.setInteractionMode('none');
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
@@ -292,17 +354,88 @@ export class MonthSlot {
       const timestamp = cell.getAttribute('data-mglon-date');
       if (timestamp) {
         const hoverDate = new Date(parseInt(timestamp, 10));
-        this.store.setResizeHover(hoverDate);
-        this.store.updateResizedEvent();
+        this.store.setResizeHover(hoverDate)
+        this.store.updateResizedEvent()
+
+        // Dispatch resize interaction event
+        this.store.dispatchInteraction('resize', this.slot().idEvent, {
+          event: this.event()!,
+          slotId: this.slot().id,
+          data: {
+            side: this.store.resizeState().side!,
+            date: hoverDate
+          } as ResizeInteractionData
+        })
       }
     }
   }
 
   onMouseEnter() {
+    if (this.store.interactionMode() !== 'none') return;
     this.store.setHoveredEvent(this.slot().idEvent);
+    this.store.dispatchInteraction('mouseenter', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id
+    });
   }
 
   onMouseLeave() {
+    if (this.store.interactionMode() !== 'none') return;
     this.store.setHoveredEvent(null);
+    this.store.dispatchInteraction('mouseleave', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id
+    });
+  }
+
+  onClick(event: MouseEvent) {
+    event.stopPropagation();
+
+    // Prevent click if we just finished a drag or resize
+    if (this.ignoreNextClick) {
+      this.ignoreNextClick = false;
+      return;
+    }
+
+    // Double click detection: if another click arrives within 250ms, cancel this one
+    if (this.clickTimer) {
+      clearTimeout(this.clickTimer);
+      this.clickTimer = undefined;
+      return;
+    }
+
+    this.clickTimer = setTimeout(() => {
+      this.clickTimer = undefined;
+      this.store.dispatchInteraction('click', this.slot().idEvent, {
+        event: this.event()!,
+        slotId: this.slot().id,
+        originalEvent: event
+      });
+    }, 250);
+  }
+
+  onDblClick(event: MouseEvent) {
+    event.stopPropagation();
+
+    if (this.clickTimer) {
+      clearTimeout(this.clickTimer);
+      this.clickTimer = undefined;
+    }
+
+    this.store.dispatchInteraction('dblclick', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      originalEvent: event
+    });
+  }
+
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.store.dispatchInteraction('contextmenu', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      originalEvent: event
+    });
   }
 }
