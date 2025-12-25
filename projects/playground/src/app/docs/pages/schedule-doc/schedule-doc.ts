@@ -42,7 +42,7 @@ export class ScheduleDocComponent {
 
   // Multi-week event: Dec 26 to Jan 5
   event2Start = new Date(2025, 11, 26); // Dec 26, 2025
-  event2End = new Date(2026, 0, 5);     // Jan 5, 2025
+  event2End = new Date(2026, 0, 5);     // Jan 5, 2026
 
   // Single day event
   event3Start = new Date(2025, 11, 24, 10, 0);

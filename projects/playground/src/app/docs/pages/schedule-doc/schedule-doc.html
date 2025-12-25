@@ -19,11 +19,14 @@
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
             <mglon-resource id="1" name="Resource 1">
-              <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"></mglon-event>
-              <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"></mglon-event>
-              <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"></mglon-event>
-              <mglon-event id="e4" title="Year End Review" [startDate]="event4Start"
-                [endDate]="event4End"></mglon-event>
+              <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"
+                color="#3b82f6"></mglon-event>
+              <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"
+                color="#10b981"></mglon-event>
+              <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"
+                color="#ef4444"></mglon-event>
+              <mglon-event id="e4" title="Year End Review" [startDate]="event4Start" [endDate]="event4End"
+                color="#8b5cf6"></mglon-event>
             </mglon-resource>
           </mglon-schedule>
         </div>

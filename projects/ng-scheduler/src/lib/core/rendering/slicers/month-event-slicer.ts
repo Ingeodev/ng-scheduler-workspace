@@ -158,6 +158,9 @@ export function sliceEventsByWeek(
     // Determine slot type based on week boundaries
     const type = determineSlotType(eventRange, weekRange);
 
+    // Extract event properties for the slot
+    const isEditable = !event.isReadOnly && !event.isBlocked;
+
     slots.push({
       id: `${event.id}-${weekRange.start.getTime()}`,
       idEvent: event.id,
@@ -170,9 +173,13 @@ export function sliceEventsByWeek(
         width
       },
       zIndex: rowIndex + 1,
-      type
+      type,
+      color: event.color ?? '#4285f4',
+      draggable: isEditable,
+      resizable: isEditable
     });
   }
 
   return slots;
 }
+

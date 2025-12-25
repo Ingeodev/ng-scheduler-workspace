@@ -5,16 +5,19 @@
   padding: 0 4px;
   border-radius: 4px;
   background-color: var(--slot-bg, #4285f4);
-  color: var(--slot-color, #fff);
+  color: var(--slot-text, #fff);
   font-size: 12px;
   line-height: 1;
   overflow: hidden;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: background-color 0.15s ease;
 
   &:hover {
-    opacity: 0.9;
+    background-color: var(--slot-hover);
   }
+
+  box-shadow: var(--mglon-schedule-shadow-sm);
+  pointer-events: all;
 }
 
 // Slot type modifiers for visual cues on multi-week events

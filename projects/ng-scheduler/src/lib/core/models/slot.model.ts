@@ -20,4 +20,7 @@ export interface SlotModel {
   position: SlotPosition;
   zIndex: number;
   type: slotType;
+  color: string;
+  draggable: boolean;
+  resizable: boolean;
 }

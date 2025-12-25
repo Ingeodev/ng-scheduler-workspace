@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { SlotModel } from '../../../core/models/slot.model';
 import { CalendarStore } from '../../../core/store/calendar.store';
+import { getHoverColor, getTextColor } from '../../../shared/helpers';
 
 @Component({
   selector: 'mglon-month-slot',
@@ -14,6 +15,9 @@ import { CalendarStore } from '../../../core/store/calendar.store';
     '[style.width.%]': 'slot().position.width',
     '[style.height.px]': 'slot().position.height',
     '[style.z-index]': 'slot().zIndex',
+    '[style.--slot-bg]': 'slot().color',
+    '[style.--slot-hover]': 'hoverColor()',
+    '[style.--slot-text]': 'textColor()',
     '[attr.data-slot-type]': 'slot().type',
     '[class.mglon-month-slot--first]': 'slot().type === "first"',
     '[class.mglon-month-slot--last]': 'slot().type === "last"',
@@ -39,4 +43,19 @@ export class MonthSlot {
   readonly title = computed(() => {
     return this.event()?.title ?? '';
   });
+
+  /**
+   * Hover color calculated from the base color.
+   */
+  readonly hoverColor = computed(() => {
+    return getHoverColor(this.slot().color);
+  });
+
+  /**
+   * Text color with optimal contrast against the background.
+   */
+  readonly textColor = computed(() => {
+    return getTextColor(this.slot().color);
+  });
 }
+
