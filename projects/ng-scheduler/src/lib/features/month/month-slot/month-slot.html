@@ -1,6 +1,18 @@
-<div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" [mglonResizable]="resizableSides()"
-  (resizeStart)="onResizeStart($event)" (pointerdown)="onPointerDown($event)" (mouseenter)="onMouseEnter()"
+<!-- Renderizado de slots recurrentes (Se eliminan los eventos de resize y drag) -->
+@if(isRecurrent()) {
+<div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()" (click)="onClick($event)" (dblclick)="onDblClick($event)"
   (contextmenu)="onContextMenu($event)">
   <span class="mglon-month-slot__title" [mglonMonthRecurrence]="isRecurrent()">{{ title() }}</span>
 </div>
+}
+
+<!-- Renderizado de slots no recurrentes -->
+@else {
+<div class="mglon-month-slot__inner" [mglonZigzag]="zigzagSides()" [mglonResizable]="resizableSides()"
+  (resizeStart)="onResizeStart($event)" (pointerdown)="onPointerDown($event)" (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()" (click)="onClick($event)" (dblclick)="onDblClick($event)"
+  (contextmenu)="onContextMenu($event)">
+  <span class="mglon-month-slot__title">{{ title() }}</span>
+</div>
+}
