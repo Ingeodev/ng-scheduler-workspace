@@ -65,9 +65,18 @@ $slot-gap: 4px;
 }
 
 .mglon-month-slot__title {
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
+
+  .mglon-month-slot__recurrence-icon {
+    flex-shrink: 0;
+    margin-right: var(--mglon-schedule-gap-sm, 8px);
+    font-size: 1.2em;
+  }
 }
 
 // ============================================

@@ -11,8 +11,9 @@ import { SchedulerConfig, ViewMode } from '../models/config-schedule'
 import { UIConfig, DEFAULT_UI_CONFIG, HeaderUIConfig, SidebarUIConfig, GridUIConfig } from '../models/ui-config'
 import { ResizeSide } from '../../shared/directives/resizable.directive'
 import { ResourceModel } from '../models/resource.model'
-import { AnyEvent } from '../models/event.model'
+import { AnyEvent, isRecurrentEvent } from '../models/event.model'
 import { getViewRange, isEventInRange } from '../../shared/helpers/calendar.helpers'
+import { expandRecurrentEvent } from '../../shared/helpers/recurrent-events.helpers'
 import { addDays, differenceInCalendarDays, startOfDay } from 'date-fns'
 import { Subject } from 'rxjs'
 import { InteractionEvent, InteractionType } from '../models/interaction.model'
@@ -133,7 +134,12 @@ export const CalendarStore = signalStore(
     currentViewEvents: computed(() => {
       const range = getViewRange(currentDate(), viewMode());
       const resMap = resources();
+
       return Array.from(events().values()).filter(event => {
+        // Exclude 'recurrent' templates from rendering.
+        // Their expanded instances ('event' type) will be included instead.
+        if (event.type === 'recurrent') return false;
+
         const inRange = isEventInRange(event, range);
         if (!inRange) return false;
 

@@ -2,5 +2,5 @@
   (resizeStart)="onResizeStart($event)" (pointerdown)="onPointerDown($event)" (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()" (click)="onClick($event)" (dblclick)="onDblClick($event)"
   (contextmenu)="onContextMenu($event)">
-  <span class="mglon-month-slot__title">{{ title() }}</span>
+  <span class="mglon-month-slot__title" [mglonMonthRecurrence]="isRecurrent()">{{ title() }}</span>
 </div>

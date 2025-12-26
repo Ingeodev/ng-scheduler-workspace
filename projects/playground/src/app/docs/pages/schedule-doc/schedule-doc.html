@@ -20,18 +20,8 @@
             (resourceHide)="onResourceHide($event)">
             <mglon-resource id="1" name="Resource example" color="#228c72"
               avatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s">
-              <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd" color="#f7e5b2"
-                (eventClick)="handleEventInteraction('click', $event)"
-                (eventDblClick)="handleEventInteraction('dblclick', $event)"
-                (eventContextMenu)="handleEventInteraction('contextmenu', $event)"
-                (eventMouseEnter)="handleEventInteraction('mouseenter', $event)"
-                (eventMouseLeave)="handleEventInteraction('mouseleave', $event)"
-                (eventDragStart)="handleEventInteraction('dragStart', $event)"
-                (eventDrag)="handleEventInteraction('drag', $event)"
-                (eventDragEnd)="handleEventInteraction('dragEnd', $event)"
-                (eventResizeStart)="handleEventInteraction('resizeStart', $event)"
-                (eventResize)="handleEventInteraction('resize', $event)"
-                (eventResizeEnd)="handleEventInteraction('resizeEnd', $event)"></mglon-event>
+              <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"
+                color="#f7e5b2"></mglon-event>
               <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"></mglon-event>
               <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"></mglon-event>
               <mglon-event id="e4" title="Year End Review" [startDate]="event4Start"
@@ -48,6 +38,15 @@
               <mglon-event id="e8" title="Sprint Planning" [startDate]="event8Start" [endDate]="event8End"
                 color="#ec4899"></mglon-event>
               <mglon-event id="e9" title="Code Review" [startDate]="event9Start" [endDate]="event9End"></mglon-event>
+
+              <!-- Recurrent Events Test -->
+              <mglon-recurrent-event id="rec-1" title="Daily Standup (Every 2 days)" [startDate]="recurrent1Start"
+                [endDate]="recurrent1End" [recurrenceRule]="recurrenceRule1">
+              </mglon-recurrent-event>
+
+              <mglon-recurrent-event id="rec-2" title="Weekly Sync (Mondays)" [startDate]="recurrent2Start"
+                [endDate]="recurrent2End" [recurrenceRule]="recurrenceRule2">
+              </mglon-recurrent-event>
             </mglon-resource>
           </mglon-schedule>
         </div>

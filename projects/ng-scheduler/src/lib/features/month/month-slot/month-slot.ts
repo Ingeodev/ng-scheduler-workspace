@@ -15,9 +15,11 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
   'full': 'var(--mglon-schedule-radius-full)'
 }
 
+import { MonthRecurrenceDirective } from '../directives/month-recurrence.directive'
+
 @Component({
   selector: 'mglon-month-slot',
-  imports: [ZigzagDirective, ResizableDirective],
+  imports: [ZigzagDirective, ResizableDirective, MonthRecurrenceDirective],
   templateUrl: './month-slot.html',
   styleUrl: './month-slot.scss',
   host: {
@@ -58,6 +60,12 @@ export class MonthSlot {
    */
   readonly event = computed(() => {
     return this.store.getEvent(this.slot().idEvent)
+  })
+
+  /** Whether this event is part of a recurrence series */
+  readonly isRecurrent = computed(() => {
+    const e = this.event()
+    return e?.type === 'event' && e.isRecurrenceInstance === true
   })
 
   /**

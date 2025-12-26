@@ -1,11 +1,11 @@
 import { Component, inject, input } from '@angular/core';
-import { DEFAULT_EVENT_INPUTS } from '../../core/config/default-schedule-config';
+import { DEFAULT_EVENT_INPUTS } from '../../../core/config/default-schedule-config';
 import { CommonModule } from '@angular/common';
-import { Event as EventModel } from '../../core/models/event.model';
-import { RESOURCE_ID_TOKEN } from '../resource-events/resource-events';
-import { CalendarStore } from '../../core/store/calendar.store';
+import { Event as EventModel } from '../../../core/models/event.model';
+import { RESOURCE_ID_TOKEN } from '../../resource-events/resource-events';
+import { CalendarStore } from '../../../core/store/calendar.store';
 import { output } from '@angular/core';
-import { DragInteractionData, EventInteraction, ResizeInteractionData } from '../../core/models/interaction.model';
+import { DragInteractionData, EventInteraction, ResizeInteractionData } from '../../../core/models/interaction.model';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
