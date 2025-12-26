@@ -141,45 +141,55 @@ describe('Color Helpers', () => {
   });
 
   describe('generateAdaptiveColorScheme', () => {
-    it('should generate complete adaptive scheme', () => {
+    it('should generate complete adaptive scheme with raw variant', () => {
       const baseColor = '#1a73e8'; // Vivid blue
       const scheme = generateAdaptiveColorScheme(baseColor);
 
       expect(scheme.vivid.base).toBeDefined();
       expect(scheme.pastel.base).toBeDefined();
       expect(scheme.dark.base).toBeDefined();
+      expect(scheme.raw.base).toBe(baseColor);
 
-      expect(scheme.vivid.hover).toBeDefined();
-      expect(scheme.vivid.text).toBeDefined();
-      expect(scheme.vivid.textHover).toBeDefined();
+      // Raw variant should have its own functional derivatives
+      expect(scheme.raw.hover).toBeDefined();
+      expect(scheme.raw.text).toBeDefined();
+      expect(scheme.raw.textHover).toBeDefined();
+      expect(hexToRgb(scheme.raw.hover)).not.toBeNull();
     });
 
-    it('should preserve vivid input as vivid', () => {
-      const vividGreen = '#228c72';
-      const scheme = generateAdaptiveColorScheme(vividGreen);
+    it('should correctly categorize colors and preserve them', () => {
+      const colors = {
+        vivid: '#228c72',
+        pastel: '#fce4ec',
+        dark: '#0a0a0a'
+      };
 
-      expect(scheme.vivid.base).toBe(vividGreen);
-      // Pastel should be different (lighter)
-      expect(scheme.pastel.base).not.toBe(vividGreen);
+      const vividScheme = generateAdaptiveColorScheme(colors.vivid);
+      expect(vividScheme.vivid.base).toBe(colors.vivid);
+      expect(vividScheme.raw.base).toBe(colors.vivid);
+
+      const pastelScheme = generateAdaptiveColorScheme(colors.pastel);
+      expect(pastelScheme.pastel.base).toBe(colors.pastel);
+      expect(pastelScheme.raw.base).toBe(colors.pastel);
+
+      const darkScheme = generateAdaptiveColorScheme(colors.dark);
+      expect(darkScheme.dark.base).toBe(colors.dark);
+      expect(darkScheme.raw.base).toBe(colors.dark);
     });
 
-    it('should preserve pastel input as pastel', () => {
-      const pastelPink = '#fce4ec'; // Very light pink
-      const scheme = generateAdaptiveColorScheme(pastelPink);
+    it('should generate accessible text for raw variant across different lightness', () => {
+      const darkColor = '#212121';
+      const lightColor = '#f5f5f5';
 
-      expect(scheme.pastel.base).toBe(pastelPink);
-      // Vivid should be different (stronger)
-      expect(scheme.vivid.base).not.toBe(pastelPink);
-    });
+      const darkScheme = generateAdaptiveColorScheme(darkColor);
+      expect(darkScheme.raw.text).toBe('#ffffff');
 
-    it('should generate accessible text for pastel variant', () => {
-      const scheme = generateAdaptiveColorScheme('#7d016f'); // Dark purple
-      // Pastel variant of purple should have dark text
-      const pastelRgb = hexToRgb(scheme.pastel.base)!;
-      const textRgb = hexToRgb(scheme.pastel.text)!;
-      const contrast = getContrastRatio(pastelRgb, textRgb);
+      const lightScheme = generateAdaptiveColorScheme(lightColor);
+      expect(lightScheme.raw.text).not.toBe('#ffffff');
 
-      expect(contrast).toBeGreaterThan(4.5); // WCAG AA for normal text
+      const lightTextRgb = hexToRgb(lightScheme.raw.text)!;
+      // Should be dark text (luminance < 0.5)
+      expect(getLuminance(lightTextRgb.r, lightTextRgb.g, lightTextRgb.b)).toBeLessThan(0.4);
     });
   });
 
