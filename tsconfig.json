@@ -36,6 +36,12 @@
     },
     {
       "path": "./projects/miguelon-ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/documentation/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/documentation/tsconfig.spec.json"
     }
   ]
 }
