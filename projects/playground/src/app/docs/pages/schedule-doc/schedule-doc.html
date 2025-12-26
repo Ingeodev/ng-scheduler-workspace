@@ -18,7 +18,8 @@
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-            <mglon-resource id="1" name="Resource example" color="#228c72">
+            <mglon-resource id="1" name="Resource example" color="#228c72"
+              avatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s">
               <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd" color="#f7e5b2"
                 (eventClick)="handleEventInteraction('click', $event)"
                 (eventDblClick)="handleEventInteraction('dblclick', $event)"

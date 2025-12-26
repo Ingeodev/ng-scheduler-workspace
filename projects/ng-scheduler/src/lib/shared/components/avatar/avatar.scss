@@ -80,11 +80,11 @@
 
 .avatar-placeholder,
 .avatar-initials {
-  background-color: var(--ngx-cal-surface, #f0f0f0);
+  background-color: var(--mglon-schedule-surface, #f0f0f0);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ngx-cal-text-secondary, #666);
+  color: var(--mglon-schedule-text-secondary, #666);
   user-select: none;
   font-weight: 600;
   text-transform: uppercase;

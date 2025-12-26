@@ -342,7 +342,13 @@ export const CalendarStore = signalStore(
               ? {
                 resourceItems: config.sidebar.resourceItems
                   ? { ...state.uiConfig.sidebar.resourceItems, ...config.sidebar.resourceItems }
-                  : state.uiConfig.sidebar.resourceItems
+                  : state.uiConfig.sidebar.resourceItems,
+                background: config.sidebar.background !== undefined
+                  ? config.sidebar.background
+                  : state.uiConfig.sidebar.background,
+                rounded: config.sidebar.rounded !== undefined
+                  ? config.sidebar.rounded
+                  : state.uiConfig.sidebar.rounded
               }
               : state.uiConfig.sidebar,
             grid: config.grid

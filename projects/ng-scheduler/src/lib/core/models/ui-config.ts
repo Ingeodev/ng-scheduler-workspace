@@ -124,6 +124,18 @@ export interface SidebarUIConfig {
    * Resource list item configuration
    */
   resourceItems: ResourceItemConfig;
+
+  /**
+   * Background color for sidebar container
+   * @default '#ffffff' or 'var(--bg-color)'
+   */
+  background?: string;
+
+  /**
+   * Border radius for sidebar container
+   * @default 'none'
+   */
+  rounded?: BorderRadius;
 }
 
 // =============================================================================

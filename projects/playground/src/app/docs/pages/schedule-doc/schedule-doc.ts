@@ -96,9 +96,10 @@ export class ScheduleDocComponent {
   };
 
   sidebarUIConfig: Partial<SidebarUIConfig> = {
+    rounded: 'sm',
     resourceItems: {
-      rounded: 'none',
-      density: 'comfortable'
+      rounded: 'full',
+      density: 'compact'
     }
   };
 
