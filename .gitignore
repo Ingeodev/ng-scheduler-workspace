@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#Planification and ia
+/.plan
+/.agent
+
+

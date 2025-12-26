@@ -7,5 +7,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.scss'
 })
 export class App {
-  title = 'playground';
+  title = 'mglon-schedule';
 }
