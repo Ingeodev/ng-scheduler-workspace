@@ -1,7 +1,11 @@
 @if (src() && !imageError) {
-<img [src]="src()" [alt]="alt()" [ngStyle]="borderStyle()" (error)="onImageError()" class="avatar-image" />
+<img [src]="src()" [alt]="alt()" [ngStyle]="innerStyle()" (error)="onImageError()" class="avatar-image" />
+} @else if (initials()) {
+<div class="avatar-initials" [ngStyle]="innerStyle()">
+  {{ initials() }}
+</div>
 } @else {
-<div class="avatar-placeholder" [ngStyle]="borderStyle()">
+<div class="avatar-placeholder" [ngStyle]="innerStyle()">
   <span class="avatar-icon">👤</span>
 </div>
 }

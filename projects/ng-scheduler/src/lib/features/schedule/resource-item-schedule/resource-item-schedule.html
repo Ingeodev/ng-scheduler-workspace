@@ -1,5 +1,6 @@
 <div class="resource-item" (click)="onToggle()">
-  <mglon-avatar [src]="resource().avatar || ''" [alt]="resource().name" size="xs" [showBorder]="true"
-    [borderColor]="resource().color || 'var(--ngx-cal-primary)'" [inactive]="resource().isActive === false" />
+  <mglon-avatar [src]="resource().avatar || ''" [name]="resource().name" [color]="resource().color || ''"
+    [alt]="resource().name" size="xs" [showBorder]="true" [borderColor]="resource().color || 'var(--ngx-cal-primary)'"
+    [inactive]="resource().isActive === false" />
   <span class="resource-name" [class.inactive]="resource().isActive === false">{{ resource().name }}</span>
 </div>
