@@ -1,4 +1,5 @@
 @use '../../../styles/zigzag' as *;
+@use '../../../styles/resizable' as *;
 
 // Slot horizontal gap (applied via calc on width)
 $slot-gap: 4px;
@@ -87,4 +88,9 @@ $slot-gap: 4px;
   transform: scale(1.02);
   z-index: 100 !important;
   pointer-events: none;
+}
+
+// Global hover state (all slots of the same event)
+:host(.mglon-month-slot--hovered) {
+  background-color: var(--slot-hover);
 }

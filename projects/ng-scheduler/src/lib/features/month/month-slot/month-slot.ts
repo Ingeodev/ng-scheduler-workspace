@@ -3,6 +3,8 @@ import { SlotModel } from '../../../core/models/slot.model'
 import { CalendarStore } from '../../../core/store/calendar.store'
 import { getHoverColor, getTextColor } from '../../../shared/helpers'
 import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
+import { ResizableDirective, ResizeEvent, ResizeSide } from '../../../shared/directives/resizable.directive'
+import { DragInteractionData, ResizeInteractionData } from '../../../core/models/interaction.model'
 import { EventSlotRadius } from '../../../core/models/ui-config'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
@@ -15,7 +17,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
 
 @Component({
   selector: 'mglon-month-slot',
-  imports: [ZigzagDirective],
+  imports: [ZigzagDirective, ResizableDirective],
   templateUrl: './month-slot.html',
   styleUrl: './month-slot.scss',
   host: {
@@ -26,7 +28,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
     '[style.--slot-width.%]': 'slot().position.width',
     '[style.height.px]': 'slot().position.height',
     '[style.z-index]': 'slot().zIndex',
-    '[style.--slot-bg]': 'slot().color',
+    '[style.--slot-bg]': 'resolvedColor()',
     '[style.--slot-hover]': 'hoverColor()',
     '[style.--slot-text]': 'textColor()',
     '[style.--slot-radius]': 'slotRadius()',
@@ -37,6 +39,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
     '[class.mglon-month-slot--full]': 'slot().type === "full"',
     '[class.mglon-month-slot--dragging]': 'isDragging()',
     '[class.mglon-month-slot--idle]': '!isDragging()',
+    '[class.mglon-month-slot--hovered]': 'isHovered()',
   }
 })
 export class MonthSlot {
@@ -46,6 +49,9 @@ export class MonthSlot {
 
   /** Whether this specific event is being dragged */
   readonly isDragging = computed(() => this.store.dragState().eventId === this.slot().idEvent)
+
+  /** Whether this event is currently hovered globally */
+  readonly isHovered = computed(() => this.store.hoveredEventId() === this.slot().idEvent)
 
   /**
    * Gets the event data from the store using the slot's event ID.
@@ -62,17 +68,49 @@ export class MonthSlot {
   })
 
   /**
-   * Hover color calculated from the base color.
+   * Resolves the final color for the event slot based on the hierarchy:
+   * 1. Event color (from component/model)
+   * 2. Resource color (if associated)
+   * 3. UI Config color (grid.eventSlots.color)
+   * 4. CSS Variable (--mglon-schedule-primary)
    */
-  readonly hoverColor = computed(() => {
-    return getHoverColor(this.slot().color)
+  readonly resolvedColor = computed(() => {
+    // 1. Event color (passed thru the slot)
+    if (this.slot().color) {
+      return this.slot().color
+    }
+
+    // 2. Resource color (if associated)
+    const event = this.event()
+    if (event?.resourceId) {
+      const resource = this.store.getResource(event.resourceId)
+      if (resource?.color) {
+        return resource.color
+      }
+    }
+
+    // 3. UI Config color (grid.eventSlots.color)
+    const uiColor = this.store.uiConfig().grid.eventSlots.color
+    if (uiColor) {
+      return uiColor
+    }
+
+    // 4. Default hex fallback (matching --mglon-schedule-primary)
+    return '#1a73e8'
   })
 
   /**
-   * Text color with optimal contrast against the background.
+   * Hover color calculated from the resolved color.
+   */
+  readonly hoverColor = computed(() => {
+    return getHoverColor(this.resolvedColor())
+  })
+
+  /**
+   * Text color with optimal contrast against the resolved color.
    */
   readonly textColor = computed(() => {
-    return getTextColor(this.slot().color)
+    return getTextColor(this.resolvedColor())
   })
 
   /**
@@ -104,14 +142,61 @@ export class MonthSlot {
     }
   })
 
+  /**
+   * Determines which sides are resizable.
+   * Only sides without zigzag are resizable, and only if resizableEvents is enabled.
+   */
+  readonly resizableSides = computed<ResizeSide[]>(() => {
+    // Check global config from store
+    if (!this.store.config().resizableEvents) {
+      return []
+    }
+
+    // Check resource-specific config if available
+    const event = this.event()
+    if (event?.resourceId) {
+      const resource = this.store.getResource(event.resourceId)
+      if (resource && resource.resizableEvents === false) {
+        return []
+      }
+    }
+
+    const type = this.slot().type
+    switch (type) {
+      case 'first':
+        return ['left']
+      case 'last':
+        return ['right']
+      case 'middle':
+        return []
+      case 'full':
+        return ['left', 'right']
+      default:
+        return []
+    }
+  })
+
   private dragDelayTimer?: any;
-  private startPointerPos = { x: 0, y: 0 };
   private readonly DRAG_DELAY = 150; // ms
   private readonly DRAG_THRESHOLD = 5; // px
+  private startPointerPos = { x: 0, y: 0 };
+
+  private clickTimer?: any;
+  private ignoreNextClick = false;
 
   onPointerDown(event: PointerEvent) {
     // Only handle primary button and if no other interaction is active
     if (event.button !== 0 || this.store.interactionMode() !== 'none') return;
+
+    // Check if we clicked a resize handle
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const sides = this.resizableSides();
+    const handleSize = 6; // Matching ResizableDirective default
+
+    if (sides.includes('left') && x <= handleSize) return;
+    if (sides.includes('right') && x >= rect.width - handleSize) return;
 
     // Stop propagation immediately to prevent background selection from seeing this event
     event.stopPropagation();
@@ -156,6 +241,16 @@ export class MonthSlot {
 
     this.store.setDragStart(this.slot().idEvent, grabDate);
     this.store.setInteractionMode('dragging');
+
+    // Dispatch dragStart interaction
+    this.store.dispatchInteraction('dragStart', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      data: {
+        grabDate,
+        hoverDate: null
+      } as DragInteractionData
+    });
   }
 
   private onGlobalMove(event: PointerEvent) {
@@ -179,6 +274,8 @@ export class MonthSlot {
     this.cancelDragDelay();
     if (this.store.dragState().eventId) {
       this.onPointerUp(event);
+      // Occlude the next click event that follows pointerup
+      this.ignoreNextClick = true;
     } else {
       // It was just a click or a cancelled drag, release mutex
       this.store.setInteractionMode('none');
@@ -203,14 +300,174 @@ export class MonthSlot {
       const timestamp = cell.getAttribute('data-mglon-date');
       if (timestamp) {
         const hoverDate = new Date(parseInt(timestamp, 10));
-        this.store.setDragHover(hoverDate);
-        this.store.updateDraggedEventPosition();
+        this.store.setDragHover(hoverDate)
+        this.store.updateDraggedEventPosition()
+
+        // Dispatch drag interaction event
+        this.store.dispatchInteraction('drag', this.slot().idEvent, {
+          event: this.event()!,
+          slotId: this.slot().id,
+          data: {
+            grabDate: this.store.dragState().grabDate!,
+            hoverDate: hoverDate
+          } as DragInteractionData
+        })
       }
     }
   }
 
   private onPointerUp(event: PointerEvent) {
+    // Dispatch dragEnd interaction before clearing state
+    const dragState = this.store.dragState();
+    this.store.dispatchInteraction('dragEnd', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      data: {
+        grabDate: dragState.grabDate!,
+        hoverDate: dragState.hoverDate
+      } as DragInteractionData
+    });
+
     this.store.setInteractionMode('none');
     this.store.clearDragState();
+  }
+
+  onResizeStart(event: ResizeEvent) {
+    this.store.setResizeStart(this.slot().idEvent, event.side);
+
+    // Dispatch resizeStart interaction
+    this.store.dispatchInteraction('resizeStart', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      data: {
+        side: event.side,
+        date: this.slot().start // Basic reference date for start
+      } as ResizeInteractionData
+    });
+
+    // Bind movement and release for real-time resize feedback
+    // Similar to drag-and-drop, we use global listeners
+    const onMove = (e: PointerEvent) => this.onGlobalResizeMove(e);
+    const onUp = () => {
+      // Occlude the next click event
+      this.ignoreNextClick = true;
+
+      // Dispatch resizeEnd interaction before clearing state
+      const resizeState = this.store.resizeState();
+      this.store.dispatchInteraction('resizeEnd', this.slot().idEvent, {
+        event: this.event()!,
+        slotId: this.slot().id,
+        data: {
+          side: resizeState.side!,
+          date: resizeState.hoverDate || (resizeState.side === 'left' ? this.slot().start : this.slot().end)
+        } as ResizeInteractionData
+      });
+
+      this.store.clearResizeState();
+      this.store.setInteractionMode('none');
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  }
+
+  private onGlobalResizeMove(event: PointerEvent) {
+    if (this.store.interactionMode() !== 'resizing') return;
+
+    // Detect which cell we are over using coordinates
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    const cell = element?.closest('.mglon-month-cell') as HTMLElement | null;
+
+    if (cell) {
+      const timestamp = cell.getAttribute('data-mglon-date');
+      if (timestamp) {
+        const hoverDate = new Date(parseInt(timestamp, 10));
+        this.store.setResizeHover(hoverDate)
+        this.store.updateResizedEvent()
+
+        // Dispatch resize interaction event
+        this.store.dispatchInteraction('resize', this.slot().idEvent, {
+          event: this.event()!,
+          slotId: this.slot().id,
+          data: {
+            side: this.store.resizeState().side!,
+            date: hoverDate
+          } as ResizeInteractionData
+        })
+      }
+    }
+  }
+
+  onMouseEnter() {
+    if (this.store.interactionMode() !== 'none') return;
+    this.store.setHoveredEvent(this.slot().idEvent);
+    this.store.dispatchInteraction('mouseenter', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id
+    });
+  }
+
+  onMouseLeave() {
+    if (this.store.interactionMode() !== 'none') return;
+    this.store.setHoveredEvent(null);
+    this.store.dispatchInteraction('mouseleave', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id
+    });
+  }
+
+  onClick(event: MouseEvent) {
+    event.stopPropagation();
+
+    // Prevent click if we just finished a drag or resize
+    if (this.ignoreNextClick) {
+      this.ignoreNextClick = false;
+      return;
+    }
+
+    // Double click detection: if another click arrives within 250ms, cancel this one
+    if (this.clickTimer) {
+      clearTimeout(this.clickTimer);
+      this.clickTimer = undefined;
+      return;
+    }
+
+    this.clickTimer = setTimeout(() => {
+      this.clickTimer = undefined;
+      this.store.dispatchInteraction('click', this.slot().idEvent, {
+        event: this.event()!,
+        slotId: this.slot().id,
+        originalEvent: event
+      });
+    }, 250);
+  }
+
+  onDblClick(event: MouseEvent) {
+    event.stopPropagation();
+
+    if (this.clickTimer) {
+      clearTimeout(this.clickTimer);
+      this.clickTimer = undefined;
+    }
+
+    this.store.dispatchInteraction('dblclick', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      originalEvent: event
+    });
+  }
+
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.store.dispatchInteraction('contextmenu', this.slot().idEvent, {
+      event: this.event()!,
+      slotId: this.slot().id,
+      originalEvent: event
+    });
   }
 }

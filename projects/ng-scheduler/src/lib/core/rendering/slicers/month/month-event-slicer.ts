@@ -7,7 +7,6 @@ import { getEventDateRange } from './event-date-range'
 import { determineSlotType } from './slot-type'
 import { calculateHorizontalPosition, findAvailableRow, PlacedEventRange } from './slot-positioning'
 
-const DEFAULT_EVENT_COLOR = '#4285f4'
 
 /**
  * Slices a collection of events into visual slots for a specific week.
@@ -72,7 +71,7 @@ export function sliceEventsByWeek(
       },
       zIndex: rowIndex + 1,
       type,
-      color: event.color ?? DEFAULT_EVENT_COLOR,
+      color: event.color ?? '',
       draggable: isEditable,
       resizable: isEditable
     })

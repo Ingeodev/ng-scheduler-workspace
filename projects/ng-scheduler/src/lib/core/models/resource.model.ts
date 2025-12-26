@@ -12,5 +12,6 @@ export interface ResourceModel {
   isActive?: boolean,   // Si true, el recurso está activo y visible. Defecto: true
   isReadOnly?: boolean, // Si true, no se pueden editar sus eventos
   isBlocked?: boolean,  // Si true, no acepta nuevos eventos
+  resizableEvents?: boolean, // Si true, permite redimensionar sus eventos. Defecto: true
   metadata?: any,       // Datos flexibles del usuario
 }

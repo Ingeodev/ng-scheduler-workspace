@@ -5,7 +5,9 @@ import {
   endOfWeek,
   eachDayOfInterval,
   isSameMonth,
-  areIntervalsOverlapping
+  areIntervalsOverlapping,
+  startOfDay,
+  endOfDay
 } from 'date-fns';
 import { ViewMode } from '../../core/models/config-schedule';
 import { AnyEvent, isAllDayEvent, isEvent, isRecurrentEvent } from '../../core/models/event.model';
@@ -208,23 +210,14 @@ export function getViewRange(date: Date, viewMode: ViewMode): DateRange {
  */
 export function isEventInRange(event: AnyEvent, range: DateRange): boolean {
   if (isEvent(event) || isRecurrentEvent(event)) {
-    return areIntervalsOverlapping(
-      { start: event.start, end: event.end },
-      { start: range.start, end: range.end }
-    );
+    return event.start <= range.end && event.end >= range.start;
   }
 
   if (isAllDayEvent(event)) {
-    const eventStart = new Date(event.date);
-    eventStart.setHours(0, 0, 0, 0);
+    const eventStart = startOfDay(event.date);
+    const eventEnd = event.endDate ? endOfDay(event.endDate) : endOfDay(event.date);
 
-    const eventEnd = event.endDate ? new Date(event.endDate) : new Date(event.date);
-    eventEnd.setHours(23, 59, 59, 999);
-
-    return areIntervalsOverlapping(
-      { start: eventStart, end: eventEnd },
-      { start: range.start, end: range.end }
-    );
+    return eventStart <= range.end && eventEnd >= range.start;
   }
 
   return false;

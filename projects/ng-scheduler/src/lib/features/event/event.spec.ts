@@ -2,24 +2,31 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Event } from './event';
 import { CalendarStore } from '../../core/store/calendar.store';
 import { RESOURCE_ID_TOKEN } from '../resource-events/resource-events';
-import { signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { InteractionEvent, InteractionType } from '../../core/models/interaction.model';
 
 describe('Event Component', () => {
   let component: Event;
   let fixture: ComponentFixture<Event>;
   let mockStore: any;
+  let interaction$: Subject<InteractionEvent>;
 
-  const eventData = {
+  const eventData: any = {
     id: 'event-1',
     title: 'Test Event',
     startDate: new Date('2025-12-24T10:00:00'),
-    endDate: new Date('2025-12-24T11:00:00')
+    endDate: new Date('2025-12-24T11:00:00'),
+    start: new Date('2025-12-24T10:00:00'),
+    end: new Date('2025-12-24T11:00:00'),
+    type: 'event'
   };
 
   beforeEach(async () => {
+    interaction$ = new Subject<InteractionEvent>();
     mockStore = {
       registerEvent: jest.fn(),
-      unregisterEvent: jest.fn()
+      unregisterEvent: jest.fn(),
+      getInteractions: jest.fn().mockReturnValue(interaction$.asObservable())
     };
 
     await TestBed.configureTestingModule({
@@ -63,5 +70,45 @@ describe('Event Component', () => {
     expect(mockStore.registerEvent).toHaveBeenCalledWith(expect.objectContaining({
       resourceId: 'explicit-resource-id'
     }));
+  });
+
+  describe('Interaction Outputs', () => {
+    const interactionTypes: { type: InteractionType; output: string }[] = [
+      { type: 'click', output: 'eventClick' },
+      { type: 'dblclick', output: 'eventDblClick' },
+      { type: 'contextmenu', output: 'eventContextMenu' },
+      { type: 'mouseenter', output: 'eventMouseEnter' },
+      { type: 'mouseleave', output: 'eventMouseLeave' },
+      { type: 'resizeStart', output: 'eventResizeStart' },
+      { type: 'resize', output: 'eventResize' },
+      { type: 'resizeEnd', output: 'eventResizeEnd' },
+      { type: 'dragStart', output: 'eventDragStart' },
+      { type: 'drag', output: 'eventDrag' },
+      { type: 'dragEnd', output: 'eventDragEnd' },
+    ];
+
+    interactionTypes.forEach(({ type, output }) => {
+      it(`should emit ${output} when store dispatches ${type}`, (done) => {
+        const payload: any = { event: eventData, slotId: 'slot-1' };
+        const outputEmitter = component[output as keyof Event] as any;
+
+        outputEmitter.subscribe((emitted: any) => {
+          expect(emitted).toEqual(payload);
+          done();
+        });
+
+        interaction$.next({ type, eventId: eventData.id, payload });
+      });
+    });
+
+    it('should NOT emit if interaction eventId does not match component id', () => {
+      const spy = jest.spyOn(component.eventClick, 'emit');
+      interaction$.next({
+        type: 'click',
+        eventId: 'other-id',
+        payload: { event: eventData, slotId: 'slot-1' } as any
+      });
+      expect(spy).not.toHaveBeenCalled();
+    });
   });
 });

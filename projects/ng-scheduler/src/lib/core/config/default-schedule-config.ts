@@ -28,6 +28,7 @@ export const DEFAULT_CONFIG: SchedulerConfig = {
   backgroundSelection: true,
   showNowIndicator: true,
   editable: true,
+  resizableEvents: true,
   showSidebar: true
 }
 
@@ -36,6 +37,7 @@ export const DEFAULT_RESOURCE_INPUTS = {
   isReadOnly: false,
   isBlocked: false,
   isActive: true,
+  resizableEvents: true
 };
 
 export const DEFAULT_EVENT_INPUTS = {

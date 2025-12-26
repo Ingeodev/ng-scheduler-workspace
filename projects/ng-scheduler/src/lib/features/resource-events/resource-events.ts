@@ -68,6 +68,9 @@ export class ResourceEvents implements AfterContentInit {
   /** Flexible user-defined data */
   readonly metadata = input<any>();
 
+  /** If true, allows resizing events for this resource. Default: true */
+  readonly resizableEvents = input<boolean>(DEFAULT_RESOURCE_INPUTS.resizableEvents);
+
   private elRef = inject(ElementRef);
 
   private store = inject(CalendarStore)
@@ -134,6 +137,7 @@ export class ResourceEvents implements AfterContentInit {
       isReadOnly: this.isReadOnly(),
       isBlocked: this.isBlocked(),
       isActive: this.isActive(),
+      resizableEvents: this.resizableEvents(),
       metadata: this.metadata()
     };
 

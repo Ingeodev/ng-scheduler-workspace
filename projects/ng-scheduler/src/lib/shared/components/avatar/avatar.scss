@@ -2,14 +2,17 @@
 
 :host {
   display: inline-block;
+  border-radius: 50%;
+  box-sizing: border-box;
 
   // Size variants
   &[data-size="xs"] {
     width: 24px;
     height: 24px;
 
-    .avatar-icon {
-      font-size: 12px;
+    .avatar-icon,
+    .avatar-initials {
+      font-size: 10px;
     }
   }
 
@@ -17,8 +20,9 @@
     width: 32px;
     height: 32px;
 
-    .avatar-icon {
-      font-size: 16px;
+    .avatar-icon,
+    .avatar-initials {
+      font-size: 12px;
     }
   }
 
@@ -26,8 +30,9 @@
     width: 40px;
     height: 40px;
 
-    .avatar-icon {
-      font-size: 20px;
+    .avatar-icon,
+    .avatar-initials {
+      font-size: 14px;
     }
   }
 
@@ -35,8 +40,9 @@
     width: 48px;
     height: 48px;
 
-    .avatar-icon {
-      font-size: 24px;
+    .avatar-icon,
+    .avatar-initials {
+      font-size: 16px;
     }
   }
 
@@ -44,8 +50,9 @@
     width: 64px;
     height: 64px;
 
-    .avatar-icon {
-      font-size: 32px;
+    .avatar-icon,
+    .avatar-initials {
+      font-size: 20px;
     }
   }
 
@@ -53,7 +60,8 @@
   &[data-inactive="true"] {
 
     .avatar-image,
-    .avatar-placeholder {
+    .avatar-placeholder,
+    .avatar-initials {
       filter: grayscale(100%);
       opacity: 0.6;
     }
@@ -61,7 +69,8 @@
 }
 
 .avatar-image,
-.avatar-placeholder {
+.avatar-placeholder,
+.avatar-initials {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -69,13 +78,16 @@
   display: block;
 }
 
-.avatar-placeholder {
-  background-color: var(--ngx-cal-surface);
+.avatar-placeholder,
+.avatar-initials {
+  background-color: var(--mglon-schedule-surface, #f0f0f0);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ngx-cal-text-secondary);
+  color: var(--mglon-schedule-text-secondary, #666);
   user-select: none;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .avatar-icon {

@@ -124,6 +124,18 @@ export interface SidebarUIConfig {
    * Resource list item configuration
    */
   resourceItems: ResourceItemConfig;
+
+  /**
+   * Background color for sidebar container
+   * @default '#ffffff' or 'var(--bg-color)'
+   */
+  background?: string;
+
+  /**
+   * Border radius for sidebar container
+   * @default 'none'
+   */
+  rounded?: BorderRadius;
 }
 
 // =============================================================================
@@ -147,7 +159,13 @@ export interface EventSlotConfig {
    * Border radius for event slots
    * @default 'sm'
    */
-  rounded: EventSlotRadius
+  rounded: EventSlotRadius;
+
+  /**
+   * Default color for event slots if not specified by event or resource
+   * @default undefined (falls back to primary style)
+   */
+  color?: string;
 }
 
 /**
