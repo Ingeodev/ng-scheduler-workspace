@@ -1,6 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { getTextColor } from '../../helpers/color.helpers';
+import { getTextColor, getHoverColor } from '../../helpers/color.helpers';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -78,8 +78,10 @@ export class Avatar {
     // Background color logic
     const bgColor = this.color();
     if (bgColor) {
-      styles.backgroundColor = bgColor;
-      styles.color = getTextColor(bgColor);
+      // Use slightly darker variant for background as requested
+      const darkBg = getHoverColor(bgColor);
+      styles.backgroundColor = darkBg;
+      styles.color = getTextColor(darkBg);
     }
 
     return styles;
