@@ -41,6 +41,7 @@ import { generateAdaptiveColorScheme, getEventColor } from '../../../shared/help
     '[class.mglon-month-slot--last]': 'slot().type === "last"',
     '[class.mglon-month-slot--middle]': 'slot().type === "middle"',
     '[class.mglon-month-slot--full]': 'slot().type === "full"',
+    '[class.mglon-event--all-day]': 'isAllDay()',
     '[class.mglon-month-slot--dragging]': 'isDragging()',
     '[class.mglon-month-slot--idle]': '!isDragging()',
     '[class.mglon-month-slot--hovered]': 'isHovered()',

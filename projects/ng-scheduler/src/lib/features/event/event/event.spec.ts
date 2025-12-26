@@ -72,6 +72,14 @@ describe('Event Component', () => {
     }));
   });
 
+  it('should register event with isAllDay property if allDay input is set', () => {
+    fixture.componentRef.setInput('allDay', true);
+    component.ngOnInit();
+    expect(mockStore.registerEvent).toHaveBeenCalledWith(expect.objectContaining({
+      isAllDay: true
+    }));
+  });
+
   describe('Interaction Outputs', () => {
     const interactionTypes: { type: InteractionType; output: string }[] = [
       { type: 'click', output: 'eventClick' },
