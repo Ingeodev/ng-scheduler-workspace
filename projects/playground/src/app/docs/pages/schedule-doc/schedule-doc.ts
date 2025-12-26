@@ -54,6 +54,10 @@ export class ScheduleDocComponent {
   event4Start = new Date(2025, 11, 27, 9, 0)
   event4End = new Date(2025, 11, 29, 17, 0)
 
+  // All day event test (Christmas Eve)
+  allDayStart = new Date(2025, 11, 24);
+  allDayEnd = new Date(2025, 11, 24);
+
   // ============================================
   // Additional events for overflow testing
   // Multiple events on Dec 25 (Christmas Day)

@@ -7,6 +7,7 @@ import { DragInteractionData, ResizeInteractionData } from '../../../core/models
 import { EventSlotRadius } from '../../../core/models/ui-config'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 import { MonthRecurrenceDirective } from '../directives/month-recurrence.directive'
+import { AllDayDirective } from '../directives/all-day.directive'
 
 /** Maps EventSlotRadius to CSS variable names */
 const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
@@ -19,7 +20,7 @@ import { generateAdaptiveColorScheme, getEventColor } from '../../../shared/help
 
 @Component({
   selector: 'mglon-month-slot',
-  imports: [ZigzagDirective, ResizableDirective, MonthRecurrenceDirective],
+  imports: [ZigzagDirective, ResizableDirective, MonthRecurrenceDirective, AllDayDirective],
   templateUrl: './month-slot.html',
   styleUrl: './month-slot.scss',
   host: {
@@ -30,10 +31,10 @@ import { generateAdaptiveColorScheme, getEventColor } from '../../../shared/help
     '[style.--slot-width.%]': 'slot().position.width',
     '[style.height.px]': 'slot().position.height',
     '[style.z-index]': 'slot().zIndex',
-    '[style.--slot-bg]': 'colorScheme().base',
-    '[style.--slot-hover]': 'colorScheme().hover',
-    '[style.--slot-text]': 'colorScheme().text',
-    '[style.--slot-text-hover]': 'colorScheme().textHover',
+    '[style.--slot-bg]': 'isAllDay() ? "var(--mglon-all-day-bg, var(--mglon-schedule-neutral-200))" : colorScheme().base',
+    '[style.--slot-hover]': 'isAllDay() ? "var(--mglon-all-day-hover, var(--mglon-schedule-neutral-300))" : colorScheme().hover',
+    '[style.--slot-text]': 'isAllDay() ? "var(--mglon-all-day-text, var(--mglon-schedule-on-surface))" : colorScheme().text',
+    '[style.--slot-text-hover]': 'isAllDay() ? "var(--mglon-all-day-text-hover, var(--mglon-schedule-on-surface))" : colorScheme().textHover',
     '[style.--slot-radius]': 'slotRadius()',
     '[attr.data-slot-type]': 'slot().type',
     '[class.mglon-month-slot--first]': 'slot().type === "first"',
@@ -69,6 +70,11 @@ export class MonthSlot {
     return e?.type === 'event' && e.isRecurrenceInstance === true
   })
 
+  /** Whether the event is all-day */
+  readonly isAllDay = computed(() => {
+    return this.event()?.isAllDay === true
+  })
+
   /**
    * Display title for the slot.
    */
@@ -81,11 +87,7 @@ export class MonthSlot {
    */
   readonly colorScheme = computed(() => {
     // 1. Resolve base raw color
-    const rawColor = getEventColor(
-      { color: this.slot().color, resourceId: this.event()?.resourceId },
-      (id) => this.store.getResource(id),
-      this.store.uiConfig().grid.eventSlots.color || '#1a73e8'
-    );
+    const rawColor = this.rawColor();
 
     // 2. Generate all adaptive variants
     const scheme = generateAdaptiveColorScheme(rawColor);
@@ -98,6 +100,17 @@ export class MonthSlot {
     }
 
     return this.isRecurrent() ? scheme.pastel : scheme.vivid;
+  })
+
+  /**
+   * Raw color resolved for the event (before adaptive variants)
+   */
+  readonly rawColor = computed(() => {
+    return getEventColor(
+      { color: this.slot().color, resourceId: this.event()?.resourceId },
+      (id) => this.store.getResource(id),
+      this.store.uiConfig().grid.eventSlots.color || '#1a73e8'
+    )
   })
 
   /**

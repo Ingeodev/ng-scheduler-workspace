@@ -27,6 +27,9 @@ export interface EventBase {
   /** If true, the event is visually blocked (e.g., maintenance) */
   isBlocked?: boolean;
 
+  /** If true, the event lasts the whole day or multiple days (minimalist design) */
+  isAllDay?: boolean;
+
   /** Flexible user-defined data */
   metadata?: any;
 }

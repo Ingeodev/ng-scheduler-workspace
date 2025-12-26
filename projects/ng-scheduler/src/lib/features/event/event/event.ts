@@ -115,6 +115,7 @@ export class Event {
       color: this.color(),
       isReadOnly: this.isReadOnly(),
       isBlocked: this.isBlocked(),
+      isAllDay: this.allDay(),
       metadata: this.metadata(),
       type: 'event'
     };
