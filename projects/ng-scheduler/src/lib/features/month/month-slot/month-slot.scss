@@ -25,6 +25,7 @@ $slot-gap: 4px;
 
   &:hover {
     background-color: var(--slot-hover);
+    color: var(--slot-text-hover, var(--slot-text));
   }
 
   box-shadow: var(--mglon-schedule-shadow-sm);
@@ -102,4 +103,5 @@ $slot-gap: 4px;
 // Global hover state (all slots of the same event)
 :host(.mglon-month-slot--hovered) {
   background-color: var(--slot-hover);
+  color: var(--slot-text-hover, var(--slot-text));
 }

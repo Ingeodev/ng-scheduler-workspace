@@ -1,12 +1,12 @@
-import { Component, computed, inject, input, signal } from '@angular/core'
+import { Component, computed, inject, input } from '@angular/core'
 import { SlotModel } from '../../../core/models/slot.model'
 import { CalendarStore } from '../../../core/store/calendar.store'
-import { getHoverColor, getTextColor } from '../../../shared/helpers'
 import { ZigzagDirective, ZigzagSide } from '../../../shared/directives/zigzag.directive'
 import { ResizableDirective, ResizeEvent, ResizeSide } from '../../../shared/directives/resizable.directive'
 import { DragInteractionData, ResizeInteractionData } from '../../../core/models/interaction.model'
 import { EventSlotRadius } from '../../../core/models/ui-config'
 import { addDays, differenceInCalendarDays } from 'date-fns'
+import { MonthRecurrenceDirective } from '../directives/month-recurrence.directive'
 
 /** Maps EventSlotRadius to CSS variable names */
 const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
@@ -15,7 +15,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
   'full': 'var(--mglon-schedule-radius-full)'
 }
 
-import { MonthRecurrenceDirective } from '../directives/month-recurrence.directive'
+import { generateAdaptiveColorScheme, getEventColor } from '../../../shared/helpers/color.helpers'
 
 @Component({
   selector: 'mglon-month-slot',
@@ -30,9 +30,10 @@ import { MonthRecurrenceDirective } from '../directives/month-recurrence.directi
     '[style.--slot-width.%]': 'slot().position.width',
     '[style.height.px]': 'slot().position.height',
     '[style.z-index]': 'slot().zIndex',
-    '[style.--slot-bg]': 'resolvedColor()',
-    '[style.--slot-hover]': 'hoverColor()',
-    '[style.--slot-text]': 'textColor()',
+    '[style.--slot-bg]': 'colorScheme().base',
+    '[style.--slot-hover]': 'colorScheme().hover',
+    '[style.--slot-text]': 'colorScheme().text',
+    '[style.--slot-text-hover]': 'colorScheme().textHover',
     '[style.--slot-radius]': 'slotRadius()',
     '[attr.data-slot-type]': 'slot().type',
     '[class.mglon-month-slot--first]': 'slot().type === "first"',
@@ -76,49 +77,21 @@ export class MonthSlot {
   })
 
   /**
-   * Resolves the final color for the event slot based on the hierarchy:
-   * 1. Event color (from component/model)
-   * 2. Resource color (if associated)
-   * 3. UI Config color (grid.eventSlots.color)
-   * 4. CSS Variable (--mglon-schedule-primary)
+   * Complete color scheme calculation based on event type
    */
-  readonly resolvedColor = computed(() => {
-    // 1. Event color (passed thru the slot)
-    if (this.slot().color) {
-      return this.slot().color
-    }
+  readonly colorScheme = computed(() => {
+    // 1. Resolve base raw color
+    const rawColor = getEventColor(
+      { color: this.slot().color, resourceId: this.event()?.resourceId },
+      (id) => this.store.getResource(id),
+      this.store.uiConfig().grid.eventSlots.color || '#1a73e8'
+    );
 
-    // 2. Resource color (if associated)
-    const event = this.event()
-    if (event?.resourceId) {
-      const resource = this.store.getResource(event.resourceId)
-      if (resource?.color) {
-        return resource.color
-      }
-    }
+    // 2. Generate all adaptive variants
+    const scheme = generateAdaptiveColorScheme(rawColor);
 
-    // 3. UI Config color (grid.eventSlots.color)
-    const uiColor = this.store.uiConfig().grid.eventSlots.color
-    if (uiColor) {
-      return uiColor
-    }
-
-    // 4. Default hex fallback (matching --mglon-schedule-primary)
-    return '#1a73e8'
-  })
-
-  /**
-   * Hover color calculated from the resolved color.
-   */
-  readonly hoverColor = computed(() => {
-    return getHoverColor(this.resolvedColor())
-  })
-
-  /**
-   * Text color with optimal contrast against the resolved color.
-   */
-  readonly textColor = computed(() => {
-    return getTextColor(this.resolvedColor())
+    // 3. Select variant based on event type
+    return this.isRecurrent() ? scheme.pastel : scheme.vivid;
   })
 
   /**

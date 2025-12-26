@@ -8,7 +8,7 @@ import {
   getHoverColor,
   getLightBackgroundColor,
   getTextColor,
-  generateEventColorScheme,
+  generateAdaptiveColorScheme,
   getEventColor
 } from './color.helpers';
 
@@ -140,32 +140,46 @@ describe('Color Helpers', () => {
     });
   });
 
-  describe('generateEventColorScheme', () => {
-    it('should generate complete color scheme', () => {
-      const baseColor = '#3498db';
-      const scheme = generateEventColorScheme(baseColor);
+  describe('generateAdaptiveColorScheme', () => {
+    it('should generate complete adaptive scheme', () => {
+      const baseColor = '#1a73e8'; // Vivid blue
+      const scheme = generateAdaptiveColorScheme(baseColor);
 
-      expect(scheme.base).toBe(baseColor);
-      expect(scheme.hover).toBeDefined();
-      expect(scheme.background).toBeDefined();
-      expect(scheme.text).toBeDefined();
+      expect(scheme.vivid.base).toBeDefined();
+      expect(scheme.pastel.base).toBeDefined();
+      expect(scheme.dark.base).toBeDefined();
 
-      // All should be valid hex colors
-      expect(hexToRgb(scheme.hover)).not.toBeNull();
-      expect(hexToRgb(scheme.background)).not.toBeNull();
-      expect(hexToRgb(scheme.text)).not.toBeNull();
+      expect(scheme.vivid.hover).toBeDefined();
+      expect(scheme.vivid.text).toBeDefined();
+      expect(scheme.vivid.textHover).toBeDefined();
     });
 
-    it('should generate accessible text color', () => {
-      const baseColor = '#e91e63'; // pink
-      const scheme = generateEventColorScheme(baseColor);
+    it('should preserve vivid input as vivid', () => {
+      const vividGreen = '#228c72';
+      const scheme = generateAdaptiveColorScheme(vividGreen);
 
-      // Text should have good contrast
-      const baseRgb = hexToRgb(baseColor)!;
-      const textRgb = hexToRgb(scheme.text)!;
-      const contrast = getContrastRatio(baseRgb, textRgb);
+      expect(scheme.vivid.base).toBe(vividGreen);
+      // Pastel should be different (lighter)
+      expect(scheme.pastel.base).not.toBe(vividGreen);
+    });
 
-      expect(contrast).toBeGreaterThan(2); // Minimum acceptable contrast
+    it('should preserve pastel input as pastel', () => {
+      const pastelPink = '#fce4ec'; // Very light pink
+      const scheme = generateAdaptiveColorScheme(pastelPink);
+
+      expect(scheme.pastel.base).toBe(pastelPink);
+      // Vivid should be different (stronger)
+      expect(scheme.vivid.base).not.toBe(pastelPink);
+    });
+
+    it('should generate accessible text for pastel variant', () => {
+      const scheme = generateAdaptiveColorScheme('#7d016f'); // Dark purple
+      // Pastel variant of purple should have dark text
+      const pastelRgb = hexToRgb(scheme.pastel.base)!;
+      const textRgb = hexToRgb(scheme.pastel.text)!;
+      const contrast = getContrastRatio(pastelRgb, textRgb);
+
+      expect(contrast).toBeGreaterThan(4.5); // WCAG AA for normal text
     });
   });
 
