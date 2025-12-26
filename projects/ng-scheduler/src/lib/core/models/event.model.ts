@@ -76,32 +76,92 @@ export type RecurrenceType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 export type DayOfWeek = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
 
 /**
- * Recurrence rule configuration
+ * Recurrence rule configuration compatible with RFC 5545 (iCalendar)
+ * 
+ * @example
+ * // Every Monday for 10 weeks
+ * { type: 'weekly', interval: 1, byDay: ['Mon'], count: 10 }
+ * 
+ * // Last Friday of each month until end of year
+ * { type: 'monthly', interval: 1, byDay: ['Fri'], bySetPos: [-1], until: new Date('2025-12-31') }
+ * 
+ * @important At least one of `count` or `until` must be defined to prevent infinite recurrences
+ * @important `count` and `until` are mutually exclusive - only one should be set
  */
 export interface RecurrenceRule {
   /** Type of recurrence pattern */
   type: RecurrenceType;
 
-  /** Interval between occurrences (e.g., 2 = every 2 days/weeks) */
+  /** 
+   * Interval between occurrences (e.g., 2 = every 2 days/weeks)
+   * @minimum 1
+   * @default 1
+   */
   interval: number;
 
-  /** Number of occurrences before stopping (mutually exclusive with until) */
+  /** 
+   * Number of occurrences before stopping
+   * Mutually exclusive with `until` - only one should be defined
+   * @minimum 1
+   * @example 10 // Event repeats 10 times
+   */
   count?: number;
 
-  /** End date for the recurrence pattern (mutually exclusive with count) */
+  /** 
+   * End date for the recurrence pattern
+   * Mutually exclusive with `count` - only one should be defined
+   * @example new Date('2025-12-31') // Event repeats until Dec 31, 2025
+   */
   until?: Date;
 
-  /** Days of the week for weekly recurrence (e.g., ['Mon', 'Wed', 'Fri']) */
+  /** 
+   * Days of the week for weekly/monthly recurrence
+   * @example ['Mon', 'Wed', 'Fri'] // Every Monday, Wednesday, and Friday
+   */
   byDay?: DayOfWeek[];
 
-  /** Months for yearly recurrence (e.g., [1, 6] for Jan and Jun) */
+  /** 
+   * Months for yearly recurrence (1-12)
+   * @example [1, 6, 12] // January, June, and December
+   */
   byMonth?: number[];
 
-  /** Days of the month for monthly recurrence (e.g., [1, 15]) */
+  /** 
+   * Days of the month for monthly recurrence (1-31, or negative for end of month)
+   * @example [1, 15] // 1st and 15th of each month
+   * @example [-1] // Last day of the month
+   */
   byMonthDay?: number[];
 
-  /** Position in the set (e.g., [-1] for last occurrence) */
+  /** 
+   * Position in the set (positive or negative)
+   * Used with byDay to specify nth occurrence
+   * @example [-1] // Last occurrence (e.g., last Friday of month)
+   * @example [1, 3] // First and third occurrence
+   */
   bySetPos?: number[];
+
+  /** 
+   * First day of the week for weekly recurrences
+   * Affects calculations when using bySetPos with weekly patterns
+   * @default 'Mon'
+   * @example 'Sun' // Week starts on Sunday
+   */
+  weekStart?: DayOfWeek;
+
+  /** 
+   * Hours of the day for the recurrence (0-23)
+   * Advanced: For events that repeat multiple times per day
+   * @example [9, 14, 18] // 9am, 2pm, and 6pm each day
+   */
+  byHour?: number[];
+
+  /** 
+   * Minutes of the hour for the recurrence (0-59)
+   * Advanced: For precise timing control
+   * @example [0, 30] // On the hour and half-hour
+   */
+  byMinute?: number[];
 }
 
 /**
