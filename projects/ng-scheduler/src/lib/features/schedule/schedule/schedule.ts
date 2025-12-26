@@ -45,6 +45,14 @@ export class Schedule {
   /** Optional default color for all events in the schedule */
   readonly color = input<string>();
 
+  /** 
+   * Whether to automatically generate vivid/pastel variants for events.
+   * If true, regular events use vivid colors and recurrent events use pastel variants.
+   * If false, colors are used exactly as provided.
+   * @default true
+   */
+  readonly useDynamicColors = input<boolean>(true);
+
   readonly add = output<void>();
 
   // ============================================
@@ -94,9 +102,10 @@ export class Schedule {
       const sidebarConfig = this.sidebarUI();
       const gridConfig = this.gridUI();
       const primaryColor = this.color();
+      const useDynamicColors = this.useDynamicColors();
 
       // Only update if at least one config is provided
-      if (headerConfig || sidebarConfig || gridConfig || primaryColor) {
+      if (headerConfig || sidebarConfig || gridConfig || primaryColor || useDynamicColors !== undefined) {
         // Construct a safe partial grid config
         const finalGridConfig: Partial<GridUIConfig> = gridConfig ? { ...gridConfig } : {};
 
@@ -104,7 +113,11 @@ export class Schedule {
           finalGridConfig.eventSlots = {
             ...finalGridConfig.eventSlots,
             color: finalGridConfig.eventSlots?.color || primaryColor
-          } as any; // Cast to any to bypass the mandatory 'rounded' check in this partial context
+          } as any;
+        }
+
+        if (useDynamicColors !== undefined) {
+          finalGridConfig.useDynamicColors = useDynamicColors;
         }
 
         this.store.setUIConfig({

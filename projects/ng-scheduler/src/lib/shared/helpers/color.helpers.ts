@@ -187,11 +187,13 @@ export interface AdaptiveColorScheme {
   vivid: ColorVariant;
   pastel: ColorVariant;
   dark: ColorVariant;
+  raw: ColorVariant; // Exactly the input color, but with derived variants
 }
 
 /**
  * Generates a full adaptive color scheme based on a single input color.
- * It detects the Nature of the input (Vivid, Pastel, Dark) and preserves it.
+ * It detects the Nature of the input (Vivid, Pastel, Dark) and preserves it,
+ * but also provides a "raw" variant using the color exactly as provided.
  */
 export function generateAdaptiveColorScheme(baseColor: string): AdaptiveColorScheme {
   const rgb = hexToRgb(baseColor);
@@ -211,9 +213,12 @@ export function generateAdaptiveColorScheme(baseColor: string): AdaptiveColorSch
   // 2. Generate variants, keeping the input for its detected category
   const variants: AdaptiveColorScheme = {} as any;
 
+  // Raw (Always use original input)
+  variants.raw = generateVariant(h, s, l);
+
   // Vivid
   if (type === 'vivid') {
-    variants.vivid = generateVariant(h, s, l); // Use original
+    variants.vivid = variants.raw;
   } else {
     variants.vivid = generateVariant(h, Math.max(s, 70), 50); // Boost to vivid
   }

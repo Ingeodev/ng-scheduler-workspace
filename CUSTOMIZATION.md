@@ -326,7 +326,8 @@ gridUI: {
   eventSlots: {
     rounded: 'sm',  // 'none' | 'sm' | 'full'
     color: '#1a73e8' // Default event color if not specified
-  }
+  },
+  useDynamicColors: true // If true, generates vivid/pastel palettes automatically
 }
 ```
 

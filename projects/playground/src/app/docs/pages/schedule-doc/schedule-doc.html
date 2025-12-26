@@ -17,7 +17,7 @@
         <div style="width: 100%; height: 600px;">
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
-            (resourceHide)="onResourceHide($event)">
+            (resourceHide)="onResourceHide($event)" [useDynamicColors]="false">
             <mglon-resource id="1" name="Resource example" color="#ABBFFF"
               avatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwr_zZjgvmu4BccwDNIHic8K5dyehw7cSYA&s">
               <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd"

@@ -90,7 +90,13 @@ export class MonthSlot {
     // 2. Generate all adaptive variants
     const scheme = generateAdaptiveColorScheme(rawColor);
 
-    // 3. Select variant based on event type
+    // 3. Select variant based on configuration and event type
+    const useDynamic = this.store.uiConfig().grid.useDynamicColors;
+
+    if (!useDynamic) {
+      return scheme.raw;
+    }
+
     return this.isRecurrent() ? scheme.pastel : scheme.vivid;
   })
 

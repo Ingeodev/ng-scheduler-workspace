@@ -364,7 +364,10 @@ export const CalendarStore = signalStore(
                   : state.uiConfig.grid.eventSlots,
                 overflowIndicator: config.grid.overflowIndicator
                   ? { ...state.uiConfig.grid.overflowIndicator, ...config.grid.overflowIndicator }
-                  : state.uiConfig.grid.overflowIndicator
+                  : state.uiConfig.grid.overflowIndicator,
+                useDynamicColors: config.grid.useDynamicColors !== undefined
+                  ? config.grid.useDynamicColors
+                  : state.uiConfig.grid.useDynamicColors
               }
               : state.uiConfig.grid
           }
