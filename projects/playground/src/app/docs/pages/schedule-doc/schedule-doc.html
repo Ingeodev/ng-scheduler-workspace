@@ -18,7 +18,7 @@
           <mglon-schedule [config]="config" [gridUI]="gridUIConfig" [headerUI]="headerUIConfig"
             [sidebarUI]="sidebarUIConfig" (resourceShow)="onResourceShow($event)"
             (resourceHide)="onResourceHide($event)">
-            <mglon-resource id="1" name="Resource example" color="#0860c4">
+            <mglon-resource id="1" name="Resource example" color="#228c72">
               <mglon-event id="e1" title="Team Meeting" [startDate]="eventStart" [endDate]="eventEnd" color="#f7e5b2"
                 (eventClick)="handleEventInteraction('click', $event)"
                 (eventDblClick)="handleEventInteraction('dblclick', $event)"
@@ -31,14 +31,12 @@
                 (eventResizeStart)="handleEventInteraction('resizeStart', $event)"
                 (eventResize)="handleEventInteraction('resize', $event)"
                 (eventResizeEnd)="handleEventInteraction('resizeEnd', $event)"></mglon-event>
-              <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"
-                color="#10b981"></mglon-event>
-              <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"
-                color="#ef4444"></mglon-event>
-              <mglon-event id="e4" title="Year End Review" [startDate]="event4Start" [endDate]="event4End"
-                color="#8b5cf6"></mglon-event>
+              <mglon-event id="e2" title="Holiday Trip" [startDate]="event2Start" [endDate]="event2End"></mglon-event>
+              <mglon-event id="e3" title="Christmas Eve" [startDate]="event3Start" [endDate]="event3End"></mglon-event>
+              <mglon-event id="e4" title="Year End Review" [startDate]="event4Start"
+                [endDate]="event4End"></mglon-event>
             </mglon-resource>
-            <mglon-resource id="2" name="Resource example 2" color="#f7e5b2">
+            <mglon-resource id="2" name="Resource example 2" color="#7d016f">
               <!-- Overflow test events on Dec 25 -->
               <mglon-event id="e5" title="Morning Standup" [startDate]="event5Start" [endDate]="event5End"
                 color="#f7e5b2"></mglon-event>

@@ -42,6 +42,9 @@ export class Schedule {
   /** Optional UI configuration for grid area (event slots, overflow indicators) */
   readonly gridUI = input<Partial<GridUIConfig>>();
 
+  /** Optional default color for all events in the schedule */
+  readonly color = input<string>();
+
   readonly add = output<void>();
 
   // ============================================
@@ -90,13 +93,24 @@ export class Schedule {
       const headerConfig = this.headerUI();
       const sidebarConfig = this.sidebarUI();
       const gridConfig = this.gridUI();
+      const primaryColor = this.color();
 
       // Only update if at least one config is provided
-      if (headerConfig || sidebarConfig || gridConfig) {
+      if (headerConfig || sidebarConfig || gridConfig || primaryColor) {
+        // Construct a safe partial grid config
+        const finalGridConfig: Partial<GridUIConfig> = gridConfig ? { ...gridConfig } : {};
+
+        if (primaryColor) {
+          finalGridConfig.eventSlots = {
+            ...finalGridConfig.eventSlots,
+            color: finalGridConfig.eventSlots?.color || primaryColor
+          } as any; // Cast to any to bypass the mandatory 'rounded' check in this partial context
+        }
+
         this.store.setUIConfig({
           header: headerConfig,
           sidebar: sidebarConfig,
-          grid: gridConfig
+          grid: finalGridConfig
         });
       }
     });

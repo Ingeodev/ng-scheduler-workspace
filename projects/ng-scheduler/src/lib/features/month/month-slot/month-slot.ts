@@ -28,7 +28,7 @@ const RADIUS_VAR_MAP: Record<EventSlotRadius, string> = {
     '[style.--slot-width.%]': 'slot().position.width',
     '[style.height.px]': 'slot().position.height',
     '[style.z-index]': 'slot().zIndex',
-    '[style.--slot-bg]': 'slot().color',
+    '[style.--slot-bg]': 'resolvedColor()',
     '[style.--slot-hover]': 'hoverColor()',
     '[style.--slot-text]': 'textColor()',
     '[style.--slot-radius]': 'slotRadius()',
@@ -68,17 +68,49 @@ export class MonthSlot {
   })
 
   /**
-   * Hover color calculated from the base color.
+   * Resolves the final color for the event slot based on the hierarchy:
+   * 1. Event color (from component/model)
+   * 2. Resource color (if associated)
+   * 3. UI Config color (grid.eventSlots.color)
+   * 4. CSS Variable (--mglon-schedule-primary)
    */
-  readonly hoverColor = computed(() => {
-    return getHoverColor(this.slot().color)
+  readonly resolvedColor = computed(() => {
+    // 1. Event color (passed thru the slot)
+    if (this.slot().color) {
+      return this.slot().color
+    }
+
+    // 2. Resource color (if associated)
+    const event = this.event()
+    if (event?.resourceId) {
+      const resource = this.store.getResource(event.resourceId)
+      if (resource?.color) {
+        return resource.color
+      }
+    }
+
+    // 3. UI Config color (grid.eventSlots.color)
+    const uiColor = this.store.uiConfig().grid.eventSlots.color
+    if (uiColor) {
+      return uiColor
+    }
+
+    // 4. Default hex fallback (matching --mglon-schedule-primary)
+    return '#1a73e8'
   })
 
   /**
-   * Text color with optimal contrast against the background.
+   * Hover color calculated from the resolved color.
+   */
+  readonly hoverColor = computed(() => {
+    return getHoverColor(this.resolvedColor())
+  })
+
+  /**
+   * Text color with optimal contrast against the resolved color.
    */
   readonly textColor = computed(() => {
-    return getTextColor(this.slot().color)
+    return getTextColor(this.resolvedColor())
   })
 
   /**

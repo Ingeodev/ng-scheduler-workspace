@@ -22,7 +22,7 @@ export class Event {
   readonly title = input.required<string>();
   readonly startDate = input.required<Date>();
   readonly endDate = input.required<Date>();
-  readonly color = input<string>(DEFAULT_EVENT_INPUTS.color);
+  readonly color = input<string>();
   readonly allDay = input<boolean>(DEFAULT_EVENT_INPUTS.allDay);
   readonly description = input<string>(DEFAULT_EVENT_INPUTS.description);
   readonly data = input<any>(DEFAULT_EVENT_INPUTS.data);

@@ -147,7 +147,13 @@ export interface EventSlotConfig {
    * Border radius for event slots
    * @default 'sm'
    */
-  rounded: EventSlotRadius
+  rounded: EventSlotRadius;
+
+  /**
+   * Default color for event slots if not specified by event or resource
+   * @default undefined (falls back to primary style)
+   */
+  color?: string;
 }
 
 /**
