@@ -27,6 +27,9 @@ export interface EventBase {
   /** If true, the event is visually blocked (e.g., maintenance) */
   isBlocked?: boolean;
 
+  /** If true, the event lasts the whole day or multiple days (minimalist design) */
+  isAllDay?: boolean;
+
   /** Flexible user-defined data */
   metadata?: any;
 }
@@ -43,6 +46,15 @@ export interface Event extends EventBase {
 
   /** Event type discriminator */
   type: 'event';
+
+  /** If true, this is an instance generated from a RecurrentEventModel */
+  isRecurrenceInstance?: boolean;
+
+  /** ID of the parent RecurrentEventModel */
+  parentRecurrenceId?: string;
+
+  /** Original date of occurrence from the recurrence rule */
+  recurrenceDate?: Date;
 }
 
 /**
@@ -167,7 +179,7 @@ export interface RecurrenceRule {
 /**
  * Interface for recurring events
  */
-export interface RecurrentEvent extends EventBase {
+export interface RecurrentEventModel extends EventBase {
   /** Start date and time of the first occurrence */
   start: Date;
 
@@ -187,7 +199,7 @@ export interface RecurrentEvent extends EventBase {
 /**
  * Union type representing any event type
  */
-export type AnyEvent = Event | AllDayEvent | RecurrentEvent;
+export type AnyEvent = Event | AllDayEvent | RecurrentEventModel;
 
 /**
  * Type guard to check if an event is a regular Event
@@ -206,6 +218,6 @@ export function isAllDayEvent(event: AnyEvent): event is AllDayEvent {
 /**
  * Type guard to check if an event is a RecurrentEvent
  */
-export function isRecurrentEvent(event: AnyEvent): event is RecurrentEvent {
+export function isRecurrentEvent(event: AnyEvent): event is RecurrentEventModel {
   return event.type === 'recurrent';
 }

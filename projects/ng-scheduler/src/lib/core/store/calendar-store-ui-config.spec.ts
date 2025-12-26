@@ -78,6 +78,16 @@ describe('CalendarStore - UI Config', () => {
         expect(store.uiConfig().grid.overflowIndicator.appearance).toBe('solid')
         expect(store.uiConfig().grid.overflowIndicator.rounded).toBe('none')
       })
+
+      it('should merge useDynamicColors configuration', () => {
+        store.setUIConfig({
+          grid: {
+            useDynamicColors: false
+          }
+        })
+
+        expect(store.uiConfig().grid.useDynamicColors).toBe(false)
+      })
     })
 
     describe('header configuration', () => {

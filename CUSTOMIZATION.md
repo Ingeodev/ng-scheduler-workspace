@@ -326,8 +326,22 @@ gridUI: {
   eventSlots: {
     rounded: 'sm',  // 'none' | 'sm' | 'full'
     color: '#1a73e8' // Default event color if not specified
-  }
+  },
+  useDynamicColors: true // If true, generates vivid/pastel palettes automatically
 }
+```
+
+### All-Day Events
+The `EventBase` interface (shared by regular and recurrent events) includes an `isAllDay` property. When set to `true`, the event slot adopts a minimalist design (transparent background, colored dot icon).
+
+```html
+<mglon-event
+  id="e1"
+  title="Conference"
+  [startDate]="start"
+  [endDate]="end"
+  [allDay]="true"
+></mglon-event>
 ```
 
 ### Inherited Variables

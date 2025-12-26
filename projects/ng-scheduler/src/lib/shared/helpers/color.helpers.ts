@@ -174,51 +174,113 @@ export function getTextColor(backgroundColor: string): string {
 }
 
 /**
- * Complete color scheme generator
- * Returns all three derived colors at once
+ * Complete color scheme generator with multiple adaptive variants
  */
-export interface EventColorScheme {
-  base: string;          // Original color
-  hover: string;         // Darker/stronger for hover
-  background: string;    // Very light variant
-  text: string;          // Optimal contrast text color
+export interface ColorVariant {
+  base: string;
+  hover: string;
+  text: string;
+  textHover: string;
 }
 
-export function generateEventColorScheme(baseColor: string): EventColorScheme {
+export interface AdaptiveColorScheme {
+  vivid: ColorVariant;
+  pastel: ColorVariant;
+  dark: ColorVariant;
+  raw: ColorVariant; // Exactly the input color, but with derived variants
+}
+
+/**
+ * Generates a full adaptive color scheme based on a single input color.
+ * It detects the Nature of the input (Vivid, Pastel, Dark) and preserves it,
+ * but also provides a "raw" variant using the color exactly as provided.
+ */
+export function generateAdaptiveColorScheme(baseColor: string): AdaptiveColorScheme {
+  const rgb = hexToRgb(baseColor);
+  if (!rgb) {
+    const fallback = '#1a73e8';
+    return generateAdaptiveColorScheme(fallback);
+  }
+
+  const { h, s, l } = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+  // 1. Determine the "Nature" of the input color
+  let type: 'pastel' | 'dark' | 'vivid';
+  if (l > 80) type = 'pastel';
+  else if (l < 20) type = 'dark'; // Only extremely dark colors are "Dark"
+  else type = 'vivid';
+
+  // 2. Generate variants, keeping the input for its detected category
+  const variants: AdaptiveColorScheme = {} as any;
+
+  // Raw (Always use original input)
+  variants.raw = generateVariant(h, s, l);
+
+  // Vivid
+  if (type === 'vivid') {
+    variants.vivid = variants.raw;
+  } else {
+    variants.vivid = generateVariant(h, Math.max(s, 70), 50); // Boost to vivid
+  }
+
+  // Pastel
+  if (type === 'pastel') {
+    variants.pastel = generateVariant(h, s, l); // Use original
+  } else {
+    // Soften: high lightness, moderate saturation
+    variants.pastel = generateVariant(h, Math.min(s, 65), 92);
+  }
+
+  // Dark
+  if (type === 'dark') {
+    variants.dark = generateVariant(h, s, l); // Use original
+  } else {
+    // Deepen: low lightness, moderate saturation
+    variants.dark = generateVariant(h, Math.min(s, 60), 25);
+  }
+
+  return variants;
+}
+
+/**
+ * Internal helper to generate a specific variant with its hover and text colors
+ */
+function generateVariant(h: number, s: number, l: number): ColorVariant {
+  const base = hslToHex(h, s, l);
+
+  // Hover: slightly more saturated and darker (or lighter if base is very dark)
+  const hoverL = l > 20 ? Math.max(0, l - 8) : l + 15;
+  const hoverS = Math.min(100, s + 5);
+  const hover = hslToHex(h, hoverS, hoverL);
+
   return {
-    base: baseColor,
-    hover: getHoverColor(baseColor),
-    background: getLightBackgroundColor(baseColor),
-    text: getTextColor(baseColor)
+    base,
+    hover,
+    text: getTextColor(base),
+    textHover: getTextColor(hover)
   };
 }
 
 /**
+ * Simple HSL to Hex bridge
+ */
+function hslToHex(h: number, s: number, l: number): string {
+  const rgb = hslToRgb(h, s, l);
+  return rgbToHex(rgb.r, rgb.g, rgb.b);
+}
+
+/**
  * Resolves the effective color for an event
- * 
- * Resolution order:
- * 1. event.color (event-specific)
- * 2. resource.color (inherited from resource)
- * 3. defaultColor (fallback)
- * 
- * @param event - The event to get color for
- * @param getResource - Function to retrieve resource by ID
- * @param defaultColor - Fallback color if none found
  */
 export function getEventColor(
   event: { color?: string; resourceId?: string },
   getResource: (id: string) => { color?: string } | undefined,
   defaultColor: string
 ): string {
-  // 1. Event-specific color
   if (event.color) return event.color;
-
-  // 2. Resource color
   if (event.resourceId) {
     const resource = getResource(event.resourceId);
     if (resource?.color) return resource.color;
   }
-
-  // 3. Default
   return defaultColor;
 }

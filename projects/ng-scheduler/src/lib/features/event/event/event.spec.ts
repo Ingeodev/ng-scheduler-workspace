@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Event } from './event';
-import { CalendarStore } from '../../core/store/calendar.store';
-import { RESOURCE_ID_TOKEN } from '../resource-events/resource-events';
+import { CalendarStore } from '../../../core/store/calendar.store';
+import { RESOURCE_ID_TOKEN } from '../../resource-events/resource-events';
 import { Subject } from 'rxjs';
-import { InteractionEvent, InteractionType } from '../../core/models/interaction.model';
+import { InteractionEvent, InteractionType } from '../../../core/models/interaction.model';
 
 describe('Event Component', () => {
   let component: Event;
@@ -69,6 +69,14 @@ describe('Event Component', () => {
     component.ngOnInit();
     expect(mockStore.registerEvent).toHaveBeenCalledWith(expect.objectContaining({
       resourceId: 'explicit-resource-id'
+    }));
+  });
+
+  it('should register event with isAllDay property if allDay input is set', () => {
+    fixture.componentRef.setInput('allDay', true);
+    component.ngOnInit();
+    expect(mockStore.registerEvent).toHaveBeenCalledWith(expect.objectContaining({
+      isAllDay: true
     }));
   });
 

@@ -25,9 +25,10 @@ $slot-gap: 4px;
 
   &:hover {
     background-color: var(--slot-hover);
+    color: var(--slot-text-hover, var(--slot-text));
   }
 
-  box-shadow: var(--mglon-schedule-shadow-sm);
+  // box-shadow: var(--mglon-schedule-shadow-sm);
   pointer-events: all;
 }
 
@@ -65,9 +66,18 @@ $slot-gap: 4px;
 }
 
 .mglon-month-slot__title {
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
+
+  .mglon-month-slot__recurrence-icon {
+    flex-shrink: 0;
+    margin-right: var(--mglon-schedule-gap-sm, 8px);
+    font-size: 1.2em;
+  }
 }
 
 // ============================================
@@ -93,4 +103,26 @@ $slot-gap: 4px;
 // Global hover state (all slots of the same event)
 :host(.mglon-month-slot--hovered) {
   background-color: var(--slot-hover);
+  color: var(--slot-text-hover, var(--slot-text));
+}
+
+// ============================================
+// All-day style
+// ============================================
+:host(.mglon-event--all-day) {
+  box-shadow: none;
+  border: var(--slot-border, none);
+
+  &:hover {
+    border: var(--slot-border, none);
+  }
+}
+
+.mglon-event__all-day-icon {
+  flex-shrink: 0;
+  margin-right: var(--mglon-schedule-gap-sm, 8px);
+  font-size: 1.2em;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }

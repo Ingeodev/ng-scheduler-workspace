@@ -8,7 +8,7 @@ import {
   getHoverColor,
   getLightBackgroundColor,
   getTextColor,
-  generateEventColorScheme,
+  generateAdaptiveColorScheme,
   getEventColor
 } from './color.helpers';
 
@@ -140,32 +140,56 @@ describe('Color Helpers', () => {
     });
   });
 
-  describe('generateEventColorScheme', () => {
-    it('should generate complete color scheme', () => {
-      const baseColor = '#3498db';
-      const scheme = generateEventColorScheme(baseColor);
+  describe('generateAdaptiveColorScheme', () => {
+    it('should generate complete adaptive scheme with raw variant', () => {
+      const baseColor = '#1a73e8'; // Vivid blue
+      const scheme = generateAdaptiveColorScheme(baseColor);
 
-      expect(scheme.base).toBe(baseColor);
-      expect(scheme.hover).toBeDefined();
-      expect(scheme.background).toBeDefined();
-      expect(scheme.text).toBeDefined();
+      expect(scheme.vivid.base).toBeDefined();
+      expect(scheme.pastel.base).toBeDefined();
+      expect(scheme.dark.base).toBeDefined();
+      expect(scheme.raw.base).toBe(baseColor);
 
-      // All should be valid hex colors
-      expect(hexToRgb(scheme.hover)).not.toBeNull();
-      expect(hexToRgb(scheme.background)).not.toBeNull();
-      expect(hexToRgb(scheme.text)).not.toBeNull();
+      // Raw variant should have its own functional derivatives
+      expect(scheme.raw.hover).toBeDefined();
+      expect(scheme.raw.text).toBeDefined();
+      expect(scheme.raw.textHover).toBeDefined();
+      expect(hexToRgb(scheme.raw.hover)).not.toBeNull();
     });
 
-    it('should generate accessible text color', () => {
-      const baseColor = '#e91e63'; // pink
-      const scheme = generateEventColorScheme(baseColor);
+    it('should correctly categorize colors and preserve them', () => {
+      const colors = {
+        vivid: '#228c72',
+        pastel: '#fce4ec',
+        dark: '#0a0a0a'
+      };
 
-      // Text should have good contrast
-      const baseRgb = hexToRgb(baseColor)!;
-      const textRgb = hexToRgb(scheme.text)!;
-      const contrast = getContrastRatio(baseRgb, textRgb);
+      const vividScheme = generateAdaptiveColorScheme(colors.vivid);
+      expect(vividScheme.vivid.base).toBe(colors.vivid);
+      expect(vividScheme.raw.base).toBe(colors.vivid);
 
-      expect(contrast).toBeGreaterThan(2); // Minimum acceptable contrast
+      const pastelScheme = generateAdaptiveColorScheme(colors.pastel);
+      expect(pastelScheme.pastel.base).toBe(colors.pastel);
+      expect(pastelScheme.raw.base).toBe(colors.pastel);
+
+      const darkScheme = generateAdaptiveColorScheme(colors.dark);
+      expect(darkScheme.dark.base).toBe(colors.dark);
+      expect(darkScheme.raw.base).toBe(colors.dark);
+    });
+
+    it('should generate accessible text for raw variant across different lightness', () => {
+      const darkColor = '#212121';
+      const lightColor = '#f5f5f5';
+
+      const darkScheme = generateAdaptiveColorScheme(darkColor);
+      expect(darkScheme.raw.text).toBe('#ffffff');
+
+      const lightScheme = generateAdaptiveColorScheme(lightColor);
+      expect(lightScheme.raw.text).not.toBe('#ffffff');
+
+      const lightTextRgb = hexToRgb(lightScheme.raw.text)!;
+      // Should be dark text (luminance < 0.5)
+      expect(getLuminance(lightTextRgb.r, lightTextRgb.g, lightTextRgb.b)).toBeLessThan(0.4);
     });
   });
 

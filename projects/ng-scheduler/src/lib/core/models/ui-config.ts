@@ -198,6 +198,14 @@ export interface GridUIConfig {
    * Overflow indicator (+N more) styling
    */
   overflowIndicator: OverflowIndicatorConfig
+
+  /**
+   * Whether to automatically generate vivid/pastel variants for events.
+   * If true, regular events use vivid colors and recurrent events use pastel variants.
+   * If false, colors are used exactly as provided (with derived contrast text).
+   * @default true
+   */
+  useDynamicColors: boolean;
 }
 
 
@@ -257,6 +265,7 @@ export const DEFAULT_UI_CONFIG: UIConfig = {
     overflowIndicator: {
       rounded: 'sm',
       appearance: 'ghost'
-    }
+    },
+    useDynamicColors: true
   }
 } as const

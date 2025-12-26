@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MonthSlot } from './month-slot';
 import { CalendarStore } from '../../../core/store/calendar.store';
-import { signal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { SlotModel } from '../../../core/models/slot.model';
 import { DEFAULT_UI_CONFIG } from '../../../core/models/ui-config';
 import { DEFAULT_CONFIG } from '../../../core/config/default-schedule-config';
@@ -10,6 +10,7 @@ describe('MonthSlot', () => {
   let component: MonthSlot;
   let fixture: ComponentFixture<MonthSlot>;
   let mockStore: any;
+  let eventSignal: WritableSignal<any>;
 
   const mockSlot: SlotModel = {
     id: 'slot-1',
@@ -33,6 +34,7 @@ describe('MonthSlot', () => {
   };
 
   beforeEach(async () => {
+    eventSignal = signal(mockEvent);
     mockStore = {
       dragState: signal({ eventId: null, grabDate: null, hoverDate: null }),
       resizeState: signal({ eventId: null, side: null, hoverDate: null }),
@@ -40,7 +42,7 @@ describe('MonthSlot', () => {
       interactionMode: signal('none'),
       uiConfig: signal(DEFAULT_UI_CONFIG),
       config: signal(DEFAULT_CONFIG),
-      getEvent: jest.fn().mockReturnValue(mockEvent),
+      getEvent: jest.fn().mockImplementation(() => eventSignal()),
       getResource: jest.fn().mockReturnValue({ resizableEvents: true }),
       setHoveredEvent: jest.fn(),
       dispatchInteraction: jest.fn(),
@@ -122,8 +124,6 @@ describe('MonthSlot', () => {
     });
 
     it('should ignore click if ignoreNextClick is set (after drag/resize)', () => {
-      // We simulate ignoreNextClick by calling onGlobalUp (internal logic)
-      // Since it's private, we check the behavior of onClick directly
       (component as any).ignoreNextClick = true;
 
       const event = new MouseEvent('click');
@@ -150,10 +150,8 @@ describe('MonthSlot', () => {
   describe('Drag & Resize Initialization', () => {
     it('should start drag on pointerdown if not a resize handle', () => {
       const event = new PointerEvent('pointerdown', { button: 0, clientX: 50, clientY: 50 });
-      // In tests, currentTarget must be manually defined if calling handler directly
       Object.defineProperty(event, 'currentTarget', { value: fixture.nativeElement });
 
-      // We need to mock getBoundingClientRect for element to calculate click position
       jest.spyOn(fixture.nativeElement, 'getBoundingClientRect').mockReturnValue({
         left: 0, top: 0, width: 100, height: 25
       } as any);
@@ -161,7 +159,6 @@ describe('MonthSlot', () => {
       component.onPointerDown(event);
 
       expect(mockStore.setInteractionMode).toHaveBeenCalledWith('dragging');
-      // We can't easily wait for the timer here without fakeAsync or spying on initiateDrag
     });
 
     it('should start resize on resizeStart', () => {
@@ -170,6 +167,30 @@ describe('MonthSlot', () => {
 
       expect(mockStore.setResizeStart).toHaveBeenCalledWith(mockSlot.idEvent, 'left');
       expect(mockStore.dispatchInteraction).toHaveBeenCalledWith('resizeStart', mockSlot.idEvent, expect.any(Object));
+    });
+  });
+
+  describe('All-Day Logic', () => {
+    it('should compute isAllDay as true if event has isAllDay: true', () => {
+      eventSignal.set({ ...mockEvent, isAllDay: true });
+      fixture.detectChanges();
+      expect(component.isAllDay()).toBe(true);
+    });
+
+    it('should compute isAllDay as false if event has isAllDay: false or undefined', () => {
+      eventSignal.set({ ...mockEvent, isAllDay: false });
+      fixture.detectChanges();
+      expect(component.isAllDay()).toBe(false);
+
+      eventSignal.set({ ...mockEvent, isAllDay: undefined });
+      fixture.detectChanges();
+      expect(component.isAllDay()).toBe(false);
+    });
+
+    it('should apply all-day CSS class to host when isAllDay is true', () => {
+      eventSignal.set({ ...mockEvent, isAllDay: true });
+      fixture.detectChanges();
+      expect(fixture.nativeElement.classList.contains('mglon-event--all-day')).toBe(true);
     });
   });
 });

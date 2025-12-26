@@ -8,6 +8,7 @@ import {
   SidebarUIConfig,
   ResourceEvents,
   Event,
+  RecurrentEvent
 } from 'ng-scheduler';
 
 import { ApiTableComponent, ApiProperty } from '../../shared/api-table/api-table';
@@ -21,6 +22,7 @@ import { ExampleViewerComponent } from '../../shared/example-viewer/example-view
     CommonModule,
     Schedule,
     Event,
+    RecurrentEvent,
     ResourceEvents,
     ApiTableComponent,
     CodeBlockComponent,
@@ -52,6 +54,10 @@ export class ScheduleDocComponent {
   event4Start = new Date(2025, 11, 27, 9, 0)
   event4End = new Date(2025, 11, 29, 17, 0)
 
+  // All day event test (Christmas Eve)
+  allDayStart = new Date(2025, 11, 24);
+  allDayEnd = new Date(2025, 11, 24);
+
   // ============================================
   // Additional events for overflow testing
   // Multiple events on Dec 25 (Christmas Day)
@@ -71,12 +77,35 @@ export class ScheduleDocComponent {
   event9Start = new Date(2025, 11, 25, 16, 0)
   event9End = new Date(2025, 11, 25, 17, 0)
 
+  // ============================================
+  // Recurrent Events Configuration
+  // ============================================
+
+  // 1. Every 2 days
+  recurrent1Start = new Date(2025, 11, 22, 10, 0); // Dec 22
+  recurrent1End = new Date(2025, 11, 22, 11, 30);
+  recurrenceRule1 = {
+    type: 'daily',
+    interval: 2,
+    count: 10 // Repeat 10 times
+  };
+
+  // 2. Every Monday
+  recurrent2Start = new Date(2025, 11, 22, 14, 0); // Dec 22 (Monday)
+  recurrent2End = new Date(2025, 11, 22, 16, 0);
+  recurrenceRule2 = {
+    type: 'weekly',
+    interval: 1,
+    byDay: ['Mon'],
+    until: new Date(2026, 11, 1) // Until Feb 1, 2026
+  };
+
 
 
   // UI Configuration Examples
   gridUIConfig: Partial<GridUIConfig> = {
     eventSlots: {
-      rounded: 'sm'  // Options: 'none' | 'sm' | 'full'
+      rounded: 'full'  // Options: 'none' | 'sm' | 'full'
     }
   };
 
