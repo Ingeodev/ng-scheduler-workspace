@@ -5,7 +5,18 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "outDir": "../../out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+      "mglon-schedule": [
+        "./node_modules/mglon-schedule"
+      ],
+      "@ng-doc/generated": [
+        "../../ng-doc/documentation/index.ts"
+      ],
+      "@ng-doc/generated/*": [
+        "../../ng-doc/documentation/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"

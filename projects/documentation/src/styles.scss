@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@use '../../mglon-schedule/src/lib/styles/variables' as vars;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* mglon-schedule theme variables */
+:root {
+  @include vars.google-calendar-theme;
+}
