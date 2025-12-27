@@ -76,7 +76,5 @@ jobs:
       - name: Publish to npm
         run: |
           cd dist/mglon-schedule
-          npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}
+          npm publish --access public --provenance
 
