@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.3...mglon-schedule-v0.0.4) (2025-12-27)
+
+
+### ✨ Features
+
+* update README with installation and usage instructions ([7d8fcc6](https://github.com/Ingeodev/ng-scheduler-workspace/commit/7d8fcc60a9ad61088a68e63aad7f10c7e184d0a9))
+
 ## [0.0.3](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.2...mglon-schedule-v0.0.3) (2025-12-27)
 
 
