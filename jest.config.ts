@@ -7,14 +7,15 @@ const config: Config = {
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/dist/',
+    '<rootDir>/projects/documentation/',
   ],
   transformIgnorePatterns: [
     'node_modules/(?!.*\\.mjs$)'
   ],
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   moduleNameMapper: {
-    '^ng-scheduler$': '<rootDir>/projects/ng-scheduler/src/public-api.ts',
-    '^ng-scheduler/(.*)$': '<rootDir>/projects/ng-scheduler/src/lib/$1'
+    '^mglon-schedule$': '<rootDir>/projects/mglon-schedule/src/public-api.ts',
+    '^mglon-schedule/(.*)$': '<rootDir>/projects/mglon-schedule/src/lib/$1'
   }
 };
 

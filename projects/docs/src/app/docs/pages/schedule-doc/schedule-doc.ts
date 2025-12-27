@@ -9,7 +9,7 @@ import {
   ResourceEvents,
   Event,
   RecurrentEvent
-} from 'ng-scheduler';
+} from 'mglon-schedule';
 
 import { ApiTableComponent, ApiProperty } from '../../shared/api-table/api-table';
 import { CodeBlockComponent } from '../../shared/code-block/code-block';

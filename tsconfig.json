@@ -17,8 +17,8 @@
       "miguelon-ui": [
         "./dist/miguelon-ui"
       ],
-      "ng-scheduler": [
-        "./projects/ng-scheduler/src/public-api.ts"
+      "mglon-schedule": [
+        "./projects/mglon-schedule/src/public-api.ts"
       ]
     },
     "noFallthroughCasesInSwitch": true,

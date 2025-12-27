@@ -11,7 +11,30 @@ permissions:
   id-token: write  # Requerido para npm Trusted Publishing (OIDC)
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run library tests
+        run: pnpm test:lib
+
   release-please:
+    needs: test
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -48,11 +71,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build library
-        run: pnpm ng build ng-scheduler --configuration=production
+        run: pnpm ng build mglon-schedule --configuration=production
 
-      - name: Publish to npm (Trusted Publishing)
+      - name: Publish to npm
         run: |
-          cd dist/ng-scheduler
-          npm publish --access public --provenance
+          cd dist/mglon-schedule
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}
+

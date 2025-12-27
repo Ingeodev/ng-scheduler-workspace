@@ -3,10 +3,10 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ng-scheduler": {
+    "mglon-schedule": {
       "projectType": "library",
-      "root": "projects/ng-scheduler",
-      "sourceRoot": "projects/ng-scheduler/src",
+      "root": "projects/mglon-schedule",
+      "sourceRoot": "projects/mglon-schedule/src",
       "prefix": "mglon",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,10 +18,10 @@
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "projects/ng-scheduler/tsconfig.lib.prod.json"
+              "tsConfig": "projects/mglon-schedule/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ng-scheduler/tsconfig.lib.json"
+              "tsConfig": "projects/mglon-schedule/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -29,7 +29,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "tsConfig": "projects/ng-scheduler/tsconfig.spec.json"
+            "tsConfig": "projects/mglon-schedule/tsconfig.spec.json"
           }
         }
       }
@@ -93,9 +93,6 @@
             },
             "development": {
               "buildTarget": "docs:build:development",
-              "ngDoc": {
-                "config": "projects/docs/ng-doc.config.ts"
-              }
             }
           },
           "defaultConfiguration": "development"
