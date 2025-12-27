@@ -60,7 +60,7 @@ export class MonthGrid implements Selectable {
    * Returns an array of weeks, each containing 7 days.
    */
   readonly weeks = computed<CalendarWeek[]>(() => {
-    console.log('weeks cambiaron')
+
     return getMonthCalendarGrid(this.currentDate())
   })
 
@@ -206,7 +206,7 @@ export class MonthGrid implements Selectable {
    * Stores the height in CalendarStore to be shared with all weeks.
    */
   onWeekResize(event: ResizeEvent): void {
-    console.log('week resize', event)
+
     this.store.setWeekRowHeight(event.height)
   }
 

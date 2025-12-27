@@ -118,32 +118,6 @@
         }
       }
     },
-    "miguelon-ui": {
-      "projectType": "library",
-      "root": "projects/miguelon-ui",
-      "sourceRoot": "projects/miguelon-ui/src",
-      "prefix": "mglon",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/miguelon-ui/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/miguelon-ui/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/miguelon-ui/tsconfig.spec.json"
-          }
-        }
-      }
-    },
     "documentation": {
       "projectType": "application",
       "schematics": {

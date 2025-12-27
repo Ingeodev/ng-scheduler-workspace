@@ -50,3 +50,6 @@ Thumbs.db
 
 # NgDoc files
 /ng-doc
+
+# Local testing project
+/projects/docs
