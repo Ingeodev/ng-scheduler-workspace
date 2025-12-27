@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResizableDirective, ResizeEvent } from './resizable.directive';
 import { By } from '@angular/platform-browser';
+import { CalendarStore } from '../../core/store/calendar.store';
 
 @Component({
   template: `
@@ -26,7 +27,8 @@ describe('ResizableDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestComponent, ResizableDirective]
+      imports: [TestComponent, ResizableDirective],
+      providers: [CalendarStore]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
@@ -42,14 +44,6 @@ describe('ResizableDirective', () => {
   it('should emit resized event when clicking handle area', () => {
     const div = fixture.debugElement.query(By.css('div')).nativeElement;
 
-    // Simulate click on left edge (handle size 10)
-    // Client (0,0) relative to element (0,0) -> Inside 10px handle
-    const event = new MouseEvent('mousedown', {
-      clientX: 0,
-      clientY: 50,
-      bubbles: true
-    });
-
     // Mock getBoundingClientRect for accurate coord check in tests
     jest.spyOn(div, 'getBoundingClientRect').mockReturnValue({
       left: 0,
@@ -57,10 +51,24 @@ describe('ResizableDirective', () => {
       width: 100,
       height: 100,
       right: 100,
-      bottom: 100
+      bottom: 100,
+      x: 0,
+      y: 0,
+      toJSON: () => { }
     } as DOMRect);
 
-    div.dispatchEvent(event);
+    // First trigger mouseenter to register the mousedown listener
+    const mouseEnterEvent = new MouseEvent('mouseenter', { bubbles: true });
+    div.dispatchEvent(mouseEnterEvent);
+
+    // Now simulate click on left edge (handle size 10)
+    const mouseDownEvent = new MouseEvent('mousedown', {
+      clientX: 5, // Within 10px handle
+      clientY: 50,
+      bubbles: true
+    });
+
+    div.dispatchEvent(mouseDownEvent);
 
     expect(component.lastEvent).toBeTruthy();
     expect(component.lastEvent?.side).toBe('left');
@@ -69,21 +77,28 @@ describe('ResizableDirective', () => {
   it('should NOT emit resized event when clicking outside handle area', () => {
     const div = fixture.debugElement.query(By.css('div')).nativeElement;
 
-    // Simulate click in middle (x=50)
-    const event = new MouseEvent('mousedown', {
-      clientX: 50,
-      clientY: 50,
-      bubbles: true
-    });
-
     jest.spyOn(div, 'getBoundingClientRect').mockReturnValue({
       left: 0,
       top: 0,
       width: 100,
       height: 100,
       right: 100,
-      bottom: 100
+      bottom: 100,
+      x: 0,
+      y: 0,
+      toJSON: () => { }
     } as DOMRect);
+
+    // Trigger mouseenter first
+    const mouseEnterEvent = new MouseEvent('mouseenter', { bubbles: true });
+    div.dispatchEvent(mouseEnterEvent);
+
+    // Simulate click in middle (x=50)
+    const event = new MouseEvent('mousedown', {
+      clientX: 50,
+      clientY: 50,
+      bubbles: true
+    });
 
     div.dispatchEvent(event);
 

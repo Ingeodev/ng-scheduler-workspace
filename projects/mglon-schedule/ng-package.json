@@ -1,11 +1,13 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/ng-scheduler",
+  "dest": "../../dist/mglon-schedule",
   "lib": {
     "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
     "@ngrx/signals",
-    "@angular/cdk"
+    "@angular/cdk",
+    "date-fns",
+    "rrule"
   ]
 }

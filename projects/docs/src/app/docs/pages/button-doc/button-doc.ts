@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent, IconButtonComponent, FabButtonComponent, ButtonGroupComponent } from 'ng-scheduler';
+import { ButtonComponent, IconButtonComponent, FabButtonComponent, ButtonGroupComponent } from 'mglon-schedule';
 import { ApiTableComponent, ApiProperty } from '../../shared/api-table/api-table';
 import { CodeBlockComponent } from '../../shared/code-block/code-block';
 import { ExampleViewerComponent } from '../../shared/example-viewer/example-viewer';
