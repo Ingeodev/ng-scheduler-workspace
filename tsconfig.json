@@ -8,6 +8,12 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "paths": {
+      "@ng-doc/generated": [
+        "./ng-doc/documentation/index.ts"
+      ],
+      "@ng-doc/generated/*": [
+        "./ng-doc/documentation/*"
+      ],
       "miguelon-ui": [
         "./dist/miguelon-ui"
       ],
