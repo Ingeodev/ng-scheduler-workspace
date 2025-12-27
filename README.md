@@ -1,59 +1,66 @@
-# NgSchedulerWorkspace
+# Mglon Scheduler (ng-scheduler)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.4.
+A powerful, robust, and lightweight Scheduler library for Angular, built from the ground up using **Angular Signals** and **NgRx Signals**. Designed for performance, extensibility, and a premium developer experience.
 
-## Development server
+## ✨ Key Features
 
-To start a local development server, run:
+- **🚀 Signal-First Architecture**: Built entirely with Angular Signals for fine-grained reactivity and optimal performance.
+- **📅 Multiple Views**: Support for Month and Week views (with more on the way).
+- **💡 Minimalism & Aesthetics**: Premium design with glassmorphism touches, vibrant adaptive colors, and clean typography.
+- **🔄 Recurrence Support**: Full support for recurrent events following RFC 5545 standards.
+- **🏗 Resource-Based Scheduling**: Group and manage events by resources effortlessly.
+- **📍 All-Day Events**: Special minimalist styling for all-day events with dot indicators and colored borders.
+- **🖱 Interactive Experience**: Smooth Drag & Drop and Resizing interactions using native pointer events.
+- **🎨 Adaptive Color System**: Automatic generation of surface and contrast colors based on event base colors.
+- **📱 Responsive Design**: CSS Grid-based layouts that adapt to any screen size.
 
-```bash
-ng serve
-```
+## 📂 Project Structure
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The project is organized as an Angular Workspace:
 
-## Code scaffolding
+- **`projects/ng-scheduler`**: The core library source code.
+  - `src/lib/core`: Store management, models, and rendering logic.
+  - `src/lib/features`: View implementations (Month, Week, Event, Resource).
+  - `src/lib/shared`: Helpers, icons, and common components.
+- **`projects/playground`**: A dedicated application for demonstration, testing, and documentation.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛠 Getting Started
 
-```bash
-ng generate component component-name
-```
+### Prerequisites
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- **Node.js**: Latest LTS recommended.
+- **pnpm**: Used as the primary package manager.
 
-```bash
-ng generate --help
-```
+### Installation
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Clone the repository and install dependencies:
 
 ```bash
-ng test
+pnpm install
 ```
 
-## Running end-to-end tests
+### Execution
 
-For end-to-end (e2e) testing, run:
+To run the **Playground** (Demo App) locally:
 
 ```bash
-ng e2e
+pnpm start
+# The app will be available at http://localhost:4200
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Development Scripts
 
-## Additional Resources
+- **Build Library**: `pnpm run build`
+- **Run Tests**: `pnpm run test`
+- **Watch Library**: `pnpm run watch` (for development)
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🏗 Core Technologies
+
+- **Angular 21+**: Core framework.
+- **NgRx Signals**: State management.
+- **date-fns**: Date manipulation.
+- **rrule**: Recurrence logic.
+- **SASS**: Advanced styling and variable system.
+
+---
+Developed with ❤️ for the Angular Ecosystem.

@@ -34,31 +34,31 @@
         }
       }
     },
-    "playground": {
+    "docs": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "projects/playground",
-      "sourceRoot": "projects/playground/src",
+      "root": "projects/docs",
+      "sourceRoot": "projects/docs/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "projects/playground/src/main.ts",
-            "tsConfig": "projects/playground/tsconfig.app.json",
+            "browser": "projects/docs/src/main.ts",
+            "tsConfig": "projects/docs/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/playground/public"
+                "input": "projects/docs/public"
               }
             ],
             "styles": [
-              "projects/playground/src/styles.scss"
+              "projects/docs/src/styles.scss"
             ]
           },
           "configurations": {
@@ -89,10 +89,13 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "playground:build:production"
+              "buildTarget": "docs:build:production"
             },
             "development": {
-              "buildTarget": "playground:build:development"
+              "buildTarget": "docs:build:development",
+              "ngDoc": {
+                "config": "projects/docs/ng-doc.config.ts"
+              }
             }
           },
           "defaultConfiguration": "development"
@@ -103,16 +106,16 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "tsConfig": "projects/playground/tsconfig.spec.json",
+            "tsConfig": "projects/docs/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/playground/public"
+                "input": "projects/docs/public"
               }
             ],
             "styles": [
-              "projects/playground/src/styles.scss"
+              "projects/docs/src/styles.scss"
             ]
           }
         }
@@ -141,6 +144,108 @@
           "options": {
             "tsConfig": "projects/miguelon-ui/tsconfig.spec.json"
           }
+        }
+      }
+    },
+    "documentation": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/documentation",
+      "sourceRoot": "projects/documentation/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@ng-doc/builder:application",
+          "options": {
+            "browser": "projects/documentation/src/main.ts",
+            "tsConfig": "projects/documentation/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/app/assets",
+                "output": "assets/ng-doc/app"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/ui-kit/assets",
+                "output": "assets/ng-doc/ui-kit"
+              },
+              {
+                "glob": "**/*",
+                "input": "ng-doc/documentation/assets",
+                "output": "assets/ng-doc"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/documentation/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/app/assets",
+                "output": "assets/ng-doc/app"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/ui-kit/assets",
+                "output": "assets/ng-doc/ui-kit"
+              },
+              {
+                "glob": "**/*",
+                "input": ".ng-doc/documentation/assets",
+                "output": "assets/ng-doc"
+              }
+            ],
+            "styles": [
+              "node_modules/@ng-doc/app/styles/global.css",
+              "projects/documentation/src/styles.scss"
+            ],
+            "allowedCommonJsDependencies": [
+              "@ng-doc/core"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@ng-doc/builder:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "documentation:build:production"
+            },
+            "development": {
+              "buildTarget": "documentation:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
         }
       }
     }

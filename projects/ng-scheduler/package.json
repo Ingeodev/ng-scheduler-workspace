@@ -1,6 +1,23 @@
 {
   "name": "ng-scheduler",
   "version": "0.0.1",
+  "description": "A powerful and flexible scheduler component for Angular applications",
+  "license": "MIT",
+  "author": "miguelonCoder (https://migueloncoder.github.io/miguelon-portafolio/)",
+  "contributors": [
+    "Ingeodev"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ingeodev/ng-scheduler-workspace.git"
+  },
+  "keywords": [
+    "angular",
+    "scheduler",
+    "calendar",
+    "events",
+    "scheduling"
+  ],
   "peerDependencies": {
     "@angular/common": "^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0",
     "@angular/core": "^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0"

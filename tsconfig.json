@@ -8,6 +8,12 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "paths": {
+      "@ng-doc/generated": [
+        "./ng-doc/documentation/index.ts"
+      ],
+      "@ng-doc/generated/*": [
+        "./ng-doc/documentation/*"
+      ],
       "miguelon-ui": [
         "./dist/miguelon-ui"
       ],
@@ -36,6 +42,12 @@
     },
     {
       "path": "./projects/miguelon-ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/documentation/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/documentation/tsconfig.spec.json"
     }
   ]
 }
