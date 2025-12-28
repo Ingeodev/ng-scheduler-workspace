@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   test:
+    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'doc:')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -61,8 +62,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: '22'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

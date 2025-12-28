@@ -1,0 +1,7 @@
+{
+  "name": "documentation",
+  "private": true,
+  "dependencies": {
+    "mglon-schedule": "0.0.7"
+  }
+}
