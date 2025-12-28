@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.5...mglon-schedule-v0.0.6) (2025-12-28)
+
+
+### 🐛 Bug Fixes
+
+* **mglon-schedule:** refine config model and remove deprecated resources ([a811c92](https://github.com/Ingeodev/ng-scheduler-workspace/commit/a811c92b0a38d2e785bd648aa50146eef991ca8a))
+
 ## [0.0.5](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.4...mglon-schedule-v0.0.5) (2025-12-28)
 
 
