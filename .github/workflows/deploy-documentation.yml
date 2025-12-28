@@ -30,12 +30,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build and Deploy
-        uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.1
+      - name: Build Documentation
+        run: pnpm ng build documentation --base-href /ng-scheduler-workspace/ --configuration production
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
-          build_configuration: production
-          base_href: /ng-scheduler-workspace/
-          deploy_branch: gh-pages
-          angular_dist_build_folder: dist/documentation/browser
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/documentation/browser
 
