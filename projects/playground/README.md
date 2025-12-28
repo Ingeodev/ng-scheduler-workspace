@@ -1,3 +1,10 @@
+> [!WARNING]
+> This package is currently under development and is not yet finished. It is **not recommended for production use**.
+>
+> If you need more information or have any questions, please contact:
+> - **miguelonCoder**: mr.develop411@gmail.com
+> - **Ingeodev**: ingeodev@gmail.com
+
 # ng-scheduler Playground & Documentation Site
 
 Este proyecto `playground` ha sido transformado en un sitio de documentación completo para la librería `ng-scheduler`, siguiendo el estilo y filosofía de la documentación oficial de Angular y Angular Material.

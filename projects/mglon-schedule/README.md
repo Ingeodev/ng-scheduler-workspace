@@ -1,3 +1,10 @@
+> [!WARNING]
+> This package is currently under development and is not yet finished. It is **not recommended for production use**.
+>
+> If you need more information or have any questions, please contact:
+> - **miguelonCoder**: mr.develop411@gmail.com
+> - **Ingeodev**: ingeodev@gmail.com
+
 # mglon-schedule
 
 A powerful and flexible scheduler component for Angular applications.

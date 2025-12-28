@@ -1,3 +1,10 @@
+> [!WARNING]
+> This package is currently under development and is not yet finished. It is **not recommended for production use**.
+>
+> If you need more information or have any questions, please contact:
+> - **miguelonCoder**: mr.develop411@gmail.com
+> - **Ingeodev**: ingeodev@gmail.com
+
 # Mglon Scheduler (ng-scheduler)
 
 A powerful, robust, and lightweight Scheduler library for Angular, built from the ground up using **Angular Signals** and **NgRx Signals**. Designed for performance, extensibility, and a premium developer experience.
