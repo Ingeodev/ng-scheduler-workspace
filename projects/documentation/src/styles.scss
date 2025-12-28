@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use '../../mglon-schedule/src/lib/styles/variables' as vars;
+@use '../../../dist/mglon-schedule/src/lib/styles/default_theme' as vars;
 
 @tailwind base;
 @tailwind components;
@@ -7,5 +7,9 @@
 
 /* mglon-schedule theme variables */
 :root {
-  @include vars.google-calendar-theme;
+  @include vars.default-light-theme;
+}
+
+:root.dark {
+  @include vars.default-dark-theme;
 }
