@@ -47,8 +47,11 @@ jobs:
           manifest-file: .release-please-manifest.json
 
   publish:
-    needs: release-please
-    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    needs: [release-please]
+    # Se ejecuta si release-please creó una release O si se lanza manualmente
+    if: |
+      always() &&
+      (needs.release-please.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -61,7 +64,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -77,5 +79,5 @@ jobs:
       - name: Publish to npm
         run: |
           cd dist/mglon-schedule
-          npm publish --access public --provenance
+          npm publish
 
