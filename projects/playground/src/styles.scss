@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'mglon-schedule/src/lib/styles/default_theme' as vars;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+//@import 'prismjs/themes/prism-okaidia.css';
+
+:root {
+  @include vars.default-dark-theme;
+}
+
+body {
+  margin: 0;
+  font-family: var(--mglon-schedule-font-family, Roboto, "Helvetica Neue", sans-serif);
+}

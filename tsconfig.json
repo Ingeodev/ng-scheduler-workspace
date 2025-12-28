@@ -13,12 +13,6 @@
       ],
       "@ng-doc/generated/*": [
         "./ng-doc/documentation/*"
-      ],
-      "miguelon-ui": [
-        "./dist/miguelon-ui"
-      ],
-      "mglon-schedule": [
-        "./projects/mglon-schedule/src/public-api.ts"
       ]
     },
     "noFallthroughCasesInSwitch": true,
@@ -35,19 +29,5 @@
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
     "strictTemplates": true
-  },
-  "references": [
-    {
-      "path": "./projects/miguelon-ui/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/miguelon-ui/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/documentation/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/documentation/tsconfig.spec.json"
-    }
-  ]
+  }
 }

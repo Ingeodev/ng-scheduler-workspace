@@ -133,6 +133,36 @@ importers:
         specifier: 4.0.8
         version: 4.0.8(@types/debug@4.1.12)(@types/node@25.0.3)(jiti@2.6.1)(jsdom@27.1.0)(less@4.4.2)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.2)
 
+  projects/mglon-schedule:
+    dependencies:
+      '@angular/cdk':
+        specifier: '>=18.0.0'
+        version: 21.0.5(@angular/common@21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/common':
+        specifier: '>=18.0.0'
+        version: 21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: '>=18.0.0'
+        version: 21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@ngrx/signals':
+        specifier: 21.0.0
+        version: 21.0.0(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      date-fns:
+        specifier: 4.1.0
+        version: 4.1.0
+      rrule:
+        specifier: 2.8.1
+        version: 2.8.1
+      tslib:
+        specifier: 2.8.1
+        version: 2.8.1
+
+  projects/playground:
+    dependencies:
+      mglon-schedule:
+        specifier: link:../../dist/mglon-schedule
+        version: link:../../dist/mglon-schedule
+
 packages:
 
   '@acemir/cssom@0.9.29':
@@ -7785,6 +7815,14 @@ snapshots:
       rxjs: 7.8.0
       tslib: 2.8.1
 
+  '@angular/cdk@21.0.5(@angular/common@21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/common': 21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)
+      parse5: 8.0.0
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@angular/cli@21.0.3(@types/node@25.0.3)(chokidar@4.0.3)':
     dependencies:
       '@angular-devkit/architect': 0.2100.3(chokidar@4.0.3)
@@ -7818,6 +7856,12 @@ snapshots:
       rxjs: 7.8.0
       tslib: 2.8.1
 
+  '@angular/common@21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@angular/compiler-cli@21.0.6(@angular/compiler@21.0.6)(typescript@5.9.3)':
     dependencies:
       '@angular/compiler': 21.0.6
@@ -7841,6 +7885,14 @@ snapshots:
   '@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.0)(zone.js@0.16.0)':
     dependencies:
       rxjs: 7.8.0
+      tslib: 2.8.1
+    optionalDependencies:
+      '@angular/compiler': 21.0.6
+      zone.js: 0.16.0
+
+  '@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)':
+    dependencies:
+      rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
       '@angular/compiler': 21.0.6
@@ -9704,6 +9756,13 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       rxjs: 7.8.0
+
+  '@ngrx/signals@21.0.0(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)
+      tslib: 2.8.1
+    optionalDependencies:
+      rxjs: 7.8.2
 
   '@ngtools/webpack@21.0.4(@angular/compiler-cli@21.0.6(@angular/compiler@21.0.6)(typescript@5.9.3))(typescript@5.9.3)(webpack@5.104.0(esbuild@0.26.0))':
     dependencies:

@@ -1,0 +1,14 @@
+<div class="relative group rounded-lg overflow-hidden border border-gray-200 bg-[#272822]">
+  <!-- Header/Language Label -->
+  <div class="flex justify-between items-center px-4 py-2 bg-gray-800 text-xs text-gray-400 border-b border-gray-700">
+    <span class="uppercase font-mono">{{ language() }}</span>
+    <button (click)="copyCode()" class="opacity-0 group-hover:opacity-100 transition-opacity hover:text-white"
+      title="Copy to clipboard">
+      <span class="material-icons text-sm">content_copy</span>
+    </button>
+  </div>
+
+  <!-- Code Content -->
+  <pre
+    class="m-0 p-4 overflow-x-auto text-sm"><code #codeElement [class]="'language-' + language()">{{ code() }}</code></pre>
+</div>

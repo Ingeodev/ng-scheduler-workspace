@@ -3,17 +3,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "outDir": "../../out-tsc/app",
     "types": [],
-    "paths": {
-      "@ng-doc/generated": [
-        "../../ng-doc/documentation/index.ts"
-      ],
-      "@ng-doc/generated/*": [
-        "../../ng-doc/documentation/*"
-      ]
-    }
+    "paths": {}
   },
   "include": [
     "src/**/*.ts"

@@ -1,0 +1,42 @@
+<nav
+  class="w-64 bg-white border-r border-gray-200 overflow-y-auto py-6 flex-shrink-0 fixed left-0 top-16 bottom-0 z-40">
+  <div class="px-6 mb-8">
+    <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Documentation</p>
+  </div>
+
+  <div class="space-y-1">
+    <!-- Getting Started -->
+    <div class="px-6 py-2">
+      <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Getting Started</h3>
+    </div>
+    <a routerLink="/docs/introduction" routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">Introduction</a>
+    <a routerLink="/docs/installation" routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">Installation</a>
+
+    <!-- Components -->
+    <div class="px-6 py-2 mt-6">
+      <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Components</h3>
+    </div>
+    <a routerLink="/docs/components/schedule"
+      routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">Schedule</a>
+    <a routerLink="/docs/components/buttons"
+      routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">Buttons</a>
+
+    <!-- API -->
+    <div class="px-6 py-2 mt-6">
+      <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">API</h3>
+    </div>
+    <a routerLink="/docs/api/scheduler-config"
+      routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">SchedulerConfig</a>
+
+    <a routerLink="/docs/api/resource-model"
+      routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">ResourceModel</a>
+    <a routerLink="/docs/api/view-mode" routerLinkActive="bg-primary-50 text-primary-600 border-r-4 border-primary-600"
+      class="block px-6 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">ViewMode</a>
+  </div>
+</nav>
