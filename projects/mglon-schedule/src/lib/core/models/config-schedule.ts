@@ -76,7 +76,5 @@ export interface SchedulerConfig {
    * Defecto: true */
   showSidebar?: boolean;
 
-  /** Array de recursos a mostrar en el sidebar.
-   * Defecto: [] */
   resources?: ResourceModel[];
 }

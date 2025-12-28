@@ -1,11 +1,4 @@
 /**
- * UI Configuration Types
- * 
- * Type definitions organized by functional areas (Header, Sidebar, Grid)
- * for controlling the visual appearance of schedule components.
- */
-
-/**
  * Border radius levels based on design system
  */
 export type BorderRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
