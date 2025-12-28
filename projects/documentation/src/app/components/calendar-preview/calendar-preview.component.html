@@ -1,0 +1,16 @@
+<mglon-schedule [config]="config">
+  @for (resource of resources; track resource.id) {
+  <mglon-resource [id]="resource.id" [name]="resource.name" [color]="resource.color">
+    <!-- Regular and Multi-Day Events -->
+    @for (event of getEventsForResource(resource.id); track event.id) {
+    <mglon-event [id]="event.id" [title]="event.title" [startDate]="event.startDate" [endDate]="event.endDate"
+      [color]="event.color" [allDay]="event.allDay" />
+    }
+    <!-- Recurrent Events -->
+    @for (recEvent of getRecurrentEventsForResource(resource.id); track recEvent.id) {
+    <mglon-recurrent-event [id]="recEvent.id" [title]="recEvent.title" [startDate]="recEvent.startDate"
+      [endDate]="recEvent.endDate" [color]="recEvent.color" [recurrenceRule]="recEvent.recurrenceRule" />
+    }
+  </mglon-resource>
+  }
+</mglon-schedule>

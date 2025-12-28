@@ -1,8 +1,8 @@
-@use '../../../styles/variables' as *;
+@use '../../../styles/default_theme' as *;
 @use '../../../styles/mixins' as *;
 
 :host {
-  @include google-calendar-theme;
+  @include default-light-theme;
   display: block;
   // CSS Custom Properties for Resource View
   --resource-view-bg: var(--mglon-resource-view-bg, var(--mglon-schedule-background));
