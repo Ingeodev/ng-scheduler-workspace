@@ -79,5 +79,5 @@ jobs:
       - name: Publish to npm
         run: |
           cd dist/mglon-schedule
-          npm publish
+          npm publish --access public --provenance
 
