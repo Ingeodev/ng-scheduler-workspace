@@ -8,7 +8,7 @@
     "types": [],
     "paths": {
       "mglon-schedule": [
-        "./dist/mglon-schedule"
+        "./node_modules/mglon-schedule"
       ],
       "@ng-doc/generated": [
         "../../ng-doc/documentation/index.ts"
