@@ -8,6 +8,7 @@ const config: Config = {
     '<rootDir>/node_modules/',
     '<rootDir>/dist/',
     '<rootDir>/projects/documentation/',
+    '<rootDir>/projects/playground/',
   ],
   transformIgnorePatterns: [
     'node_modules/(?!.*\\.mjs$)'
