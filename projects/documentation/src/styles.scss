@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use '../../../dist/mglon-schedule/src/lib/styles/default_theme' as vars;
+@use 'mglon-schedule/src/lib/styles/default_theme' as vars;
 
 @tailwind base;
 @tailwind components;
