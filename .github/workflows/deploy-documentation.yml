@@ -1,0 +1,40 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Documentation
+        run: pnpm ng build documentation --base-href /ng-scheduler-workspace/ --configuration=production
+
+      - name: Deploy to GitHub Pages
+        uses: angular-schule/angular-cli-ghpages-action@v5
+        with:
+          dir: dist/documentation
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
