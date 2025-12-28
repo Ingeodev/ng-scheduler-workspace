@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.4...mglon-schedule-v0.0.5) (2025-12-28)
+
+
+### 🐛 Bug Fixes
+
+* **styles:** Add styles to build library and implements dark theme ([914ed0c](https://github.com/Ingeodev/ng-scheduler-workspace/commit/914ed0c9556e107e55a6cffb163920d4b2b8f806))
+
 ## [0.0.4](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.3...mglon-schedule-v0.0.4) (2025-12-27)
 
 
