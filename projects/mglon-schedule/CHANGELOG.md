@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.6...mglon-schedule-v0.0.7) (2025-12-28)
+
+
+### 🐛 Bug Fixes
+
+* **styles:** make zigzag color responsive to the theme ([5919942](https://github.com/Ingeodev/ng-scheduler-workspace/commit/5919942f5403211db23df9540527e3da7a2014f6))
+
 ## [0.0.6](https://github.com/Ingeodev/ng-scheduler-workspace/compare/mglon-schedule-v0.0.5...mglon-schedule-v0.0.6) (2025-12-28)
 
 
