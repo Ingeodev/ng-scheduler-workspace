@@ -1,16 +1,22 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { CalendarPreviewComponent } from '../../components/calendar-preview/calendar-preview.component';
+import { LandingHeaderComponent } from '../../components/landing/header/header.component';
+import { HeroSectionComponent } from '../../components/landing/hero-section/hero-section.component';
+import { SolutionsSectionComponent } from '../../components/landing/solutions-section/solutions-section.component';
+import { LandingFooterComponent } from '../../components/landing/footer/footer.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink, CalendarPreviewComponent],
+  imports: [
+    LandingHeaderComponent,
+    HeroSectionComponent,
+    SolutionsSectionComponent,
+    LandingFooterComponent
+  ],
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {
-  features = [
+  solutions = [
     {
       icon: '📅',
       title: 'Multiple Views',
@@ -43,4 +49,3 @@ export class LandingComponent {
     }
   ];
 }
-
